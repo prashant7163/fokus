@@ -1,0 +1,18 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Iron Will achievement badge">
+  <title>Iron Will badge</title>
+  <desc>Achievement badge: a solid diamond/gem at the center of the focus ring, for 10 strict-mode completions. Amber frame, indigo gem.</desc>
+  <defs>
+    <linearGradient id="badgeRingF" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFB86B"/><stop offset="1" stop-color="#FF9E4B"/>
+    </linearGradient>
+    <linearGradient id="focusF" x1="44" y1="42" x2="76" y2="82" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5B6CFF"/><stop offset="1" stop-color="#7A6BFF"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="50" stroke="url(#badgeRingF)" stroke-width="4" fill="#FFB86B" fill-opacity="0.08"/>
+  <!-- broken focus ring around the gem -->
+  <path d="M62.6 42.4 A18.5 18.5 0 1 1 57.4 42.4" stroke="url(#badgeRingF)" stroke-width="3" stroke-linecap="round" fill="none" stroke-opacity="0.55"/>
+  <!-- gem/diamond -->
+  <path d="M60 47 l12 8 -12 20 -12 -20 z" stroke="url(#focusF)" stroke-width="3.5" fill="#5B6CFF" fill-opacity="0.18" stroke-linejoin="round"/>
+  <path d="M48 55 h24" stroke="url(#focusF)" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

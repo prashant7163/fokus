@@ -1,0 +1,35 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Water break recovery illustration">
+  <title>Water break — glass with a droplet and ripple</title>
+  <desc>A calm glass filling with a wave line and a single droplet, with a soft ripple. Sage-to-blue calm gradient line art, both-theme safe.</desc>
+  <defs>
+    <linearGradient id="calmGradW" x1="80" y1="60" x2="160" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8FD3C4"/>
+      <stop offset="1" stop-color="#A9C7F0"/>
+    </linearGradient>
+    <clipPath id="glassClip">
+      <path d="M92 84 h56 l-6 96 a10 10 0 0 1 -10 9 h-18 a10 10 0 0 1 -10 -9 z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Glass outline (tumbler, gently tapered) -->
+  <path d="M92 84 h56 l-6 96 a10 10 0 0 1 -10 9 h-18 a10 10 0 0 1 -10 -9 z"
+        stroke="url(#calmGradW)" stroke-width="3" stroke-linejoin="round" fill="none"/>
+
+  <!-- Water fill with a gentle wave top, clipped to glass -->
+  <g clip-path="url(#glassClip)">
+    <path d="M84 138 q14 -10 28 0 t28 0 t28 0 v70 h-84 z"
+          fill="#8FD3C4" fill-opacity="0.28"/>
+    <path d="M84 138 q14 -10 28 0 t28 0 t28 0"
+          stroke="url(#calmGradW)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Falling droplet above the glass -->
+  <path d="M120 44 c8 12 12 18 12 25 a12 12 0 0 1 -24 0 c0 -7 4 -13 12 -25 z"
+        stroke="url(#calmGradW)" stroke-width="3" fill="#A9C7F0" fill-opacity="0.25" stroke-linejoin="round"/>
+
+  <!-- Ripple arcs at the base -->
+  <g stroke="url(#calmGradW)" stroke-width="2.5" stroke-linecap="round" fill="none" stroke-opacity="0.55">
+    <path d="M70 204 q20 10 44 0"/>
+    <path d="M126 204 q20 10 44 0"/>
+  </g>
+</svg>

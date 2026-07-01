@@ -1,0 +1,20 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Early Bird achievement badge">
+  <title>Early Bird badge</title>
+  <desc>Achievement badge: a rising sun over a horizon, for sessions before 7am. Amber celebration frame.</desc>
+  <defs>
+    <linearGradient id="badgeRingB" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFB86B"/><stop offset="1" stop-color="#FF9E4B"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="50" stroke="url(#badgeRingB)" stroke-width="4" fill="#FFB86B" fill-opacity="0.08"/>
+  <!-- horizon -->
+  <path d="M36 74 h48" stroke="url(#badgeRingB)" stroke-width="4" stroke-linecap="round"/>
+  <!-- rising sun (half circle above horizon) -->
+  <path d="M46 74 a14 14 0 0 1 28 0" stroke="url(#badgeRingB)" stroke-width="4" fill="#FFB86B" fill-opacity="0.2" stroke-linecap="round"/>
+  <!-- rays -->
+  <g stroke="url(#badgeRingB)" stroke-width="4" stroke-linecap="round">
+    <path d="M60 44 v-8"/>
+    <path d="M42 50 l-5 -5"/>
+    <path d="M78 50 l5 -5"/>
+  </g>
+</svg>

@@ -1,0 +1,40 @@
+<svg width="1024" height="500" viewBox="0 0 1024 500" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FOKUS Play Store feature graphic">
+  <title>FOKUS feature graphic (1024x500)</title>
+  <desc>Play Store feature graphic: FOKUS wordmark and tagline on a Deep Ink field, with the broken focus ring mark and a soft calm gradient glow. Text kept clear of the right edge where Play overlays the install button.</desc>
+  <defs>
+    <linearGradient id="fgBg" x1="0" y1="0" x2="1024" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1D2136"/>
+      <stop offset="1" stop-color="#0B0E1A"/>
+    </linearGradient>
+    <linearGradient id="fgFocus" x1="700" y1="120" x2="920" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5B6CFF"/>
+      <stop offset="1" stop-color="#7A6BFF"/>
+    </linearGradient>
+    <radialGradient id="fgGlow" cx="0.78" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#5B6CFF" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#5B6CFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="fgGlowSage" cx="0.78" cy="0.5" r="0.42">
+      <stop offset="0" stop-color="#8FD3C4" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#8FD3C4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1024" height="500" fill="url(#fgBg)"/>
+  <!-- soft glows behind the mark -->
+  <rect width="1024" height="500" fill="url(#fgGlow)"/>
+  <rect width="1024" height="500" fill="url(#fgGlowSage)"/>
+
+  <!-- The big broken focus ring mark on the right (kept ~120px clear of right edge for install button) -->
+  <g transform="translate(792 250)">
+    <!-- r=140, gap at top -->
+    <path d="M18.28 -138.8 A140 140 0 1 1 -18.28 -138.8"
+          stroke="url(#fgFocus)" stroke-width="26" stroke-linecap="round" fill="none"/>
+    <circle cx="0" cy="0" r="26" fill="url(#fgFocus)"/>
+  </g>
+
+  <!-- Wordmark + tagline, left-aligned, safe from overlays -->
+  <text x="90" y="238" font-family="'Plus Jakarta Sans', sans-serif" font-size="108" font-weight="700" letter-spacing="6.5" fill="#E7E8F2">FOKUS</text>
+  <text x="94" y="300" font-family="'Plus Jakarta Sans', sans-serif" font-size="30" font-weight="500" letter-spacing="0.3" fill="#B9C0FF">Focus without the fight.</text>
+  <text x="94" y="342" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="400" fill="#C3C5D6">Block distractions. Recover gently. Build the streak.</text>
+</svg>

@@ -1,0 +1,17 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="First Session achievement badge">
+  <title>First Session badge</title>
+  <desc>Achievement badge: the FOKUS focus ring with a single filled center, marking the first completed session. Amber celebration frame.</desc>
+  <defs>
+    <linearGradient id="badgeRingA" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFB86B"/><stop offset="1" stop-color="#FF9E4B"/>
+    </linearGradient>
+    <linearGradient id="focusA" x1="36" y1="36" x2="84" y2="84" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5B6CFF"/><stop offset="1" stop-color="#7A6BFF"/>
+    </linearGradient>
+  </defs>
+  <!-- shared badge container: soft amber ring frame -->
+  <circle cx="60" cy="60" r="50" stroke="url(#badgeRingA)" stroke-width="4" fill="#FFB86B" fill-opacity="0.08"/>
+  <!-- glyph: broken focus ring (r22, gap at top) -->
+  <path d="M63.8 38.6 A22 22 0 1 1 56.2 38.6" stroke="url(#focusA)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <circle cx="60" cy="60" r="6" fill="url(#focusA)"/>
+</svg>

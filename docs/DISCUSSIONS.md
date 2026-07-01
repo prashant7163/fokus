@@ -42,3 +42,9 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   blueprint remains product-vision reference in planning/.
 - Bash policy clarified: non-destructive commands free inside project; destructive ones need
   Prashant's approval (also enforced by Cowork's own permission prompts) — added to hard rules.
+- ux-designer agent deployed → initial design package delivered (design/ + 14 SVGs). Brand
+  motif: "broken-O focus ring" (345° arc, 15° gap — focus as a state you enter, not a cage);
+  indigo/sage/amber palette, dark theme as hero, Plus Jakarta Sans bundled.
+- **Open design questions for Prashant:** (1) dark-as-default vs follow-system; (2) bundle
+  font TTFs in repo — OK? (3) draw remaining 2 badges now or at F-15; (4) store tagline
+  "Focus without the fight." kept or PM owns; (5) disclosure copy confirmed as PM-owned.
