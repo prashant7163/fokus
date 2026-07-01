@@ -1,28 +1,20 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FOKUS app icon">
-  <title>FOKUS app icon — broken focus ring</title>
-  <desc>The FOKUS mark: a broken circular focus ring with a gap at the top, filled with the focus gradient. Works at 48px and 512px.</desc>
+  <title>FOKUS app icon — broken focus ring (v2)</title>
+  <desc>The FOKUS mark: a broken orange focus ring with a 15-degree gap at the top and a solid center dot, on a charcoal field. Broken-ring variant (recommended). Works at 48px and 512px.</desc>
   <defs>
-    <linearGradient id="focusGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#5B6CFF"/>
-      <stop offset="1" stop-color="#7A6BFF"/>
+    <linearGradient id="emberGrad" x1="120" y1="90" x2="392" y2="422" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF7A30"/>
+      <stop offset="1" stop-color="#E8611F"/>
     </linearGradient>
-    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#1D2136"/>
-      <stop offset="1" stop-color="#101322"/>
+    <linearGradient id="charcoalBg" x1="0" y1="0" x2="0" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2F2C27"/>
+      <stop offset="1" stop-color="#221F1B"/>
     </linearGradient>
   </defs>
-
-  <!-- App-icon background: Deep Ink field (adaptive-icon safe; keep mark within 66% safe zone) -->
-  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
-
-  <!-- The broken focus ring. 345deg arc, 15deg gap centered at top (12 o'clock). r=150, cx=cy=256. -->
-  <!-- Gap centered at -90deg: arc runs from -82.5deg around to -97.5deg (clockwise 345deg). -->
-  <!-- Start point at angle -82.5deg: (256 + 150*cos, 256 + 150*sin) = (275.57, 107.32) -->
-  <!-- End point at angle -97.5deg: (236.43, 107.32) -->
-  <path d="M275.57 107.32
-           A150 150 0 1 1 236.43 107.32"
-        stroke="url(#focusGrad)" stroke-width="34" stroke-linecap="round" fill="none"/>
-
-  <!-- Inner still point: a small calm dot = the centered self / the focus target -->
-  <circle cx="256" cy="256" r="30" fill="url(#focusGrad)"/>
+  <rect width="512" height="512" rx="112" fill="url(#charcoalBg)"/>
+  <!-- Broken focus ring: 345deg arc, 15deg gap at top. r=150, cx=cy=256. -->
+  <path d="M275.57 107.32 A150 150 0 1 1 236.43 107.32"
+        stroke="url(#emberGrad)" stroke-width="34" stroke-linecap="round" fill="none"/>
+  <!-- Center dot: the still, centered self / the focus target -->
+  <circle cx="256" cy="256" r="30" fill="url(#emberGrad)"/>
 </svg>

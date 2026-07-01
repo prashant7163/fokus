@@ -19,53 +19,56 @@ lib/core/theme/
 
 ## 1. ColorScheme (Dart literals)
 
+> **v2 palette (D-009):** blue/indigo dropped. Warm neutral base, light default, orange accent.
+> Values below are the literal machine-readable form of `BRAND.md §3`.
+
 ```dart
 // app_colors.dart
 const lightScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF4C5BE0),        onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFFE1E4FF), onPrimaryContainer: Color(0xFF141A4A),
-  secondary: Color(0xFF3E7D71),       onSecondary: Color(0xFFFFFFFF),
-  secondaryContainer: Color(0xFFC6EFE5), onSecondaryContainer: Color(0xFF0C2B25),
-  tertiary: Color(0xFFB5691E),        onTertiary: Color(0xFFFFFFFF),
-  tertiaryContainer: Color(0xFFFFE2C2), onTertiaryContainer: Color(0xFF3A1E00),
+  primary: Color(0xFFC24A16),        onPrimary: Color(0xFFFFFFFF),
+  primaryContainer: Color(0xFFFFE4D2), onPrimaryContainer: Color(0xFF4A1B04),
+  secondary: Color(0xFF5A6152),       onSecondary: Color(0xFFFFFFFF),
+  secondaryContainer: Color(0xFFDDE7D0), onSecondaryContainer: Color(0xFF26301E),
+  tertiary: Color(0xFF785A0B),        onTertiary: Color(0xFFFFFFFF),
+  tertiaryContainer: Color(0xFFFBEBC8), onTertiaryContainer: Color(0xFF4A3200),
   error: Color(0xFFB3261E),           onError: Color(0xFFFFFFFF),
   errorContainer: Color(0xFFF9DEDC),  onErrorContainer: Color(0xFF410E0B),
-  surface: Color(0xFFFBFBFE),         onSurface: Color(0xFF161A2E),
+  surface: Color(0xFFFBF9F6),         onSurface: Color(0xFF22201D),
   surfaceContainerLowest: Color(0xFFFFFFFF),
-  surfaceContainerLow: Color(0xFFF6F6FC),
-  surfaceContainer: Color(0xFFF1F2F9),
-  surfaceContainerHigh: Color(0xFFEBECF5),
-  surfaceContainerHighest: Color(0xFFE5E6F1),
-  surfaceVariant: Color(0xFFE3E4EE),  onSurfaceVariant: Color(0xFF484A5B),
-  outline: Color(0xFF767888),         outlineVariant: Color(0xFFC7C9D6),
-  surfaceTint: Color(0xFF4C5BE0),
-  inverseSurface: Color(0xFF2E3142),  onInverseSurface: Color(0xFFF1F1F8),
-  inversePrimary: Color(0xFFB9C0FF),
+  surfaceContainerLow: Color(0xFFFAF7F2),
+  surfaceContainer: Color(0xFFF5F2EC),
+  surfaceContainerHigh: Color(0xFFEFEBE3),
+  surfaceContainerHighest: Color(0xFFE9E4DA),
+  surfaceVariant: Color(0xFFEAE4DA),  onSurfaceVariant: Color(0xFF55524C),
+  outline: Color(0xFF84807A),         outlineVariant: Color(0xFFD6CFC3),
+  surfaceTint: Color(0xFFC24A16),
+  inverseSurface: Color(0xFF332F2A),  onInverseSurface: Color(0xFFF3EFE9),
+  inversePrimary: Color(0xFFFFB68C),
   shadow: Color(0xFF000000),          scrim: Color(0xFF000000),
 );
 
 const darkScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: Color(0xFFB9C0FF),         onPrimary: Color(0xFF232A66),
-  primaryContainer: Color(0xFF3A4290), onPrimaryContainer: Color(0xFFE1E4FF),
-  secondary: Color(0xFF8FD3C4),       onSecondary: Color(0xFF0C2B25),
-  secondaryContainer: Color(0xFF265049), onSecondaryContainer: Color(0xFFC6EFE5),
-  tertiary: Color(0xFFFFB86B),        onTertiary: Color(0xFF4A2600),
-  tertiaryContainer: Color(0xFF6B3F14), onTertiaryContainer: Color(0xFFFFE2C2),
+  primary: Color(0xFFFFB68C),         onPrimary: Color(0xFF3A1600),
+  primaryContainer: Color(0xFF7A3410), onPrimaryContainer: Color(0xFFFFDBC7),
+  secondary: Color(0xFFBCCBAC),       onSecondary: Color(0xFF28331C),
+  secondaryContainer: Color(0xFF3E4833), onSecondaryContainer: Color(0xFFDDE7D0),
+  tertiary: Color(0xFFF2C24E),        onTertiary: Color(0xFF3A2B00),
+  tertiaryContainer: Color(0xFF574200), onTertiaryContainer: Color(0xFFFBEBC8),
   error: Color(0xFFFFB4AB),           onError: Color(0xFF690005),
   errorContainer: Color(0xFF93000A),  onErrorContainer: Color(0xFFFFDAD6),
-  surface: Color(0xFF161A2E),         onSurface: Color(0xFFE7E8F2),
-  surfaceContainerLowest: Color(0xFF0B0E1A),
-  surfaceContainerLow: Color(0xFF191D31),
-  surfaceContainer: Color(0xFF1D2136),
-  surfaceContainerHigh: Color(0xFF262A40),
-  surfaceContainerHighest: Color(0xFF31354C),
-  surfaceVariant: Color(0xFF2B2E42),  onSurfaceVariant: Color(0xFFC3C5D6),
-  outline: Color(0xFF8D8FA0),         outlineVariant: Color(0xFF3A3D52),
-  surfaceTint: Color(0xFFB9C0FF),
-  inverseSurface: Color(0xFFE7E8F2),  onInverseSurface: Color(0xFF2E3142),
-  inversePrimary: Color(0xFF4C5BE0),
+  surface: Color(0xFF20201E),         onSurface: Color(0xFFECE7E0),
+  surfaceContainerLowest: Color(0xFF161513),
+  surfaceContainerLow: Color(0xFF201F1D),
+  surfaceContainer: Color(0xFF242320),
+  surfaceContainerHigh: Color(0xFF2E2C28),
+  surfaceContainerHighest: Color(0xFF383530),
+  surfaceVariant: Color(0xFF3A382F),  onSurfaceVariant: Color(0xFFCFC8BF),
+  outline: Color(0xFF9A968E),         outlineVariant: Color(0xFF3A382F),
+  surfaceTint: Color(0xFFFFB68C),
+  inverseSurface: Color(0xFFECE7E0),  onInverseSurface: Color(0xFF332F2A),
+  inversePrimary: Color(0xFFC24A16),
   shadow: Color(0xFF000000),          scrim: Color(0xFF000000),
 );
 ```
@@ -73,11 +76,13 @@ const darkScheme = ColorScheme(
 Non-scheme brand extras (put on a `ThemeExtension<FokusColors>`):
 ```dart
 // gradients + rationed signals not expressible as single ColorScheme roles
-focusGradient  = LinearGradient([Color(0xFF5B6CFF), Color(0xFF7A6BFF)], 135°)
-calmGradient   = LinearGradient([Color(0xFF8FD3C4), Color(0xFFA9C7F0)], 160°)
-streakFlame    = light Color(0xFFB5691E) / dark Color(0xFFFFB86B)   // amber signal
+focusGradient  = LinearGradient([Color(0xFFFF7A30), Color(0xFFE8611F)], 135°)  // ember
+calmWash       = LinearGradient([Color(0xFF8FA07E), Color(0xFFB7C3A5)], 160°)  // sage, recovery
+streakSignal   = light Color(0xFF785A0B) / dark Color(0xFFF2C24E)   // warm-gold streak
 ringTrack      = surfaceVariant   // unfilled part of progress ring
 scrimIntercept = scrim @ 0.55 opacity
+// On light surfaces the progress-ring arc falls back to solid Rust Color(0xFFC24A16)
+// where the ember gradient would drop below AA against Paper.
 ```
 
 ---
@@ -217,8 +222,8 @@ focus-gradient as a subtle top-edge accent (never full-bleed behind text).
   **-90° (12 o'clock)**, sweeping clockwise.
 - The signature: the ring is drawn as **345° of arc with a 15° gap at top** even at "full" —
   mirroring the logotype's broken-O. As the session completes, the arc fills toward the gap;
-  at 100% a soft amber pulse (`celebrate`) closes the gap momentarily then it re-opens (focus
-  is a state you re-enter). Recovery breathing reuses the ring geometry with `calmGradient`.
+  at 100% a soft warm-gold pulse (`celebrate`) closes the gap momentarily then it re-opens (focus
+  is a state you re-enter). Recovery breathing reuses the ring geometry with `calmWash` (sage).
 - Animate progress with `base` when a value changes; the second-by-second countdown updates the
   angle continuously via an `AnimationController` synced to `endEpochMs` (wall-clock, not ticks).
 

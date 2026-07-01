@@ -1,15 +1,13 @@
 <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FOKUS mark">
-  <title>FOKUS mark (in-app, theme-adaptive)</title>
-  <desc>Broken focus ring for in-app use. Uses the focus gradient; also renders correctly in monochrome via currentColor fallback.</desc>
+  <title>FOKUS mark (in-app, theme-adaptive, v2)</title>
+  <desc>Broken orange focus ring with center dot for in-app use. Uses the ember gradient; renders correctly in monochrome via currentColor fallback.</desc>
   <defs>
-    <linearGradient id="markGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#5B6CFF"/>
-      <stop offset="1" stop-color="#7A6BFF"/>
+    <linearGradient id="markGrad" x1="8" y1="6" x2="40" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF7A30"/>
+      <stop offset="1" stop-color="#E8611F"/>
     </linearGradient>
   </defs>
   <!-- r=17, cx=cy=24, 345deg arc, 15deg gap at top -->
-  <!-- start -82.5deg: (24+17*cos(-82.5),24+17*sin(-82.5)) = (26.22, 7.15) -->
-  <!-- end -97.5deg: (21.78, 7.15) -->
   <path d="M26.22 7.15 A17 17 0 1 1 21.78 7.15"
         stroke="url(#markGrad)" stroke-width="3.6" stroke-linecap="round" fill="none"/>
   <circle cx="24" cy="24" r="3.4" fill="url(#markGrad)"/>

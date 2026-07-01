@@ -48,3 +48,17 @@ conversations). fokus-specs.md at root is the binding build spec; blueprint in p
 remains vision. ux-designer role upgraded to graphics-first (opus). Destructive commands
 require Prashant's approval; non-destructive bash is unrestricted in-project.
 **Revisit when:** doc set feels heavy for the team size.
+
+## D-009 · 2026-07-02 · Brand direction v2 (Prashant)
+Drop blue/indigo entirely. App icon: dark grey (charcoal) background, orange circle + center
+dot. Overall system: neutral-to-light palette, light theme default, orange as the single
+accent. Supersedes the v1 indigo palette and the "dark as hero" question. Branding must be
+distinctive in a crowded wellbeing segment — lead with differentiators (in-flow recovery,
+compassionate exits, earned lock-breaks, offline privacy), not generic calm-app tropes.
+**Revisit when:** user testing or store-listing A/B says otherwise.
+
+## D-010 · 2026-07-02 · Working model: main session = discussion, worker sessions = build
+Prashant opens separate Cowork sessions for heavy build work (they coordinate via CLAUDE.md,
+TASKBOARD claiming, and MOM); the main session stays available for live discussion. Roadmap
+structure in docs/ROADMAP.md; execution state only in TASKBOARD.md.
+**Revisit when:** taskboard claiming conflicts appear.

@@ -1,20 +1,16 @@
 <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two Week Warrior achievement badge">
   <title>Two Week Warrior badge</title>
-  <desc>Achievement badge: a streak flame over the number 14, for a 14-day streak. Amber celebration frame.</desc>
+  <desc>Achievement badge: a streak flame over the number 14, for a 14-day streak. Warm-gold celebration frame.</desc>
   <defs>
-    <linearGradient id="badgeRingD" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#FFB86B"/><stop offset="1" stop-color="#FF9E4B"/>
+    <linearGradient id="frameD" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F2C24E"/><stop offset="1" stop-color="#C88418"/>
+    </linearGradient>
+    <linearGradient id="flameD" x1="44" y1="38" x2="76" y2="86" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF7A30"/><stop offset="1" stop-color="#E8611F"/>
     </linearGradient>
   </defs>
-  <circle cx="60" cy="60" r="50" stroke="url(#badgeRingD)" stroke-width="4" fill="#FFB86B" fill-opacity="0.08"/>
-  <!-- streak flame -->
-  <path d="M60 38
-           c10 10 16 18 16 28
-           a16 16 0 0 1 -32 0
-           c0 -6 3 -11 8 -16
-           c1 6 4 8 6 9
-           c-2 -8 0 -15 2 -21 z"
-        stroke="url(#badgeRingD)" stroke-width="3.5" fill="#FFB86B" fill-opacity="0.2" stroke-linejoin="round"/>
-  <!-- "14" beneath, small -->
-  <text x="60" y="88" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="700" fill="#FF9E4B">14</text>
+  <circle cx="60" cy="60" r="50" stroke="url(#frameD)" stroke-width="4" fill="#F2C24E" fill-opacity="0.08"/>
+  <path d="M60 38 c10 10 16 18 16 28 a16 16 0 0 1 -32 0 c0 -6 3 -11 8 -16 c1 6 4 8 6 9 c-2 -8 0 -15 2 -21 z"
+        stroke="url(#flameD)" stroke-width="3.5" fill="#E8611F" fill-opacity="0.18" stroke-linejoin="round"/>
+  <text x="60" y="88" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="700" fill="#C88418">14</text>
 </svg>

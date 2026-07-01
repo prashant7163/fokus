@@ -1,0 +1,22 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stand and stretch recovery illustration">
+  <title>Stand &amp; stretch — reaching arc</title>
+  <desc>An abstract, faceless upward-reaching form with motion arcs, suggesting a stretch. Sage calm-wash line art (no blue), both-theme safe.</desc>
+  <defs>
+    <linearGradient id="calmGradS" x1="40" y1="200" x2="200" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8FA07E"/>
+      <stop offset="1" stop-color="#B7C3A5"/>
+    </linearGradient>
+  </defs>
+  <path d="M64 196 h112" stroke="url(#calmGradS)" stroke-width="2.5" stroke-linecap="round" stroke-opacity="0.4"/>
+  <path d="M120 190 C118 160 120 132 122 112" stroke="url(#calmGradS)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <circle cx="123" cy="98" r="13" stroke="url(#calmGradS)" stroke-width="3" fill="none"/>
+  <path d="M118 130 C98 118 88 96 92 74" stroke="url(#calmGradS)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M128 130 C150 116 160 92 156 68" stroke="url(#calmGradS)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M120 188 C110 176 104 168 100 160" stroke="url(#calmGradS)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M122 188 C132 176 138 168 142 160" stroke="url(#calmGradS)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <g stroke="#8FA07E" stroke-width="2.5" stroke-linecap="round" stroke-opacity="0.8">
+    <path d="M92 56 v-8"/>
+    <path d="M156 54 v-8"/>
+    <path d="M124 44 v-8"/>
+  </g>
+</svg>

@@ -48,3 +48,25 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
 - **Open design questions for Prashant:** (1) dark-as-default vs follow-system; (2) bundle
   font TTFs in repo — OK? (3) draw remaining 2 badges now or at F-15; (4) store tagline
   "Focus without the fight." kept or PM owns; (5) disclosure copy confirmed as PM-owned.
+
+## 2026-07-02 · Brand v2, roadmap, website, blueprint audit
+
+- Prashant's 7-point review: brand direction v2 (D-009 — no blue, charcoal+orange icon,
+  neutral-to-light system); distinctive positioning vs crowded segment; website; epics/
+  milestones roadmap; blueprint cleanup; blank-context resumability; parallel sessions.
+- MOM-agent → orchestrator duty (unchanged); parallel work → D-010: Prashant opens worker
+  sessions, main session stays for discussion. Dark-as-default question superseded by D-009.
+- docs/ROADMAP.md created (E1–E7, M1–M6); stories stay in TASKBOARD (B-xx added).
+- ux-designer executed B-01/B-02: v2 palette (Signal Orange/charcoal/Paper neutrals, sage
+  recovery wash), all assets regenerated, broken-ring icon recommended over closed variant,
+  website/index.html (single file, EN/DE toggle, no domain hardcoded).
+- PM audit: 24 blueprint inconsistencies → planning/fokus-blueprint-specs.md with register.
+- **Orchestrator flags:** trademark check for "Fokus" (CH/EU) before brand hardens; domain
+  decision (fokus.app vs fokusapp.ch) blocks website links + waitlist inbox.
+- **DECISION-NEEDED (from PM audit, awaiting Prashant):** D-A P0 definition vs billing P1;
+  D-B priority column semantics; D-C lock-break/sub-10-min streak semantics; D-D paused/
+  scheduled states exist?; D-E always-on apps (music/nav) whitelist policy; D-F AI
+  micro-coaching = 6th recovery module or suggestion surface.
+- **Action items:** Prashant — review brand v2 + website, answer D-A…D-F, icon variant
+  sign-off, domain + waitlist inbox, trademark check, git locks + push. Orchestrator — next:
+  F-01 scaffold (suggest worker session per D-010).

@@ -32,6 +32,14 @@ Status: `todo | doing | review | done | blocked`. Owner: `core` = single-author 
 
 Deferred (needs explicit go): Firebase/social rooms, web unlock portal, monetization, iOS.
 
+## Brand & Web (E6 — parallel track, never blocks Phase A)
+
+| ID | Task | Owner | Status | Done when |
+|---|---|---|---|---|
+| B-01 | Brand v2: drop blue; charcoal + orange ring/dot icon; neutral-to-light system; distinctive vs crowded wellbeing segment | agent-ok (ux-designer) | review | BRAND/DESIGN_SYSTEM/assets updated to v2; Prashant approves |
+| B-02 | Public website (single page, website/): brand showcase, differentiators, waitlist CTA | agent-ok (ux-designer) | review | Site renders locally; copy approved; domain TBD flagged |
+| B-03 | Final store graphics from real screenshots | agent-ok | todo | 8 screenshots + feature graphic per STORE_GRAPHICS.md; needs M4 |
+
 ## Phase C — Ship
 
 | ID | Task | Owner | Status | Done when |

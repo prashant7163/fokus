@@ -1,27 +1,21 @@
 <svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Breathe recovery illustration">
   <title>Breathe — the breathing circle</title>
-  <desc>Concentric calm rings radiating from a soft center; the animated breathing circle expands and contracts. Sage/calm gradient, both-theme safe.</desc>
+  <desc>Concentric calm rings radiating from a soft center; the animated breathing circle expands and contracts. Sage calm-wash (no blue), both-theme safe.</desc>
   <defs>
     <radialGradient id="breatheCore" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#8FD3C4" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#A9C7F0" stop-opacity="0.15"/>
+      <stop offset="0" stop-color="#8FA07E" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#B7C3A5" stop-opacity="0.12"/>
     </radialGradient>
     <linearGradient id="calmGrad" x1="40" y1="40" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#8FD3C4"/>
-      <stop offset="1" stop-color="#A9C7F0"/>
+      <stop offset="0" stop-color="#8FA07E"/>
+      <stop offset="1" stop-color="#B7C3A5"/>
     </linearGradient>
   </defs>
-
-  <!-- Outermost breath ring (inhale extent) -->
   <circle cx="120" cy="120" r="92" stroke="url(#calmGrad)" stroke-width="2.5" fill="none" stroke-opacity="0.35"/>
-  <!-- Mid ring -->
   <circle cx="120" cy="120" r="68" stroke="url(#calmGrad)" stroke-width="2.5" fill="none" stroke-opacity="0.6"/>
-  <!-- The primary breathing circle (this is the element the app animates: r 44 -> 92) -->
+  <!-- primary breathing circle (app animates r 44 -> 92) -->
   <circle cx="120" cy="120" r="44" stroke="url(#calmGrad)" stroke-width="3" fill="url(#breatheCore)"/>
-  <!-- Soft inner glow center -->
-  <circle cx="120" cy="120" r="10" fill="#8FD3C4" fill-opacity="0.9"/>
-
-  <!-- Four gentle breath marks at cardinal points, round caps -->
+  <circle cx="120" cy="120" r="10" fill="#8FA07E" fill-opacity="0.9"/>
   <g stroke="url(#calmGrad)" stroke-width="2.5" stroke-linecap="round" stroke-opacity="0.7">
     <path d="M120 14 v10"/>
     <path d="M120 216 v-10"/>
