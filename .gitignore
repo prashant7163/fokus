@@ -1,0 +1,17 @@
+# Local-only business/planning material (see docs/DECISIONS.md D-005)
+planning/
+FOKUS_Product_Requirements_Blueprint.md
+
+# Secrets & local config
+*.keystore
+*.jks
+google-services.json
+local.properties
+.env*
+
+# Build artifacts (Flutter/Android — extended when scaffold lands)
+build/
+.dart_tool/
+.gradle/
+*.iml
+.idea/
