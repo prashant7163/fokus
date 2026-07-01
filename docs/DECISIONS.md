@@ -40,3 +40,11 @@ orchestrator (main session, documented in CLAUDE.md). Files double as Claude Cod
 agents if copied to `.claude/agents/` (that path is write-protected in Cowork sessions).
 PM drafts, Prashant decides; only tech-lead may change contracts; reviewer is read-only.
 **Revisit when:** role boundaries cause friction or a real human joins the team.
+
+## D-008 · 2026-07-02 · Structure v2 per Prashant's review
+agents/ and design/ live at project root; docs/ gains CHANGELOG.md (what/when) and
+DISCUSSIONS.md (MOM, orchestrator standing duty — not an agent, since subagents cannot see
+conversations). fokus-specs.md at root is the binding build spec; blueprint in planning/
+remains vision. ux-designer role upgraded to graphics-first (opus). Destructive commands
+require Prashant's approval; non-destructive bash is unrestricted in-project.
+**Revisit when:** doc set feels heavy for the team size.

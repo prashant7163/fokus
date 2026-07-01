@@ -15,11 +15,16 @@ No Firebase, no iOS, no monetization until the core loop is validated on-device.
 ## Read order for a fresh session
 
 1. `CLAUDE.md` (this file) — orientation and rules
-2. `docs/ARCHITECTURE.md` — system shape, module boundaries, tech stack
-3. `docs/CONTRACTS.md` — interfaces, state machines, channel names, DB schema. **Binding.**
-4. `docs/CONVENTIONS.md` — style, naming, commits, testing bar
-5. `docs/TASKBOARD.md` — pick up work here; every task has scope + done-criteria
-6. `docs/DECISIONS.md` — why things are the way they are; do not relitigate silently
+2. `fokus-specs.md` — WHAT we are building: scoped, unambiguous build spec
+3. `docs/ARCHITECTURE.md` — system shape, module boundaries, tech stack
+4. `docs/CONTRACTS.md` — interfaces, state machines, channel names, DB schema. **Binding.**
+5. `docs/CONVENTIONS.md` — style, naming, commits, testing bar
+6. `docs/TASKBOARD.md` — pick up work here; every task has scope + done-criteria
+7. `docs/DECISIONS.md` — why things are the way they are; do not relitigate silently
+8. `docs/DISCUSSIONS.md` — MOM of Prashant↔orchestrator discussions; catch up on recent entries
+9. `docs/CHANGELOG.md` — what changed, when
+
+`design/` holds the design system, screen specs, and graphics assets — UI tasks consume it.
 
 `planning/` (if present) is local-only business context — product blueprint, store paperwork,
 strategy. It is gitignored on purpose. Never commit it. Agents in worktrees will not see it;
@@ -27,20 +32,26 @@ they do not need it — everything build-relevant is extracted into `docs/`.
 
 ## Team roster (agent roles)
 
-Role briefs live in `docs/agents/` and are injected verbatim when a role is spawned.
+Role briefs live in `agents/` (project root) and are injected verbatim when a role is spawned.
 The **orchestrator** (main Cowork session with Prashant) is not spawned — it plans, briefs,
 integrates results, and holds the coupled core inline.
 
 | Role | Brief | Spawn for |
 |---|---|---|
-| Product Manager | `docs/agents/product-manager.md` | Taskboard grooming, copy, listing drafts |
-| Tech Lead | `docs/agents/tech-lead.md` | Contract/architecture changes, ADRs, design rulings |
-| Mobile Developer | `docs/agents/mobile-developer.md` | `agent-ok` taskboard tasks |
-| Code Reviewer | `docs/agents/code-reviewer.md` | Milestone/pre-merge review (worktree, read-only) |
-| UX Designer | `docs/agents/ux-designer.md` | Design system, screen specs, store graphics specs |
+| Product Manager | `agents/product-manager.md` | Taskboard grooming, copy, listing drafts |
+| Tech Lead | `agents/tech-lead.md` | Contract/architecture changes, ADRs, design rulings |
+| Mobile Developer | `agents/mobile-developer.md` | `agent-ok` taskboard tasks |
+| Code Reviewer | `agents/code-reviewer.md` | Milestone/pre-merge review (worktree, read-only) |
+| UX Designer | `agents/ux-designer.md` | Design system, screen specs, graphics production |
 
 Spawn discipline: one taskboard task per spawn, brief = role file + task ID + any extra
 constraints; agent returns a summary, orchestrator verifies before marking `done`.
+
+**Orchestrator standing duties (not delegable — subagents cannot see the conversation):**
+- Record MOM of every working session with Prashant in `docs/DISCUSSIONS.md` (datetime-stamped,
+  decisions + action items) — written at session end and after any significant decision.
+- Append `docs/CHANGELOG.md` on every commit batch.
+- Keep DECISIONS/TASKBOARD/CHANGELOG consistent before ending a session ("session-end ritual").
 
 ## Ownership rules
 
@@ -59,3 +70,6 @@ constraints; agent returns a summary, orchestrator verifies before marking `done
 - The accessibility-service disclosure flow ships verbatim as written in `docs/TASKBOARD.md`
   task F-14 — Google Play policy depends on it.
 - Update `docs/TASKBOARD.md` status when starting/finishing a task. Append, don't rewrite history.
+- Destructive commands (`rm -rf`, `git clean`, `git push --force`, bulk deletes, history rewrites)
+  require Prashant's explicit approval — every worker, no exceptions. Non-destructive bash inside
+  the project folder is free to use.
