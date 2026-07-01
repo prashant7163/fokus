@@ -33,3 +33,10 @@ stays in gitignored `planning/`. **Revisit when:** a second full-time contributo
 Single-author inline work for the coupled core (blocking service, session engine, intercept);
 scoped agents for leaf modules and independent review; fresh sessions between phases enabled
 by this docs set. Agents brief = files + contract + done-criteria, return summaries.
+
+## D-007 · 2026-07-02 · Named agent roles in docs/agents/
+Six roles: PM, tech-lead, mobile-developer, code-reviewer, ux-designer (spawnable briefs) +
+orchestrator (main session, documented in CLAUDE.md). Files double as Claude Code custom
+agents if copied to `.claude/agents/` (that path is write-protected in Cowork sessions).
+PM drafts, Prashant decides; only tech-lead may change contracts; reviewer is read-only.
+**Revisit when:** role boundaries cause friction or a real human joins the team.

@@ -25,6 +25,23 @@ No Firebase, no iOS, no monetization until the core loop is validated on-device.
 strategy. It is gitignored on purpose. Never commit it. Agents in worktrees will not see it;
 they do not need it — everything build-relevant is extracted into `docs/`.
 
+## Team roster (agent roles)
+
+Role briefs live in `docs/agents/` and are injected verbatim when a role is spawned.
+The **orchestrator** (main Cowork session with Prashant) is not spawned — it plans, briefs,
+integrates results, and holds the coupled core inline.
+
+| Role | Brief | Spawn for |
+|---|---|---|
+| Product Manager | `docs/agents/product-manager.md` | Taskboard grooming, copy, listing drafts |
+| Tech Lead | `docs/agents/tech-lead.md` | Contract/architecture changes, ADRs, design rulings |
+| Mobile Developer | `docs/agents/mobile-developer.md` | `agent-ok` taskboard tasks |
+| Code Reviewer | `docs/agents/code-reviewer.md` | Milestone/pre-merge review (worktree, read-only) |
+| UX Designer | `docs/agents/ux-designer.md` | Design system, screen specs, store graphics specs |
+
+Spawn discipline: one taskboard task per spawn, brief = role file + task ID + any extra
+constraints; agent returns a summary, orchestrator verifies before marking `done`.
+
 ## Ownership rules
 
 - **Core (single-author, inline):** Kotlin blocking service, foreground service, session engine,
