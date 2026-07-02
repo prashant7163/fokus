@@ -31,6 +31,13 @@ jobs:
       - name: Dependencies
         run: flutter pub get
 
+      # drift's NativeDatabase in `flutter test` loads the host libsqlite3
+      - name: Install libsqlite3 (host tests)
+        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+
+      - name: Generate code (drift)
+        run: dart run build_runner build --delete-conflicting-outputs
+
       - name: Generate l10n
         run: flutter gen-l10n
 

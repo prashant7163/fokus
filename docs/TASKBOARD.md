@@ -8,7 +8,7 @@ Status: `todo | doing | review | done | blocked`. Owner: `core` = single-author 
 | ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
 | F-01 | Flutter scaffold: project, theme (M3), nav, Riverpod, CI | core (worker session, 2026-07-02) | review | `flutter analyze` + `assembleDebug` green in CI — scaffold committed; CI run blocked until repo is pushed to GitHub (Prashant action item) |
-| F-02 | Drift schema + repositories per CONTRACTS §3 | core (worker session, 2026-07-02) | doing | Schema matches contract; repo unit tests pass |
+| F-02 | Drift schema + repositories per CONTRACTS §3 | core (worker session, 2026-07-02) | review | Schema matches contract; repo unit tests pass — 40 unit tests + schema-contract guard written; sandbox cannot run Dart, CI run is the verification gate |
 | F-03 | Kotlin: AccessibilityService + blocked-set cache + detection | core | todo | Blocked app detected < 200 ms on test device |
 | F-04 | Kotlin: SessionForegroundService + BootReceiver + resilience | core | todo | Session survives process kill + reboot |
 | F-05 | Kotlin: InterceptActivity (anchor, countdown, 3 CTAs) | core | todo | Renders from a cold intercept; buttons wired to channel |

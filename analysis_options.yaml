@@ -3,6 +3,8 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - lib/l10n/generated/**
+    # Drift/build_runner output (gitignored, generated in CI before analyze)
+    - "**/*.g.dart"
 
 linter:
   rules:
