@@ -11,4 +11,18 @@
     <string name="session_notification_channel_description">Shows your running focus session and the time remaining.</string>
     <string name="session_notification_title_fallback">Focus session</string>
     <string name="session_notification_text">%1$d min remaining</string>
+
+    <!-- F-05 intercept screen (native-side copy; PM review with F-20).
+         Warm, gently firm — never "BLOCKED"/red (design/SCREENS.md §4). -->
+    <string name="intercept_headline">%1$s can wait.</string>
+    <string name="intercept_icon_description">%1$s icon</string>
+    <string name="intercept_anchor">You\'re here to: %1$s</string>
+    <string name="intercept_cta_return">Return to focus</string>
+    <string name="intercept_cta_stuck">I\'m stuck</string>
+    <string name="intercept_cta_emergency">Emergency exit</string>
+    <string name="intercept_hint_repeated">Tempted a few times — a 30-second breather might help.</string>
+    <plurals name="intercept_time_remaining">
+        <item quantity="one">%1$d minute left in your session</item>
+        <item quantity="other">%1$d minutes left in your session</item>
+    </plurals>
 </resources>

@@ -8,4 +8,11 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+    <!-- F-05: native intercept screen — light per D-009, no Flutter engine. -->
+    <style name="InterceptTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#FFFBF9F6</item>
+        <item name="android:statusBarColor">#FFFBF9F6</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#FFFBF9F6</item>
+    </style>
 </resources>

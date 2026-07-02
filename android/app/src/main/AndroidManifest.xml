@@ -39,7 +39,29 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- F-05: intercept CTAs deep-link into the Flutter shell
+                 (fokus://recovery, fokus://exit) via Flutter's own
+                 deep-linking — go_router registers the routes (F-06+). -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="fokus" />
+            </intent-filter>
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="true" />
         </activity>
+
+        <!-- F-05: blocked-app intercept. Native (< 200 ms cold render), own
+             task, never in recents. -->
+        <activity
+            android:name=".blocking.InterceptActivity"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:taskAffinity="ch.hoffely.fokus.intercept"
+            android:theme="@style/InterceptTheme" />
         <!-- F-03: foreground-app detection. Disclosure flow (F-10) precedes
              enabling; config keeps window-content access off. -->
         <service

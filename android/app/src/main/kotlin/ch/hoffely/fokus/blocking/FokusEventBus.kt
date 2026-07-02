@@ -36,13 +36,22 @@ object FokusEventBus : EventChannel.StreamHandler {
         sink = null
     }
 
+    // distractionAttempt is buffered too: cold intercepts fire while the
+    // engine is down, and every attempt must land as a DistractionAttempt
+    // row (spec §3.2 — this data is the product hypothesis). The original
+    // ts travels with the event, so late delivery stays accurate.
     fun emitDistractionAttempt(packageName: String, tsEpochMs: Long) =
-        emit("distractionAttempt", mapOf("pkg" to packageName, "ts" to tsEpochMs))
+        emit(
+            "distractionAttempt",
+            mapOf("pkg" to packageName, "ts" to tsEpochMs),
+            buffered = true,
+        )
 
     fun emitInterceptShown(packageName: String) =
         emit("interceptShown", mapOf("pkg" to packageName))
 
-    fun emitRecoveryRequested() = emit("recoveryRequested", emptyMap())
+    fun emitRecoveryRequested() =
+        emit("recoveryRequested", emptyMap(), buffered = true)
 
     fun emitPermissionLost(kind: String) =
         emit("permissionLost", mapOf("kind" to kind), buffered = true)

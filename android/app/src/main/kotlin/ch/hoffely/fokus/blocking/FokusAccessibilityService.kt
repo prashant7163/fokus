@@ -23,6 +23,7 @@ class FokusAccessibilityService : AccessibilityService() {
 
     private var lastInterceptPackage: String? = null
     private var lastInterceptAtMs: Long = 0L
+    private val attemptTracker = AttemptTracker()
 
     @Volatile
     private var neverBlockable: Set<String> = emptySet()
@@ -54,8 +55,10 @@ class FokusAccessibilityService : AccessibilityService() {
         lastInterceptAtMs = nowMs
 
         FokusEventBus.emitDistractionAttempt(packageName!!, nowMs)
-        // TODO(F-05): launch InterceptActivity here (anchor, countdown, CTAs).
-        // Detection seam is complete; the activity is the next core task.
+        val attemptsInWindow = attemptTracker.record(nowMs)
+        // Background-activity-start is permitted here: accessibility
+        // services are system-bound (documented BAL exemption).
+        InterceptActivity.launch(this, packageName, attemptsInWindow)
     }
 
     override fun onInterrupt() {
