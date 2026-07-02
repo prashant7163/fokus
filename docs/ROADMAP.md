@@ -22,7 +22,7 @@ Progress at a glance = milestones table below + taskboard statuses. Append-only 
 | M1 "It builds" | Scaffold + CI green (analyze, test, assembleDebug) | E1 partial | **done 2026-07-02 13:05** (CI run #4 green: full pipeline over F-01…F-06 + fixes) |
 | M2 "It blocks" | Blocked app intercepted < 200 ms on emulator; survives reboot/kill (D-012: emulator is the M2 device; OEM battery behavior deferred to closed track) | E1 | **done 2026-07-02 16:15** (evidence: docs/reviews/M2-emulator-pass.md; <200 ms visible-render on hardware stays a closed-track confirm) |
 | M3 "Core loop complete" | Session → intercept → recovery → resume/exit, end-to-end on device | E2 | **done 2026-07-02 16:15** (same pass: stuck→recovery→resumed row, emergency→exit sheet→aborted, unblock verified) |
-| M4 "Retention ready" | Streaks/stats/onboarding done; app is daily-usable; closed-track candidate | E3 | todo |
+| M4 "Retention ready" | Streaks/stats/onboarding done; app is daily-usable; closed-track candidate | E3 | **done 2026-07-02 19:45** (F-09…F-12 CI-verified; full first-run → session → intercept → celebrate loop walked on-emulator through the real UI; independent M4 review next) |
 | M5 "Engagement complete" | All Phase B features pass done-criteria | E4 | todo |
 | M6 "Store-ready" | QA matrix P0s pass; listing approved; release build on closed track | E5, E6 | todo |
 

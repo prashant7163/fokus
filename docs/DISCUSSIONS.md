@@ -416,3 +416,29 @@ every cold start).
 **Next:** retention layer — F-09 (streaks/tokens/today stats/complete screen, D-011
 semantics), then F-10/F-11/F-12 → M4 + independent review. Prashant owes nothing here;
 disclosure copy approval comes with F-10.
+
+## 2026-07-02 16:30–19:55 · Worker session (Claude Code): F-09…F-12 built + CI green — M4 done
+
+Retention layer complete, each task CI-verified (runs #11–#14 on e511171/43d55b2/535f423/64cc2be):
+- **F-09** streaks (derived engine, D-017; schema v2 note column closes D-014), tokens
+  (milestones, weekly cap, redemption incl. the F-08 strict-dialog offer), Session Complete
+  screen, today view.
+- **F-10** onboarding (blueprint §6.7 copy; prominent disclosure with explicit consent before
+  any settings redirect — test-proven; ⚠ disclosure copy is a MARKED PLACEHOLDER, Prashant's
+  verbatim approval is a release blocker; D-011 allowlist step). shared_preferences added (D-018).
+- **F-11** home (sacred one-tap repeat test-proven), config, Active Session ring screen;
+  native getAppIcons (D-019). SCREENS §2's per-session recovery toggle deferred to F-13 (D-019).
+- **F-12** settings (permissions health + red mid-session-loss banner, theme toggle
+  light-default, suggestions opt-in, D-011 allowlist editing); **Plus Jakarta Sans bundled**
+  (OFL) Flutter + native — the open font question is closed (D-020).
+- **CI note:** run #12's only red was shared_preferences_android's own unit tests failing
+  under Jetifier; the Kotlin gate is now scoped to :app (D-019) — our gate unchanged.
+- **M4 UI emulator pass** (fresh install, real UI): full loop walked first-run → celebration;
+  8 screenshots banked for B-03. Two polish bugs found+fixed (chip label contrast, early-finish
+  minutes display).
+- Skipped consciously: "Session restored" snackbar (SCREENS §3) — needs a restore signal plumb,
+  low value; noted for the M4 review to challenge.
+
+**Next:** independent M4 code review (agent, read-only, scope F-22/F-07…F-12 + M2 fixes),
+self-triage P0/P1, then Phase B (F-13…F-17). Prashant-only items unchanged (disclosure verbatim
+approval now pending on top).

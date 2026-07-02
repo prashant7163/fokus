@@ -173,12 +173,14 @@ class _SessionCompleteScreenState extends ConsumerState<SessionCompleteScreen> {
   }
 
   int _actualMinutes(SessionState session) {
-    // actualMin is persisted, not carried in state — derive the same value.
+    // actualMin is persisted, not carried in state — and state.endTime is the
+    // wall-clock ANCHOR (start + planned), not the completion moment, so an
+    // early finish must derive from now (found in the F-11 emulator pass:
+    // a 4-minute finishTask celebrated "+30 focus minutes").
     final start = session.startTime;
-    final end = session.endTime;
-    if (start == null || end == null) return session.plannedMin ?? 0;
-    final min = end.difference(start).inMinutes;
-    final planned = session.plannedMin ?? min;
+    final planned = session.plannedMin ?? 0;
+    if (start == null) return planned;
+    final min = DateTime.now().difference(start).inMinutes;
     return min < 0 ? 0 : (min > planned ? planned : min);
   }
 }

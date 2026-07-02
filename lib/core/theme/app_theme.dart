@@ -112,7 +112,12 @@ abstract final class AppTheme {
       ),
       chipTheme: base.chipTheme.copyWith(
         shape: const StadiumBorder(),
-        labelStyle: AppTypography.textTheme.labelLarge,
+        // Explicit color: a labelStyle without one bypasses the chip's own
+        // color resolution and inherits whatever DefaultTextStyle is above —
+        // unselected chips rendered near-white (found in the F-11/F-12
+        // emulator pass).
+        labelStyle: AppTypography.textTheme.labelLarge
+            ?.copyWith(color: scheme.onSurface),
       ),
     );
   }
