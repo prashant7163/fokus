@@ -42,7 +42,31 @@ class _ExitScreenState extends ConsumerState<ExitScreen> {
     for (final r in ExitReason.values) {
       if (r.name == name) return r;
     }
-    return ExitReason.stuck; // unknown confirm param — safest honest default.
+    // Unknown confirm param (forged/stale browsable deep link — M4 review
+    // P2): fall back to ASKING, never to a silent abort with a made-up
+    // reason. The genuine hand-back always carries a valid enum name.
+    return null;
+  }
+
+  /// Latches [_resolving] around [action] and ALWAYS releases it: a thrown
+  /// terminal call must never leave the CTAs and the PopScope back handler
+  /// permanently dead — this screen is the strict-mode escape hatch (M4
+  /// review P1). Failures are reported and surfaced as a retry snackbar;
+  /// releasing after a successful navigation is harmless (the widget is
+  /// already unmounting).
+  Future<void> _guarded(Future<void> Function() action) async {
+    if (_resolving) return;
+    _resolving = true;
+    final messenger = ScaffoldMessenger.of(context);
+    final retry = AppLocalizations.of(context).errorTryAgain;
+    try {
+      await action();
+    } catch (e, s) {
+      FlutterError.reportError(FlutterErrorDetails(exception: e, stack: s));
+      messenger.showSnackBar(SnackBar(content: Text(retry)));
+    } finally {
+      _resolving = false;
+    }
   }
 
   SessionController get _controller =>
@@ -77,79 +101,84 @@ class _ExitScreenState extends ConsumerState<ExitScreen> {
 
   // --- terminal paths --------------------------------------------------
 
-  Future<void> _abortNow(ExitReason reason) async {
-    if (_resolving) return;
-    _resolving = true;
-    final messenger = ScaffoldMessenger.of(context);
-    final ended = AppLocalizations.of(context).exitSessionEnded;
-    await _controller.abort(exitReason: reason);
-    if (!mounted) return;
-    messenger.showSnackBar(SnackBar(content: Text(ended)));
-    context.go(AppRoutes.home);
-  }
+  Future<void> _abortNow(ExitReason reason) => _guarded(() async {
+        final messenger = ScaffoldMessenger.of(context);
+        final ended = AppLocalizations.of(context).exitSessionEnded;
+        await _controller.abort(exitReason: reason);
+        if (!mounted) return;
+        messenger.showSnackBar(SnackBar(content: Text(ended)));
+        context.go(AppRoutes.home);
+      });
 
   Future<void> _pick(ExitReason reason) async {
-    if (_resolving) return;
-    _resolving = true;
-    final l10n = AppLocalizations.of(context);
-    final messenger = ScaffoldMessenger.of(context);
+    // The two sheet outcomes run AFTER the guard releases: their own CTAs
+    // (_grantPass, _stay) latch for themselves and would bail if this method
+    // still held _resolving while the sheet is up.
+    ExitOutcome? sheet;
+    await _guarded(() async {
+      final l10n = AppLocalizations.of(context);
+      final messenger = ScaffoldMessenger.of(context);
 
-    // CONTRACTS §2: the reason is logged on every early-exit *attempt*,
-    // whether or not the session ends.
-    await _controller.recordExitReasonAttempt(reason);
+      // CONTRACTS §2: the reason is logged on every early-exit *attempt*,
+      // whether or not the session ends.
+      await _controller.recordExitReasonAttempt(reason);
+      if (!mounted) return;
+
+      switch (ExitFlow.outcomeFor(reason, strictMode: _session.strictMode)) {
+        case ExitOutcome.completeAsFinished:
+          await _controller.finishTask();
+          if (!mounted) return;
+          context.go(AppRoutes.sessionComplete);
+
+        case ExitOutcome.exitNow:
+          await _controller.emergencyExit();
+          if (!mounted) return;
+          messenger
+              .showSnackBar(SnackBar(content: Text(l10n.exitSessionEnded)));
+          context.go(AppRoutes.home);
+
+        case ExitOutcome.recoveryHub:
+          context.go('${AppRoutes.recovery}?exitReason=${reason.name}');
+
+        case ExitOutcome.recoveryBreathe:
+          context.go(
+            '${AppRoutes.recovery}?module=breathe&exitReason=${reason.name}',
+          );
+
+        case ExitOutcome.pickPassApp:
+        case ExitOutcome.strictDenied:
+          sheet = ExitFlow.outcomeFor(reason, strictMode: _session.strictMode);
+      }
+    });
     if (!mounted) return;
-
-    switch (ExitFlow.outcomeFor(reason, strictMode: _session.strictMode)) {
-      case ExitOutcome.completeAsFinished:
-        await _controller.finishTask();
-        if (!mounted) return;
-        context.go(AppRoutes.sessionComplete);
-
-      case ExitOutcome.exitNow:
-        await _controller.emergencyExit();
-        if (!mounted) return;
-        messenger.showSnackBar(SnackBar(content: Text(l10n.exitSessionEnded)));
-        context.go(AppRoutes.home);
-
-      case ExitOutcome.recoveryHub:
-        context.go('${AppRoutes.recovery}?exitReason=${reason.name}');
-
-      case ExitOutcome.recoveryBreathe:
-        context
-            .go('${AppRoutes.recovery}?module=breathe&exitReason=${reason.name}');
-
+    switch (sheet) {
       case ExitOutcome.pickPassApp:
-        _resolving = false;
         await _showPassPicker();
-
       case ExitOutcome.strictDenied:
-        _resolving = false;
         await _showStrictDenied();
+      default:
+        break;
     }
   }
 
   /// Lock-break redemption (spec §3.5): ends as completed-via-lockbreak —
   /// streak preserved, celebrated gracefully. Offered only when redeemable
   /// (token exists + weekly cap not hit — [lockBreakOfferProvider]).
-  Future<void> _redeemLockBreak() async {
-    if (_resolving) return;
-    _resolving = true;
-    await _controller.redeemLockBreak();
-    if (!mounted) return;
-    context.go(AppRoutes.sessionComplete);
-  }
+  Future<void> _redeemLockBreak() => _guarded(() async {
+        await _controller.redeemLockBreak();
+        if (!mounted) return;
+        context.go(AppRoutes.sessionComplete);
+      });
 
   /// "Stay in focus" — the friendly default. Composes recovery resume when
   /// the sheet was reached mid-recovery.
-  Future<void> _stay() async {
-    if (_resolving) return;
-    _resolving = true;
-    if (_session.status == SessionStatus.recoveryInProgress) {
-      await _controller.resumeRecovery();
-    }
-    if (!mounted) return;
-    context.go(AppRoutes.session);
-  }
+  Future<void> _stay() => _guarded(() async {
+        if (_session.status == SessionStatus.recoveryInProgress) {
+          await _controller.resumeRecovery();
+        }
+        if (!mounted) return;
+        context.go(AppRoutes.session);
+      });
 
   // --- needApp sub-states ------------------------------------------------
 
@@ -196,19 +225,18 @@ class _ExitScreenState extends ConsumerState<ExitScreen> {
     BuildContext sheetContext, {
     required String packageName,
     required String appName,
-  }) async {
-    if (_resolving) return;
-    _resolving = true;
-    final l10n = AppLocalizations.of(context);
-    final messenger = ScaffoldMessenger.of(context);
-    await _controller.grantAppPass(packageName);
-    if (!mounted) return;
-    if (sheetContext.mounted) Navigator.of(sheetContext).pop();
-    messenger.showSnackBar(
-      SnackBar(content: Text(l10n.exitPassGranted(appName))),
-    );
-    context.go(AppRoutes.session);
-  }
+  }) =>
+      _guarded(() async {
+        final l10n = AppLocalizations.of(context);
+        final messenger = ScaffoldMessenger.of(context);
+        await _controller.grantAppPass(packageName);
+        if (!mounted) return;
+        if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+        messenger.showSnackBar(
+          SnackBar(content: Text(l10n.exitPassGranted(appName))),
+        );
+        context.go(AppRoutes.session);
+      });
 
   Future<void> _showStrictDenied() async {
     final l10n = AppLocalizations.of(context);

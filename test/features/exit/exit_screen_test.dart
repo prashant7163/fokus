@@ -263,6 +263,40 @@ void main() {
       expect(find.text('stub:recovery:-:needApp'), findsOneWidget);
     });
 
+    testWidgets(
+        'a thrown grant must not dead-lock the sheet — Stay still works '
+        '(M4 review P1)', (tester) async {
+      await startSession();
+      await container.read(appListsRepositoryProvider).addBlockedApp(
+            packageName: 'com.spotify.music',
+            appName: 'Spotify',
+          );
+      fake.grantPassError = Exception('channel died');
+      await pumpExit(tester);
+
+      await tester.tap(find.text('I need one app'));
+      await settle(tester);
+      await tester.tap(find.text('Spotify'));
+      await settle(tester);
+      // The grant threw: reported (consume it) + retry snackbar shown.
+      expect(tester.takeException(), isNotNull);
+      expect(
+        find.text('Something went wrong — please try again.'),
+        findsOneWidget,
+      );
+
+      // Close the sheet and prove the screen is still alive. Pump past the
+      // snackbar (it floats over the bottom-anchored CTA).
+      await tester.tapAt(const Offset(400, 50)); // barrier dismiss
+      await settle(tester);
+      await tester.pump(const Duration(seconds: 5)); // snackbar timer fires
+      await tester.pump(const Duration(seconds: 1)); // …and animates out
+      await tester.tap(find.text('Stay in focus'));
+      await settle(tester);
+      expect(find.text('stub:session'), findsOneWidget);
+      expect(state().status, SessionStatus.active);
+    });
+
     testWidgets('strict denial "Back to focus" stays in the session',
         (tester) async {
       await startSession(strictMode: true);

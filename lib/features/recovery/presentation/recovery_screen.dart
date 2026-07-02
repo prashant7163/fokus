@@ -104,48 +104,69 @@ class _RecoveryScreenState extends ConsumerState<RecoveryScreen> {
 
   // --- resolution paths (each closes the RecoveryEvent exactly once) -------
 
-  Future<void> _resume({bool showNoted = false}) async {
+  /// Latches [_resolving] around [action] and ALWAYS releases it — a thrown
+  /// call must not leave every CTA (and the PopScope back handler) dead
+  /// (M4 review P1). Failures are reported and surfaced as a retry snackbar.
+  /// The RecoveryController keeps its own once-only guard, so releasing
+  /// after success cannot double-close the event.
+  Future<void> _guarded(Future<void> Function() action) async {
     if (_resolving) return;
     _resolving = true;
-    // Task reset saves the "next smallest step" with the event (D-017).
-    await _controller.resume(
-      note: _selected == RecoveryType.taskReset ? _taskNextStep.text : null,
-    );
-    if (!mounted) return;
-    if (showNoted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).recoveryTaskResetSaved)),
-      );
+    final messenger = ScaffoldMessenger.of(context);
+    final retry = AppLocalizations.of(context).errorTryAgain;
+    try {
+      await action();
+    } catch (e, s) {
+      FlutterError.reportError(FlutterErrorDetails(exception: e, stack: s));
+      messenger.showSnackBar(SnackBar(content: Text(retry)));
+    } finally {
+      _resolving = false;
     }
-    _goToSession();
   }
 
-  Future<void> _end() async {
-    if (_resolving) return;
-    _resolving = true;
-    await _controller.end();
-    if (!mounted) return;
-    // The exit flow decides the session's fate (F-08): first visit asks why;
-    // a recovery that was itself entered from the exit flow confirms the
-    // already-given reason instead of asking again.
-    final confirm = widget.exitReasonName;
-    context.go(
-      confirm == null ? AppRoutes.exit : '${AppRoutes.exit}?confirm=$confirm',
-    );
-  }
+  Future<void> _resume({bool showNoted = false}) => _guarded(() async {
+        // Task reset saves the "next smallest step" with the event (D-017).
+        await _controller.resume(
+          note: _selected == RecoveryType.taskReset ? _taskNextStep.text : null,
+        );
+        if (!mounted) return;
+        if (showNoted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+                  Text(AppLocalizations.of(context).recoveryTaskResetSaved),
+            ),
+          );
+        }
+        _goToSession();
+      });
 
-  Future<void> _shrink() async {
-    if (_resolving) return;
-    _resolving = true;
-    await ref.read(sessionControllerProvider.notifier).shrinkTo();
-    // Shrinking keeps the session running → the recovery result is `resumed`.
-    await _controller.resume();
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocalizations.of(context).recoveryShrinkApplied)),
-    );
-    _goToSession();
-  }
+  Future<void> _end() => _guarded(() async {
+        await _controller.end();
+        if (!mounted) return;
+        // The exit flow decides the session's fate (F-08): first visit asks
+        // why; a recovery that was itself entered from the exit flow confirms
+        // the already-given reason instead of asking again.
+        final confirm = widget.exitReasonName;
+        context.go(
+          confirm == null
+              ? AppRoutes.exit
+              : '${AppRoutes.exit}?confirm=$confirm',
+        );
+      });
+
+  Future<void> _shrink() => _guarded(() async {
+        await ref.read(sessionControllerProvider.notifier).shrinkTo();
+        // Shrinking keeps the session running → recovery result `resumed`.
+        await _controller.resume();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).recoveryShrinkApplied),
+          ),
+        );
+        _goToSession();
+      });
 
   void _goToSession() {
     if (ref.read(sessionControllerProvider).isRunning) {
@@ -156,11 +177,7 @@ class _RecoveryScreenState extends ConsumerState<RecoveryScreen> {
   }
 
   /// Back / dismiss without choosing = abandon (logged as `exited`).
-  Future<void> _abandon() async {
-    if (_resolving) return;
-    _resolving = true;
-    await _controller.abandon();
-  }
+  Future<void> _abandon() => _guarded(() => _controller.abandon());
 
   @override
   Widget build(BuildContext context) {

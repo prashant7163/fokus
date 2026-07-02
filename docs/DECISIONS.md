@@ -189,6 +189,30 @@ Sanctioned by Prashant's standing approval for CONTRACTS changes with a same-com
    now (off by default) because F-17 reads it from prefs.
 **Revisit when:** F-13/F-16/F-17 land their toggles, or brand review changes the font.
 
+## D-021 · 2026-07-02 20:30 · M4 review triage (docs/reviews/M4-review.md: approve-with-fixes, 0 P0 / 2 P1 / 7 P2)
+**P1s — both fixed same-commit:**
+1. CONTRACTS §1 was missing `getAppIcons` (doc drift vs D-019) → added.
+2. `_resolving` latch could dead-lock every CTA + system back on the exit/recovery screens if
+   a terminal call threw (the strict-mode escape hatch!) → `_guarded` try/catch/finally on both
+   screens: latch always released, failure reported + "try again" snackbar (new l10n string),
+   regression test (thrown grantAppPass leaves the sheet alive).
+**P2 rulings:**
+- Forged/stale `fokus://app/exit?confirm=<garbage>`: unknown reason now falls back to ASKING
+  (the sheet), never a silent abort with an invented reason — fixed. Remaining deep-link abuse
+  (user forging intents on their own device against their own session) — accepted risk.
+- Stale InterceptActivity font/theme comments — fixed.
+- Abandoned recovery leaves `recoveryInProgress` for the remainder — accepted: honest state
+  (user left mid-recovery), timer end composes resume→complete correctly; revisit if stats
+  misread it.
+- `startSession` journal-clear slightly reopens the P1-A crash window — accepted for now;
+  tech-lead note: move clear after first ack if closed-track data shows loss.
+- Single-column exitReason = last-write-wins vs "logged on every attempt" wording — accepted:
+  the granular history lives in recovery_events/distraction_attempts; PM may reword CONTRACTS.
+- Main-thread PNG icon encoding — accepted (96 px, few apps, cold paths); revisit if jank shows.
+- Silent best-effort start() failures — accepted (channel-dead is remote); F-13 may revisit
+  when schedules auto-start sessions.
+**Revisit when:** closed-track telemetry contradicts any accepted-risk ruling.
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via

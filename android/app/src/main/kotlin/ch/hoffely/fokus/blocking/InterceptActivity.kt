@@ -28,10 +28,11 @@ import ch.hoffely.fokus.R
  * UI is built in code: no inflation, no androidx dependency, nothing on the
  * critical path but this file.
  *
- * Colors/typography are the DESIGN_SYSTEM.md v2 *light* literals — the app
- * ships light-only per D-009/F-01 (dark arrives with the F-12 toggle).
- * Plus Jakarta Sans is not bundled yet (open ruling with Prashant) —
- * system sans-serif carries the weights until then.
+ * Colors/typography are the DESIGN_SYSTEM.md v2 *light* literals (D-009;
+ * the Flutter app gained a theme toggle with F-12 — this native screen stays
+ * light until a native dark variant is worth the maintenance). Plus Jakarta
+ * Sans is bundled via res/font (D-020), with a system-sans fallback below
+ * API 26.
  *
  * CTA wiring:
  * - "Return to focus"  → home screen (leaves the blocked app behind).

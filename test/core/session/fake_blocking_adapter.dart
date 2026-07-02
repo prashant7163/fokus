@@ -18,6 +18,10 @@ class FakeBlockingAdapter implements BlockingAdapter {
   /// When set, startSession throws — simulates a dead/erroring channel.
   Object? startError;
 
+  /// When set, grantAppPass throws — the pass grant deliberately propagates
+  /// (a failed grant must not be celebrated as success).
+  Object? grantPassError;
+
   Map<PermissionKind, bool> permissionMap = {
     for (final k in PermissionKind.values) k: true,
   };
@@ -85,6 +89,8 @@ class FakeBlockingAdapter implements BlockingAdapter {
 
   @override
   Future<void> grantAppPass(String packageName, int endEpochMs) async {
+    final error = grantPassError;
+    if (error != null) throw error;
     grantedPasses.add((packageName: packageName, endEpochMs: endEpochMs));
   }
 

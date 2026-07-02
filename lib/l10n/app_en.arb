@@ -297,6 +297,10 @@
   "@exitSessionEnded": {
     "description": "Neutral toast after an early end — no celebration, no guilt (F-08, SCREENS §7)."
   },
+  "errorTryAgain": "Something went wrong — please try again.",
+  "@errorTryAgain": {
+    "description": "Generic recoverable-failure snackbar (M4 review P1: a failed action must never dead-end a screen)."
+  },
 
   "completeHeadline": "{minutes} minutes, done.",
   "@completeHeadline": {

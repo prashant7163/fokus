@@ -19,6 +19,9 @@ abstract class BlockingAdapter {
   //   wall-clock expiry, cleared on session start/stop. Dart is policy (duration, strict
   //   gating, one pass at a time); native is mechanism.
   Future<void> ackEvents(int upToSeq); // acks journaled events; native clears ≤ upToSeq (D-013/D-014)
+  Future<Map<String, List<int>>> getAppIcons(List<String> packageNames); // F-11 (D-019):
+  //   launcher icons as 96 px PNG bytes keyed by package; missing/uninstalled packages
+  //   omitted — Dart falls back to a letter glyph. Display-only, on-device only.
   Stream<BlockingEvent> get events;
 }
 ```

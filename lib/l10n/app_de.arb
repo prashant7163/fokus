@@ -76,6 +76,7 @@
   "exitConfirmKeepGoing": "Weitermachen",
   "exitTokenOffer": "Nutze einen Lock-Break-Token, um ohne Streak-Bruch zu beenden — noch {count}",
   "exitSessionEnded": "Session beendet.",
+  "errorTryAgain": "Etwas ist schiefgelaufen — bitte versuch es nochmal.",
 
   "completeHeadline": "{minutes} Minuten, geschafft.",
   "completeHeadlineFinished": "Aufgabe erledigt — das zählt.",
