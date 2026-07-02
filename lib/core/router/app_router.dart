@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/exit/presentation/exit_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
+import '../../features/presets/presentation/presets_screen.dart';
 import '../../features/recovery/presentation/recovery_screen.dart';
 import '../../features/session/presentation/session_complete_screen.dart';
 import '../../features/session/presentation/session_config_screen.dart';
@@ -22,6 +23,7 @@ abstract final class AppRoutes {
   static const String recovery = '/recovery';
   static const String exit = '/exit';
   static const String stats = '/stats';
+  static const String presets = '/presets';
   static const String settings = '/settings';
 }
 
@@ -76,6 +78,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.stats,
         builder: (context, state) => const StatsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.presets,
+        builder: (context, state) => const PresetsScreen(),
       ),
       GoRoute(
         path: AppRoutes.settings,

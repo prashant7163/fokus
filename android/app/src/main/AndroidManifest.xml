@@ -100,6 +100,11 @@
             </intent-filter>
         </receiver>
 
+        <!-- One-shot "Skip" action on the schedule reminder (F-13). -->
+        <receiver
+            android:name=".blocking.ScheduleSkipReceiver"
+            android:exported="false" />
+
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />

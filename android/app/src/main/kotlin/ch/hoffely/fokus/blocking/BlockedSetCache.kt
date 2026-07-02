@@ -19,6 +19,8 @@ object BlockedSetCache {
     private const val KEY_SESSION_END = "session_end_epoch_ms"
     private const val KEY_SESSION_ANCHOR = "session_task_anchor"
     private const val KEY_SESSION_STRICT = "session_strict_mode"
+    private const val KEY_SESSION_STARTED = "session_started_epoch_ms"
+    private const val KEY_SESSION_RECOVERY = "session_recovery_enabled"
     private const val KEY_PASS_PACKAGE = "pass_package"
     private const val KEY_PASS_END = "pass_end_epoch_ms"
 
@@ -65,6 +67,9 @@ object BlockedSetCache {
                     endEpochMs = prefs.getLong(KEY_SESSION_END, 0L),
                     taskAnchor = prefs.getString(KEY_SESSION_ANCHOR, null),
                     strictMode = prefs.getBoolean(KEY_SESSION_STRICT, false),
+                    startedEpochMs = prefs.getLong(KEY_SESSION_STARTED, 0L),
+                    recoveryEnabled =
+                        prefs.getBoolean(KEY_SESSION_RECOVERY, true),
                 )
             }
             passPackage = prefs.getString(KEY_PASS_PACKAGE, null)
@@ -97,6 +102,8 @@ object BlockedSetCache {
             .putLong(KEY_SESSION_END, config.endEpochMs)
             .putString(KEY_SESSION_ANCHOR, config.taskAnchor)
             .putBoolean(KEY_SESSION_STRICT, config.strictMode)
+            .putLong(KEY_SESSION_STARTED, config.startedEpochMs)
+            .putBoolean(KEY_SESSION_RECOVERY, config.recoveryEnabled)
             .remove(KEY_PASS_PACKAGE)
             .remove(KEY_PASS_END)
             .apply()
@@ -134,6 +141,8 @@ object BlockedSetCache {
             .remove(KEY_SESSION_END)
             .remove(KEY_SESSION_ANCHOR)
             .remove(KEY_SESSION_STRICT)
+            .remove(KEY_SESSION_STARTED)
+            .remove(KEY_SESSION_RECOVERY)
             .remove(KEY_PASS_PACKAGE)
             .remove(KEY_PASS_END)
             .apply()

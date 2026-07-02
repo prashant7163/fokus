@@ -58,7 +58,7 @@ class SessionForegroundService : Service() {
                 val restored = intent == null ||
                     intent.getBooleanExtra(EXTRA_RESTORED, false)
                 if (restored && session != null) {
-                    FokusEventBus.emitSessionRestored(session.id)
+                    FokusEventBus.emitSessionRestored(session)
                 }
                 scheduleTick(plan.nextTickDelayMs)
                 START_STICKY

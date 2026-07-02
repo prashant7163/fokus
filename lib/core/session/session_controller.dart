@@ -36,6 +36,7 @@ class SessionState {
     this.plannedMin,
     this.taskAnchor,
     this.strictMode = false,
+    this.recoveryEnabled = true,
     this.remaining = Duration.zero,
     this.completionReason,
     this.exitReason,
@@ -58,6 +59,11 @@ class SessionState {
   final int? plannedMin;
   final String? taskAnchor;
   final bool strictMode;
+
+  /// Preset flag (F-13, D-022): false hides the native intercept's recovery
+  /// CTA. In-app recovery stays reachable — it is user-initiated.
+  final bool recoveryEnabled;
+
   final Duration remaining;
   final CompletionReason? completionReason;
   final ExitReason? exitReason;
@@ -110,6 +116,7 @@ class SessionState {
         plannedMin: plannedMin,
         taskAnchor: taskAnchor,
         strictMode: strictMode,
+        recoveryEnabled: recoveryEnabled,
         remaining: remaining ?? this.remaining,
         completionReason: completionReason ?? this.completionReason,
         exitReason: exitReason ?? this.exitReason,
@@ -132,6 +139,7 @@ class SessionState {
           plannedMin: plannedMin,
           taskAnchor: taskAnchor,
           strictMode: strictMode,
+          recoveryEnabled: recoveryEnabled,
           remaining: remaining,
           completionReason: completionReason,
           exitReason: exitReason,
@@ -213,6 +221,7 @@ class SessionController extends Notifier<SessionState>
     required int plannedMin,
     String? taskAnchor,
     bool strictMode = false,
+    bool recoveryEnabled = true,
   }) async {
     // A finished session's terminal state stays on screen until the next
     // start; the new session begins from a fresh idle (SessionMachine.terminal
@@ -239,6 +248,8 @@ class SessionController extends Notifier<SessionState>
           endEpochMs: endTime.millisecondsSinceEpoch,
           taskAnchor: taskAnchor,
           strictMode: strictMode,
+          startedEpochMs: startTime.millisecondsSinceEpoch,
+          recoveryEnabled: recoveryEnabled,
         ),
       );
       await _sessions.createSession(
@@ -268,6 +279,7 @@ class SessionController extends Notifier<SessionState>
       plannedMin: plannedMin,
       taskAnchor: taskAnchor,
       strictMode: strictMode,
+      recoveryEnabled: recoveryEnabled,
       remaining: Duration(minutes: plannedMin),
       hydrated: true,
     );
@@ -326,6 +338,8 @@ class SessionController extends Notifier<SessionState>
           endEpochMs: newEnd.millisecondsSinceEpoch,
           taskAnchor: state.taskAnchor,
           strictMode: state.strictMode,
+          startedEpochMs: state.startTime!.millisecondsSinceEpoch,
+          recoveryEnabled: state.recoveryEnabled,
         ),
       ),
     );
@@ -339,6 +353,7 @@ class SessionController extends Notifier<SessionState>
       plannedMin: newPlanned,
       taskAnchor: state.taskAnchor,
       strictMode: state.strictMode,
+      recoveryEnabled: state.recoveryEnabled,
       remaining: newEnd.difference(now),
       hydrated: true,
     );
@@ -524,8 +539,8 @@ class SessionController extends Notifier<SessionState>
       case PermissionLostEvent(:final kind):
         await _onPermissionLost(kind);
 
-      case SessionRestoredEvent(:final sessionId):
-        await _hydrate(sessionId);
+      case SessionRestoredEvent():
+        await _hydrate(event.sessionId, restoredEvent: event);
 
       case StopMismatchEvent(:final requestedId, :final liveId):
         await _onStopMismatch(requestedId, liveId);
@@ -649,7 +664,14 @@ class SessionController extends Notifier<SessionState>
   /// Re-hydrates from the DB (sessionRestored, or cold start when [id] is
   /// null) and reconciles against the wall clock: if endEpochMs passed
   /// while the app was dead, the session completes retroactively.
-  Future<void> _hydrate(String? id) async {
+  ///
+  /// A restore event with no DB row is a schedule-auto-started session
+  /// (F-13, D-022): native started it while Dart was dead, so the row is
+  /// synthesized here from the event's config before hydrating.
+  Future<void> _hydrate(
+    String? id, {
+    SessionRestoredEvent? restoredEvent,
+  }) async {
     // Already tracking this live session (replay) → just reconcile.
     if (id != null && id == state.sessionId && state.isRunning) {
       return syncWithClock();
@@ -657,33 +679,53 @@ class SessionController extends Notifier<SessionState>
     // Never clobber a live or starting session.
     if (state.isRunning || state.status == SessionStatus.pendingStart) return;
 
-    final row = id != null
+    var row = id != null
         ? await _sessions.getById(id)
         : await _sessions.getActiveSession();
+    if (row == null &&
+        id != null &&
+        restoredEvent != null &&
+        restoredEvent.hasConfig) {
+      final start =
+          DateTime.fromMillisecondsSinceEpoch(restoredEvent.startedEpochMs!);
+      final end =
+          DateTime.fromMillisecondsSinceEpoch(restoredEvent.endEpochMs!);
+      final planned = end.difference(start).inMinutes;
+      await _sessions.createSession(
+        id: id,
+        plannedMin: planned < 1 ? 1 : planned,
+        strictMode: restoredEvent.strictMode ?? false,
+        taskAnchor: restoredEvent.taskAnchor,
+        startTime: start,
+      );
+      row = await _sessions.getById(id);
+    }
     if (row == null) {
       // The look-up concluded: there really is no session. Deep-linked
       // screens may now trust `idle` (M2 finding — see SessionState.hydrated).
       state = state.asHydrated();
       return;
     }
+    final live = row; // promote for the closure below
 
-    if (row.status != SessionStatus.active &&
-        row.status != SessionStatus.recoveryInProgress) {
+    if (live.status != SessionStatus.active &&
+        live.status != SessionStatus.recoveryInProgress) {
       // DB already terminal but native restored it → disarm native.
-      await _silently(() => _adapter.stopSession(row.id));
+      await _silently(() => _adapter.stopSession(live.id));
       state = state.asHydrated();
       return;
     }
 
-    final endTime = row.startTime.add(Duration(minutes: row.plannedMin));
+    final endTime = live.startTime.add(Duration(minutes: live.plannedMin));
     final hydrated = SessionState(
-      status: row.status,
-      sessionId: row.id,
-      startTime: row.startTime,
+      status: live.status,
+      sessionId: live.id,
+      startTime: live.startTime,
       endTime: endTime,
-      plannedMin: row.plannedMin,
-      taskAnchor: row.taskAnchor,
-      strictMode: row.strictMode,
+      plannedMin: live.plannedMin,
+      taskAnchor: live.taskAnchor,
+      strictMode: live.strictMode,
+      recoveryEnabled: restoredEvent?.recoveryEnabled ?? true,
       remaining: endTime.difference(_now()),
       hydrated: true,
     );

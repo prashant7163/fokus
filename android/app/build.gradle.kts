@@ -41,6 +41,9 @@ flutter {
 }
 
 dependencies {
+    // Schedule arming (F-13, fokus-specs §3.7): reminder + auto-start work
+    // that persists across reboots. D-022.
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
     // JVM unit tests for the pure blocking-core logic (CONVENTIONS testing bar).
     testImplementation("junit:junit:4.13.2")
     // Real org.json on the test classpath (android.jar's is a throwing stub) so

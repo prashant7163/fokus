@@ -104,8 +104,25 @@ object FokusEventBus : EventChannel.StreamHandler {
     fun emitPermissionLost(kind: String) =
         emit("permissionLost", mapOf("kind" to kind), buffered = true)
 
-    fun emitSessionRestored(sessionId: String) =
-        emit("sessionRestored", mapOf("sessionId" to sessionId), buffered = true)
+    /**
+     * Carries the full config (F-13, D-022) so Dart can synthesize the DB row
+     * for a session that a schedule auto-started natively — Dart may have
+     * never seen it. Plain restores of Dart-started sessions send it too;
+     * Dart ignores the extras when it already has the row.
+     */
+    fun emitSessionRestored(config: NativeSessionConfig) =
+        emit(
+            "sessionRestored",
+            mapOf(
+                "sessionId" to config.id,
+                "startedEpochMs" to config.startedEpochMs,
+                "endEpochMs" to config.endEpochMs,
+                "taskAnchor" to config.taskAnchor,
+                "strictMode" to config.strictMode,
+                "recoveryEnabled" to config.recoveryEnabled,
+            ),
+            buffered = true,
+        )
 
     /**
      * Diagnostic for a `stopSession` id mismatch (D-013 P1-C): native was

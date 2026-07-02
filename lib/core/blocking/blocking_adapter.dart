@@ -57,12 +57,57 @@ class NativeSessionConfig {
     required this.endEpochMs,
     required this.strictMode,
     this.taskAnchor,
+    this.startedEpochMs = 0,
+    this.recoveryEnabled = true,
   });
 
   final String id;
   final int endEpochMs;
   final String? taskAnchor;
   final bool strictMode;
+
+  /// Start anchor (F-13, D-022) — lets Dart synthesize the DB row for a
+  /// session a schedule auto-started natively.
+  final int startedEpochMs;
+
+  /// Preset flag (F-13): false hides the intercept's "I'm stuck" CTA + hint.
+  final bool recoveryEnabled;
+}
+
+/// One enabled schedule pushed to native via `syncSchedules` (F-13, D-022):
+/// the joined preset config + ISO weekdays (1 = Mon … 7 = Sun) + "HH:mm"
+/// local start time. Policy lives in Dart; native only arms WorkManager.
+class ScheduleSync {
+  const ScheduleSync({
+    required this.id,
+    required this.presetName,
+    required this.packages,
+    required this.durationMin,
+    required this.strictMode,
+    required this.recoveryEnabled,
+    required this.daysOfWeek,
+    required this.startLocalTime,
+  });
+
+  final int id;
+  final String presetName;
+  final List<String> packages;
+  final int durationMin;
+  final bool strictMode;
+  final bool recoveryEnabled;
+  final List<int> daysOfWeek;
+  final String startLocalTime;
+
+  Map<String, Object?> toMap() => {
+        'id': id,
+        'presetName': presetName,
+        'packages': packages,
+        'durationMin': durationMin,
+        'strictMode': strictMode,
+        'recoveryEnabled': recoveryEnabled,
+        'daysOfWeek': daysOfWeek,
+        'startLocalTime': startLocalTime,
+      };
 }
 
 /// Events reported by the native side (CONTRACTS §1). Native never decides
@@ -115,12 +160,30 @@ class PermissionLostEvent extends BlockingEvent {
   final PermissionKind kind;
 }
 
-/// Native re-armed a session after process death or reboot; Dart must
-/// re-hydrate from the DB and reconcile.
+/// Native re-armed a session after process death or reboot — or a schedule
+/// auto-started one (F-13). Dart re-hydrates from the DB and reconciles;
+/// when no row exists and the config fields are present, it synthesizes the
+/// row from them (D-022).
 class SessionRestoredEvent extends BlockingEvent {
-  const SessionRestoredEvent({required this.sessionId});
+  const SessionRestoredEvent({
+    required this.sessionId,
+    this.startedEpochMs,
+    this.endEpochMs,
+    this.taskAnchor,
+    this.strictMode,
+    this.recoveryEnabled,
+  });
 
   final String sessionId;
+  final int? startedEpochMs;
+  final int? endEpochMs;
+  final String? taskAnchor;
+  final bool? strictMode;
+  final bool? recoveryEnabled;
+
+  /// True when the payload carries enough to synthesize a missing DB row.
+  bool get hasConfig =>
+      startedEpochMs != null && startedEpochMs! > 0 && endEpochMs != null;
 }
 
 /// Diagnostic (D-013 P1-C): `stopSession(requestedId)` was called while native
@@ -168,6 +231,12 @@ abstract class BlockingAdapter {
   /// Launcher icons as PNG bytes keyed by package name (F-11 UI, D-019).
   /// Missing/uninstalled packages are omitted — callers fall back to a glyph.
   Future<Map<String, List<int>>> getAppIcons(List<String> packageNames);
+
+  /// Replaces the native schedule set (F-13, D-022): native persists the
+  /// list and (re)arms WorkManager for each schedule's next occurrence
+  /// (reminder at T−5 min with Skip; auto-start at T unless a session is
+  /// already live). Pass the ENABLED schedules only.
+  Future<void> syncSchedules(List<ScheduleSync> schedules);
 
   /// Broadcast stream of native events. The native bus buffers
   /// restore-critical events until this stream is listened to, then replays

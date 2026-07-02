@@ -861,5 +861,92 @@
   "setLicenses": "Open-source licenses",
   "@setLicenses": {
     "description": "Opens the license page incl. the bundled font's OFL (F-12)."
-  }
+  },
+
+  "presetsTitle": "Presets & schedules",
+  "@presetsTitle": {
+    "description": "Presets screen app bar (F-13)."
+  },
+  "presetsEmpty": "Save a session setup as a preset and start it in one tap — or put it on a schedule.",
+  "@presetsEmpty": {
+    "description": "Presets empty state (F-13)."
+  },
+  "presetsNew": "New preset",
+  "@presetsNew": {
+    "description": "Create preset CTA (F-13)."
+  },
+  "presetNameLabel": "Preset name",
+  "@presetNameLabel": {
+    "description": "Preset editor name field (F-13)."
+  },
+  "presetSummary": "{minutes} min · {apps, plural, =0{timer only} =1{1 app} other{{apps} apps}}",
+  "@presetSummary": {
+    "description": "Preset card summary line (F-13).",
+    "placeholders": {
+      "minutes": { "type": "int" },
+      "apps": { "type": "int" }
+    }
+  },
+  "presetRecoveryToggle": "Recovery help when you're tempted",
+  "@presetRecoveryToggle": {
+    "description": "Preset recovery on/off row (F-13, SCREENS §2) — off hides the intercept's I'm-stuck CTA."
+  },
+  "presetStartNow": "Start now",
+  "@presetStartNow": {
+    "description": "Start a session from this preset (F-13)."
+  },
+  "presetSave": "Save preset",
+  "@presetSave": {
+    "description": "Preset editor save CTA (F-13)."
+  },
+  "presetDelete": "Delete preset",
+  "@presetDelete": {
+    "description": "Preset delete action — also removes its schedules (F-13)."
+  },
+  "presetSaveAs": "Save as preset",
+  "@presetSaveAs": {
+    "description": "Config-screen action storing the current setup (F-13)."
+  },
+  "presetSaved": "Preset saved.",
+  "@presetSaved": {
+    "description": "Confirmation snackbar (F-13)."
+  },
+  "scheduleAdd": "Add schedule",
+  "@scheduleAdd": {
+    "description": "Adds a recurring auto-start to a preset (F-13)."
+  },
+  "scheduleAt": "{time} · {days}",
+  "@scheduleAt": {
+    "description": "Schedule row summary (F-13).",
+    "placeholders": {
+      "time": { "type": "String" },
+      "days": { "type": "String" }
+    }
+  },
+  "scheduleEnabled": "Active",
+  "@scheduleEnabled": {
+    "description": "Schedule enabled switch label (F-13)."
+  },
+  "scheduleDaysHint": "Pick at least one day",
+  "@scheduleDaysHint": {
+    "description": "Schedule editor validation hint (F-13)."
+  },
+  "scheduleAutoStartNote": "Starts automatically at the set time. A reminder 5 minutes before lets you skip it — and a scheduled session never traps you: normal exits stay available.",
+  "@scheduleAutoStartNote": {
+    "description": "Honest explanation under the schedule editor (F-13, spec §3.7)."
+  },
+  "dayMon": "Mon",
+  "@dayMon": { "description": "Weekday chip (F-13)." },
+  "dayTue": "Tue",
+  "@dayTue": { "description": "Weekday chip (F-13)." },
+  "dayWed": "Wed",
+  "@dayWed": { "description": "Weekday chip (F-13)." },
+  "dayThu": "Thu",
+  "@dayThu": { "description": "Weekday chip (F-13)." },
+  "dayFri": "Fri",
+  "@dayFri": { "description": "Weekday chip (F-13)." },
+  "daySat": "Sat",
+  "@daySat": { "description": "Weekday chip (F-13)." },
+  "daySun": "Sun",
+  "@daySun": { "description": "Weekday chip (F-13)." }
 }

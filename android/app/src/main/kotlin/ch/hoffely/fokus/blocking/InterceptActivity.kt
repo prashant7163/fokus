@@ -83,7 +83,9 @@ class InterceptActivity : Activity() {
 
         val pkg = intent.getStringExtra(EXTRA_PKG) ?: ""
         val attempts = intent.getIntExtra(EXTRA_ATTEMPTS, 1)
-        hintActive = AttemptTracker.shouldShowHint(attempts)
+        // Preset flag (F-13, D-022): recovery off hides CTA2 + the hint.
+        val recoveryEnabled = session.recoveryEnabled
+        hintActive = recoveryEnabled && AttemptTracker.shouldShowHint(attempts)
         val appLabel = appLabel(pkg)
 
         // TalkBack announces the window title first (SCREENS §4 a11y).
@@ -182,15 +184,18 @@ class InterceptActivity : Activity() {
             lp(MATCH, dp(56)),
         )
 
-        // 6. CTA2 — I'm stuck (tonal → recovery).
-        root.addView(
-            button(
-                getString(R.string.intercept_cta_stuck),
-                textColor = ON_SECONDARY_CONTAINER,
-                background = fill(SECONDARY_CONTAINER),
-            ) { openRecovery() },
-            lp(MATCH, dp(56), topDp = 12),
-        )
+        // 6. CTA2 — I'm stuck (tonal → recovery); hidden when the preset
+        // disabled recovery (F-13). Emergency exit below is never hidden.
+        if (recoveryEnabled) {
+            root.addView(
+                button(
+                    getString(R.string.intercept_cta_stuck),
+                    textColor = ON_SECONDARY_CONTAINER,
+                    background = fill(SECONDARY_CONTAINER),
+                ) { openRecovery() },
+                lp(MATCH, dp(56), topDp = 12),
+            )
+        }
 
         // 8. CTA3 — Emergency exit (de-emphasized, never hidden).
         root.addView(

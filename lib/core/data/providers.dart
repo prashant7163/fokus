@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'database.dart';
 import 'repositories/app_lists_repository.dart';
 import 'repositories/distraction_repository.dart';
+import 'repositories/preset_repository.dart';
 import 'repositories/recovery_repository.dart';
 import 'repositories/session_repository.dart';
 import 'repositories/streak_repository.dart';
@@ -32,4 +33,8 @@ final recoveryRepositoryProvider = Provider<RecoveryRepository>(
 
 final streakRepositoryProvider = Provider<StreakRepository>(
   (ref) => StreakRepository(ref.watch(databaseProvider)),
+);
+
+final presetRepositoryProvider = Provider<PresetRepository>(
+  (ref) => PresetRepository(ref.watch(databaseProvider)),
 );

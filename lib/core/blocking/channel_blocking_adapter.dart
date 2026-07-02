@@ -65,6 +65,14 @@ class ChannelBlockingAdapter implements BlockingAdapter {
         'endEpochMs': config.endEpochMs,
         'taskAnchor': config.taskAnchor,
         'strictMode': config.strictMode,
+        'startedEpochMs': config.startedEpochMs,
+        'recoveryEnabled': config.recoveryEnabled,
+      });
+
+  @override
+  Future<void> syncSchedules(List<ScheduleSync> schedules) =>
+      _method.invokeMethod<void>('syncSchedules', {
+        'schedules': [for (final s in schedules) s.toMap()],
       });
 
   @override
@@ -128,7 +136,14 @@ class ChannelBlockingAdapter implements BlockingAdapter {
         debugPrint('fokus/events: unknown permission kind "${raw['kind']}"');
         return null;
       case 'sessionRestored':
-        return SessionRestoredEvent(sessionId: raw['sessionId'] as String);
+        return SessionRestoredEvent(
+          sessionId: raw['sessionId'] as String,
+          startedEpochMs: (raw['startedEpochMs'] as num?)?.toInt(),
+          endEpochMs: (raw['endEpochMs'] as num?)?.toInt(),
+          taskAnchor: raw['taskAnchor'] as String?,
+          strictMode: raw['strictMode'] as bool?,
+          recoveryEnabled: raw['recoveryEnabled'] as bool?,
+        );
       case 'stopMismatch':
         return StopMismatchEvent(
           requestedId: raw['requestedId'] as String,

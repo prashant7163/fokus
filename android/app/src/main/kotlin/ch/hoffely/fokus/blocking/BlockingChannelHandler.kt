@@ -61,9 +61,25 @@ class BlockingChannelHandler(private val activity: Activity) :
                         endEpochMs = endEpochMs,
                         taskAnchor = call.argument<String>("taskAnchor"),
                         strictMode = call.argument<Boolean>("strictMode") ?: false,
+                        startedEpochMs =
+                            call.argument<Number>("startedEpochMs")?.toLong() ?: 0L,
+                        recoveryEnabled =
+                            call.argument<Boolean>("recoveryEnabled") ?: true,
                     )
                     BlockedSetCache.startSession(activity, config)
                     SessionForegroundService.start(activity, restored = false)
+                    result.success(null)
+                }
+
+                "syncSchedules" -> {
+                    // F-13 (D-022): Dart pushes the enabled schedules (policy);
+                    // native persists them and (re)arms WorkManager (mechanism).
+                    val raw = call.argument<List<Map<String, Any?>>>("schedules")
+                        ?: return result.error(ERROR, "missing schedules", null)
+                    ScheduleArmer.rearmAll(
+                        activity,
+                        raw.map(NativeSchedule::fromMap),
+                    )
                     result.success(null)
                 }
 

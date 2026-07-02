@@ -21,4 +21,9 @@
         <item quantity="one">Noch %1$d Minute in deiner Session</item>
         <item quantity="other">Noch %1$d Minuten in deiner Session</item>
     </plurals>
+    <!-- Schedule reminder + auto-start (F-13). -->
+    <string name="schedule_channel_name">Geplante Sessions</string>
+    <string name="schedule_reminder_title">%1$s startet in 5 Minuten</string>
+    <string name="schedule_reminder_body">Deine geplante Fokus-Session beginnt gleich.</string>
+    <string name="schedule_reminder_skip">Diesmal überspringen</string>
 </resources>

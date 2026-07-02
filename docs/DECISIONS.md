@@ -213,6 +213,24 @@ Sanctioned by Prashant's standing approval for CONTRACTS changes with a same-com
   when schedules auto-start sessions.
 **Revisit when:** closed-track telemetry contradicts any accepted-risk ruling.
 
+## D-022 · 2026-07-02 21:30 · F-13 contract addenda: schedules sync, richer restore, recoveryEnabled
+1. **CONTRACTS §1 additions:** `syncSchedules(schedules)` (Dart pushes enabled schedules —
+   policy; native persists + arms WorkManager reminders at T−5 min with a one-shot Skip and
+   the auto-start at T — mechanism); `startSession` payload += `startedEpochMs`,
+   `recoveryEnabled`; `sessionRestored` now carries the full config so Dart can SYNTHESIZE
+   the DB row for a session a schedule auto-started while the Flutter engine was dead.
+2. **Auto-start safety:** a live session always vetoes an auto-start (never clobbers, pure
+   `ScheduleLogic.shouldStart`); auto-started non-strict sessions keep every normal exit
+   (spec §3.7 "never traps"); the reminder's Skip is one-shot per occurrence.
+3. **recoveryEnabled semantics (closes the D-019 deferral):** the preset flag hides the
+   NATIVE intercept's "I'm stuck" CTA + proactive hint. In-app recovery stays reachable —
+   user-initiated help is never removed.
+4. **Dependency added (native):** androidx.work:work-runtime-ktx 2.9.1.
+5. Start-now from a preset replaces the current blocked list with the preset's (single
+   source of truth stays `blocked_apps`); scheduled sessions use the preset name as anchor.
+**Revisit when:** closed-track shows WorkManager start-time drift beyond ~minutes (would
+justify AlarmManager exact alarms + its permission).
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via

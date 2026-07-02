@@ -107,5 +107,13 @@ class FakeBlockingAdapter implements BlockingAdapter {
     };
   }
 
+  /// Every `syncSchedules` call, in order (F-13).
+  final syncedScheduleSets = <List<ScheduleSync>>[];
+
+  @override
+  Future<void> syncSchedules(List<ScheduleSync> schedules) async {
+    syncedScheduleSets.add(List.of(schedules));
+  }
+
   Future<void> dispose() => _events.close();
 }

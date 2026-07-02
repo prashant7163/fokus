@@ -159,6 +159,46 @@ class _SessionConfigScreenState extends ConsumerState<SessionConfigScreen> {
     ref.invalidate(_configBlockedProvider); // refresh summary row
   }
 
+  Future<void> _saveAsPreset() async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final controller = TextEditingController();
+    final name = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.presetSaveAs),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(labelText: l10n.presetNameLabel),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          ),
+          FilledButton(
+            onPressed: () =>
+                Navigator.pop(dialogContext, controller.text.trim()),
+            child: Text(l10n.presetSave),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (name == null || name.isEmpty || !mounted) return;
+    final packages =
+        await ref.read(appListsRepositoryProvider).getBlockedPackageNames();
+    await ref.read(presetRepositoryProvider).createPreset(
+          name: name,
+          durationMin: _durationMin,
+          strictMode: _strict,
+          recoveryEnabled: true,
+          blockedPackages: packages,
+        );
+    messenger.showSnackBar(SnackBar(content: Text(l10n.presetSaved)));
+  }
+
   void _showStrictInfo() {
     final l10n = AppLocalizations.of(context);
     showModalBottomSheet<void>(
@@ -205,6 +245,13 @@ class _SessionConfigScreenState extends ConsumerState<SessionConfigScreen> {
       appBar: AppBar(
         title: Text(l10n.configTitle),
         leading: BackButton(onPressed: () => context.go(AppRoutes.home)),
+        actions: [
+          // F-13: store the current setup as a named preset.
+          TextButton(
+            onPressed: _saveAsPreset,
+            child: Text(l10n.presetSaveAs),
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(FokusSpacing.screenPadding),

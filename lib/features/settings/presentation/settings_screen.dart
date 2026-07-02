@@ -180,6 +180,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           const Divider(),
           ListTile(
             contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.tune_outlined),
+            title: Text(l10n.presetsTitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(AppRoutes.presets),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.block_outlined),
             title: Text(l10n.setBlockedApps),
             trailing: const Icon(Icons.chevron_right),

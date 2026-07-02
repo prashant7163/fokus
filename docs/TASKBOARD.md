@@ -25,7 +25,7 @@ Status: `todo | doing | review | done | blocked`. Owner: `core` = single-author 
 
 | ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
-| F-13 | Presets CRUD + schedules (WorkManager) | core | todo | Scheduled session auto-starts at local time |
+| F-13 | Presets CRUD + schedules (WorkManager) | core (worker session, 2026-07-02) | review | Scheduled session auto-starts at local time — presets CRUD + schedule editor UI, native WorkManager arm (reminder T−5 w/ Skip, auto-start w/ never-clobber veto, re-arm after fire, reboot-persistent), restore-with-config row synthesis (D-022), recoveryEnabled wired to the intercept; 13 JVM occurrence/veto tests + 7 Dart tests (226 local); CI is the gate |
 | F-14 | Stats dashboard day/week/month + focus score | agent-ok | todo | Charts render from fixtures + real data |
 | F-15 | Achievements engine + badge screen | agent-ok | todo | All 8 CONTRACTS-listed triggers fire once |
 | F-16 | Post-session micro-feedback + contextual triggers | agent-ok | todo | 1-in-3 sampling; 😔 branch captures reason |
