@@ -76,6 +76,22 @@ Remaining audit items: D-A/D-B (priority semantics — editorial, PM applies), D
 micro-coaching surface) still open.
 **Revisit when:** beta feedback on streak fairness or allowlist abuse.
 
+## D-013 · 2026-07-02 11:54 · F-18 review triage — event-delivery + liveness rulings
+Reviewer verdict approve-with-fixes (0 P0 / 4 P1 / 6 P2; docs/reviews/F-18-core-review.md).
+Orchestrator rulings on the two contract-adjacent P1s:
+1. **P1-A (attempt buffering):** distraction attempts must never drop. Split native buffering:
+   critical events (permissionLost, sessionRestored) keep the small in-memory deque;
+   distractionAttempt/recoveryRequested go to a persisted native journal (prefs/file),
+   unbounded within a session, replayed on Dart attach, cleared only on ack.
+2. **P1-C (liveness tiebreak):** Dart decides, always. `stopSession` with a mismatched id
+   stops whatever native session is running (never silently no-ops) and emits a diagnostic
+   event with both ids.
+3. **P1-B:** natural native expiry must clear BlockedSetCache. **P1-D:** replayed attempts
+   attribute by timestamp containment (ts within a session's start/end), never
+   "most recent session"; unmatched attempts are logged and discarded.
+P2s: fix opportunistically during F-07…F-12. Fixes tracked as F-22.
+**Revisit when:** journal shows abuse (unbounded growth) or tech-lead review disagrees.
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via

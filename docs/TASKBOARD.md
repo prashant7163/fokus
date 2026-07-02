@@ -19,6 +19,7 @@ Status: `todo | doing | review | done | blocked`. Owner: `core` = single-author 
 | F-10 | Onboarding: 3 value screens + permission setup + disclosure | agent-ok | todo | Disclosure precedes accessibility request (Play policy); "later" → limited mode |
 | F-11 | Home dashboard + start-session config screen | agent-ok | todo | One-tap repeat of last config works |
 | F-12 | Settings/profile: permissions health, notifications | agent-ok | todo | Revoked permission surfaces as warning banner |
+| F-22 | P1 fixes from F-18 core review per D-013 (attempt journal, stopSession tiebreak, expiry cache clear, ts-containment attribution) | core | todo | All 4 P1s fixed with tests per D-013; review report findings marked resolved |
 
 ## Phase B — Engagement (blueprint Phase 2, local-only subset)
 
@@ -44,7 +45,7 @@ Deferred (needs explicit go): Firebase/social rooms, web unlock portal, monetiza
 
 | ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
-| F-18 | Milestone code review (independent agent) on F-03…F-06 | agent-ok | todo | Findings triaged; P0s fixed |
+| F-18 | Milestone code review (independent agent) on F-02…F-06 | agent-ok (code-reviewer, 2026-07-02) | done | Findings triaged; P0s fixed — verdict approve-with-fixes, 0 P0; triage in D-013; P1 fixes → F-22 |
 | F-19 | On-device QA per checklist (Samsung/Pixel/Xiaomi) | user | todo | P0 rows all pass (checklist in planning/) |
 | F-20 | Play listing, declarations, data-safety answers | agent-ok | todo | Drafts in planning/ approved by Prashant |
 | F-21 | Release build, signing, upload to closed track | user + core | todo | Build live on closed track |

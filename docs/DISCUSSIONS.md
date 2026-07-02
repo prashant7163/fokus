@@ -229,3 +229,17 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
 - **Action items:** Prashant — watch CI on push (F-06 gate). Orchestrator — rule on the §5
   analytics sink gap. Next worker — F-07 (recovery modules; `/recovery` route + preselected
   `module` param and `enterRecovery`/`resumeRecovery`/`abort` controller API are ready seams).
+
+## 2026-07-02 11:50–12:00 · F-18 independent core review (code-reviewer agent)
+
+- Reviewer (fresh-eyes, read-only) audited F-02…F-06: verdict **approve-with-fixes**,
+  0 P0 / 4 P1 / 6 P2. Full report: docs/reviews/F-18-core-review.md.
+- Verified clean by reading: channel payloads 1:1 both sides, state machine = CONTRACTS §2
+  verbatim, schema guard, D-011 mutual exclusion, privacy/policy posture (no INTERNET,
+  accessibility window-state only, specialUse FGS declared). Caveat: nothing compiled —
+  CI stays the build gate.
+- P1s: (A) 16-slot buffer can drop attempt data; (B) natural expiry leaves stale native
+  cache; (C) stopSession no-ops on id mismatch; (D) replayed attempts misattribute via
+  "most recent session". Orchestrator rulings recorded as D-013; fixes queued as F-22 (core).
+- **Action items:** worker session — F-22 before or alongside F-07/F-08 (F-22 first if F-07
+  not yet started); P2s opportunistic. Prashant — CI status still unconfirmed in main channel.
