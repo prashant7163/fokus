@@ -92,6 +92,17 @@ Orchestrator rulings on the two contract-adjacent P1s:
 P2s: fix opportunistically during F-07…F-12. Fixes tracked as F-22.
 **Revisit when:** journal shows abuse (unbounded growth) or tech-lead review disagrees.
 
+## D-014 · 2026-07-02 13:45 · F-22/F-07 contract addenda + flutter_svg
+Sanctioned by D-013's rulings, formalized here after implementation (F-22 commit 3ec8132):
+CONTRACTS §1 gains `ackEvents(upToSeq)` (journal ack), `stopMismatch(requestedId, liveId)`
+diagnostic event, and optional `seq` on attempt-class events — at-least-once delivery with
+Dart-side idempotency. Dependency added: `flutter_svg` (renders design/assets recovery
+illustrations; pre-approved for F-07). OPEN ITEM for tech-lead: task-reset "next smallest
+step" text has no home — needs a CONTRACTS §3 column (e.g. focus_sessions.recovery_note or
+a recovery_events.note) before the data is worth collecting; currently logged in-flow only.
+**Revisit when:** the open column decision is made (target: before F-09 stats consume
+session rows).
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via

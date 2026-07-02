@@ -13,14 +13,18 @@ abstract class BlockingAdapter {
   Future<List<InstalledApp>> getInstalledApps();
   Future<void> setBlockedApps(List<String> packageNames);
   Future<void> startSession(NativeSessionConfig config); // id, endEpochMs, taskAnchor, strictMode
-  Future<void> stopSession(String sessionId);
+  Future<void> stopSession(String sessionId); // NEVER a silent no-op on id mismatch (D-013)
+  Future<void> ackEvents(int upToSeq); // acks journaled events; native clears ≤ upToSeq (D-013/D-014)
   Stream<BlockingEvent> get events;
 }
 ```
 
 `PermissionKind`: `accessibility | usageStats | notifications | batteryExemption`
-`BlockingEvent`: `distractionAttempt(pkg, ts)` · `interceptShown(pkg)` · `recoveryRequested()`
-· `permissionLost(kind)` · `sessionRestored(sessionId)`
+`BlockingEvent`: `distractionAttempt(pkg, ts, seq?)` · `interceptShown(pkg)`
+· `recoveryRequested(seq?)` · `permissionLost(kind)` · `sessionRestored(sessionId)`
+· `stopMismatch(requestedId, liveId)` — diagnostic when stopSession finds a different live
+session (it still stops it; Dart reconciles). `seq` = monotonic journal sequence for
+at-least-once delivery of attempt-class events; acked via `ackEvents` (D-013/D-014).
 
 ## 2. Session state machine
 
