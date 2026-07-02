@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/prefs.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/generated/app_localizations.dart';
 
-/// Root widget. Theme per design/DESIGN_SYSTEM.md; light default per D-009.
-/// A user-facing theme toggle arrives with settings (F-12).
+/// Root widget. Theme per design/DESIGN_SYSTEM.md; light default per D-009,
+/// user-switchable in settings (F-12).
 class FokusApp extends ConsumerWidget {
   const FokusApp({super.key});
 
@@ -19,7 +20,7 @@ class FokusApp extends ConsumerWidget {
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.light,
+      themeMode: ref.watch(themeModeProvider),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

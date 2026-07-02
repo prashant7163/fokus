@@ -186,5 +186,24 @@
   "sessionEnd": "Beenden",
   "sessionPermissionLost": "Blockieren gestoppt — Bedienungshilfen wurden deaktiviert",
   "sessionPermissionFix": "Schutz wiederherstellen",
-  "sessionGoHome": "Zur Startseite"
+  "sessionGoHome": "Zur Startseite",
+
+  "setPermsTitle": "Berechtigungen",
+  "setPermsAllGood": "Alles aktiv — deine Sessions sind geschützt.",
+  "setPermsDegraded": "Einige Berechtigungen brauchen Aufmerksamkeit.",
+  "setPermsLostBanner": "Blockieren ist aus — Bedienungshilfen wurden deaktiviert. Behebe das, um Sessions zu schützen.",
+  "setFix": "Beheben",
+  "setAppearance": "Darstellung",
+  "setThemeSystem": "System",
+  "setThemeLight": "Hell",
+  "setThemeDark": "Dunkel",
+  "setSuggestionsTitle": "Intelligente Vorschläge (Beta)",
+  "setSuggestionsSubtitle": "Sanfte Tipps auf Basis deiner letzten 2 Wochen, direkt auf dem Gerät. Nichts verlässt dein Handy.",
+  "setBlockedApps": "Blockierte Apps",
+  "setAllowedApps": "Immer verfügbare Apps",
+  "setPrivacyTitle": "Privatsphäre",
+  "setPrivacyBody": "Alles bleibt auf deinem Gerät. Keine Konten, kein Tracking.",
+  "setAboutTitle": "Über",
+  "setAboutVersion": "FOKUS {version} · Hoffely GmbH",
+  "setLicenses": "Open-Source-Lizenzen"
 }

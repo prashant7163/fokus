@@ -42,3 +42,16 @@ flutter:
   generate: true
   assets:
     - assets/recovery/
+  # Plus Jakarta Sans (OFL — assets/fonts/OFL.txt; bundling ruled in D-020,
+  # closing the open font question from F-01/D-009).
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+          weight: 700

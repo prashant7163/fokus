@@ -284,10 +284,22 @@ class InterceptActivity : Activity() {
         text = value
         setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp)
         setTextColor(color)
-        typeface = Typeface.create(
-            Typeface.SANS_SERIF,
-            if (bold) Typeface.BOLD else Typeface.NORMAL,
-        )
+        // Plus Jakarta Sans (bundled per D-020); resources.getFont needs
+        // API 26 — older devices keep system sans, visually close enough.
+        typeface = if (android.os.Build.VERSION.SDK_INT >= 26) {
+            resources.getFont(
+                if (bold) {
+                    ch.hoffely.fokus.R.font.plus_jakarta_sans_bold
+                } else {
+                    ch.hoffely.fokus.R.font.plus_jakarta_sans_regular
+                },
+            )
+        } else {
+            Typeface.create(
+                Typeface.SANS_SERIF,
+                if (bold) Typeface.BOLD else Typeface.NORMAL,
+            )
+        }
     }
 
     private fun button(

@@ -781,5 +781,81 @@
   "sessionGoHome": "Back to home",
   "@sessionGoHome": {
     "description": "failedPermissions exit action (F-11)."
+  },
+
+  "setPermsTitle": "Permissions",
+  "@setPermsTitle": {
+    "description": "Settings permissions-health card title (F-12)."
+  },
+  "setPermsAllGood": "Everything's active — sessions are protected.",
+  "@setPermsAllGood": {
+    "description": "Healthy status line (F-12)."
+  },
+  "setPermsDegraded": "Some permissions need attention.",
+  "@setPermsDegraded": {
+    "description": "Degraded status line — amber, not alarming (F-12)."
+  },
+  "setPermsLostBanner": "Blocking is off — accessibility was turned off. Fix to protect sessions.",
+  "@setPermsLostBanner": {
+    "description": "Red mid-session-loss banner (F-12, SCREENS §9) — the one genuinely-error case."
+  },
+  "setFix": "Fix",
+  "@setFix": {
+    "description": "Permission row action → settings deep link (F-12)."
+  },
+  "setAppearance": "Appearance",
+  "@setAppearance": {
+    "description": "Theme section title (F-12)."
+  },
+  "setThemeSystem": "System",
+  "@setThemeSystem": {
+    "description": "Theme option (F-12)."
+  },
+  "setThemeLight": "Light",
+  "@setThemeLight": {
+    "description": "Theme option — the D-009 default (F-12)."
+  },
+  "setThemeDark": "Dark",
+  "@setThemeDark": {
+    "description": "Theme option (F-12)."
+  },
+  "setSuggestionsTitle": "Smart Suggestions (beta)",
+  "@setSuggestionsTitle": {
+    "description": "F-17 master opt-in toggle, off by default (F-12, spec §3.10)."
+  },
+  "setSuggestionsSubtitle": "Gentle, on-device tips based on your last 2 weeks. Nothing leaves your phone.",
+  "@setSuggestionsSubtitle": {
+    "description": "Reassurance subtitle (F-12)."
+  },
+  "setBlockedApps": "Blocked apps",
+  "@setBlockedApps": {
+    "description": "Shortcut row → blocked-app picker (F-12)."
+  },
+  "setAllowedApps": "Always-available apps",
+  "@setAllowedApps": {
+    "description": "Shortcut row → D-011 allowlist picker (F-12)."
+  },
+  "setPrivacyTitle": "Privacy",
+  "@setPrivacyTitle": {
+    "description": "Privacy section title (F-12)."
+  },
+  "setPrivacyBody": "Everything stays on your device. No accounts, no tracking.",
+  "@setPrivacyBody": {
+    "description": "Trust anchor statement (F-12, SCREENS §9, principle §2.4)."
+  },
+  "setAboutTitle": "About",
+  "@setAboutTitle": {
+    "description": "About section title (F-12)."
+  },
+  "setAboutVersion": "FOKUS {version} · Hoffely GmbH",
+  "@setAboutVersion": {
+    "description": "Version + publisher line (F-12).",
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "setLicenses": "Open-source licenses",
+  "@setLicenses": {
+    "description": "Opens the license page incl. the bundled font's OFL (F-12)."
   }
 }

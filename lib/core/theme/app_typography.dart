@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// TextTheme per design/DESIGN_SYSTEM.md §2.
-/// Family Plus Jakarta Sans is NOT bundled yet — font-bundling decision is
-/// open with Prashant (B-01 review); sizes/weights/leading ship now so screens
-/// build against final metrics.
+/// TextTheme per design/DESIGN_SYSTEM.md §2. Plus Jakarta Sans is bundled
+/// (OFL, assets/fonts/ — D-020 closed the open font question) and applied
+/// theme-wide via ThemeData.fontFamily in AppTheme; styles here carry
+/// metrics only.
 abstract final class AppTypography {
+  static const String fontFamily = 'PlusJakartaSans';
+
   static const TextTheme textTheme = TextTheme(
     displayLarge: TextStyle(
         fontSize: 57, fontWeight: FontWeight.w700, height: 1.12, letterSpacing: -0.5),

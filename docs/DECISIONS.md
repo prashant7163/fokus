@@ -176,6 +176,19 @@ Sanctioned by Prashant's standing approval for CONTRACTS changes with a same-com
    contract drift.
 **Revisit when:** F-13 presets land (recovery toggle), or plugin tooling stops tripping CI.
 
+## D-020 · 2026-07-02 19:15 · F-12: Plus Jakarta Sans bundled (OFL) — font question closed; settings scope
+1. **Plus Jakarta Sans is bundled** (Regular/Medium/SemiBold/Bold TTFs from the upstream
+   tokotype repo, OFL license shipped at assets/fonts/OFL.txt and surfaced on the in-app
+   licenses page). Applied theme-wide via ThemeData.fontFamily AND in the native
+   InterceptActivity via res/font (API 26+; older devices keep system sans). This closes the
+   open font question from F-01/D-009 under Prashant's standing approval.
+2. **Theme toggle** System/Light/Dark, default Light per D-009 (SCREENS §9's "dark default
+   hero" line is a v1 leftover, superseded). Persisted in shared_preferences.
+3. **No dead toggles:** SCREENS §9's notification + default-recovery toggles ship with the
+   features that consume them (F-13/F-16), not before. Smart Suggestions master opt-in ships
+   now (off by default) because F-17 reads it from prefs.
+**Revisit when:** F-13/F-16/F-17 land their toggles, or brand review changes the font.
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via
