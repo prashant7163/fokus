@@ -75,5 +75,25 @@
   "exitConfirmEnd": "Trotzdem beenden",
   "exitConfirmKeepGoing": "Weitermachen",
   "exitTokenOffer": "Nutze einen Lock-Break-Token, um ohne Streak-Bruch zu beenden — noch {count}",
-  "exitSessionEnded": "Session beendet."
+  "exitSessionEnded": "Session beendet.",
+
+  "completeHeadline": "{minutes} Minuten, geschafft.",
+  "completeHeadlineFinished": "Aufgabe erledigt — das zählt.",
+  "completeHeadlineLockBreak": "Mit Lock-Break beendet — Streak sicher.",
+  "completeFocusDelta": "+{minutes} Fokus-Minuten",
+  "completeDistractions": "{count, plural, =0{Keine Ablenkungen — freier Lauf} =1{1 Ablenkung umgeleitet} other{{count} Ablenkungen umgeleitet}}",
+  "completeAnchorEcho": "Du hast gearbeitet an: {anchor}",
+  "completeStreak": "{days}-Tage-Streak",
+  "completeTokenEarned": "{count, plural, =1{Du hast einen Lock-Break-Token verdient 🎟} other{Du hast {count} Lock-Break-Tokens verdient 🎟}}",
+  "completeDone": "Fertig",
+  "completeStartAnother": "Noch eine starten",
+
+  "statsTodayTitle": "Heute",
+  "statsFocusMinutes": "Fokus-Minuten",
+  "statsDistractionsBlocked": "Ablenkungen blockiert",
+  "statsTopApp": "Am häufigsten abgefangen",
+  "statsCurrentStreak": "Aktueller Streak",
+  "statsDaysValue": "{days, plural, =1{1 Tag} other{{days} Tage}}",
+  "statsMinutesValue": "{minutes} Min.",
+  "statsNoneYet": "Noch nichts"
 }

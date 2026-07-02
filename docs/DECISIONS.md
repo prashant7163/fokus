@@ -133,6 +133,23 @@ Sanctioned by Prashant's standing approval for CONTRACTS changes with a same-com
    never read as "no session".
 **Revisit when:** a physical device is available (hardware latency + OEM rows).
 
+## D-017 · 2026-07-02 17:00 · F-09 rulings: derived streak, schema v2, lock-break = completed
+1. **Streak is DERIVED from session rows at read time** (pure `StreakEngine` over
+   earned/excused local days), not accumulated in `streak_summary`. Idempotent under event
+   replay by construction, and timezone changes automatically use the device's current zone
+   (D-011). `streak_summary` keeps what cannot be derived (token balances) and caches the
+   derived values for cheap display reads.
+2. **Schema v2:** `recovery_events.note` (task-reset "next smallest step") — closes the
+   D-014 open item; migration `onUpgrade` addColumn; CONTRACTS §3 updated.
+3. **Lock-break redemption lands as `completed` + CompletionReason.lockBreak** via the
+   existing finishTask edge (fokus-specs §3.5 "completed-via-lockbreak"; D-011 excused-day
+   semantics). The stale "lock-break in future scope" parenthetical under CONTRACTS §2's
+   aborted edge is superseded by this — no machine edge changed.
+4. **Milestone tokens award on exact streak hits** (7/14/30/60/100), once per day-earning
+   completion; a streak that resets and re-reaches a milestone can earn again (simple,
+   generous; revisit with data).
+**Revisit when:** F-14 stats or beta data suggest different award semantics.
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via

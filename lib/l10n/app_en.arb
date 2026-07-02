@@ -296,5 +296,103 @@
   "exitSessionEnded": "Session ended.",
   "@exitSessionEnded": {
     "description": "Neutral toast after an early end — no celebration, no guilt (F-08, SCREENS §7)."
+  },
+
+  "completeHeadline": "{minutes} minutes, done.",
+  "@completeHeadline": {
+    "description": "Session-complete headline, timer-end variant (F-09, SCREENS §7) — warm and specific.",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "completeHeadlineFinished": "Task done — that's what counts.",
+  "@completeHeadlineFinished": {
+    "description": "Session-complete headline when the exit reason was finishedTask (F-09)."
+  },
+  "completeHeadlineLockBreak": "Wrapped with a lock-break — streak safe.",
+  "@completeHeadlineLockBreak": {
+    "description": "Session-complete headline for a lock-break redemption — graceful, no shaming (F-09, SCREENS §7)."
+  },
+  "completeFocusDelta": "+{minutes} focus minutes",
+  "@completeFocusDelta": {
+    "description": "Stat delta row (F-09).",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "completeDistractions": "{count, plural, =0{No distractions — clear run} =1{1 distraction redirected} other{{count} distractions redirected}}",
+  "@completeDistractions": {
+    "description": "Stat delta row (F-09) — redirected, never 'failed'.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "completeAnchorEcho": "You worked on: {anchor}",
+  "@completeAnchorEcho": {
+    "description": "Task anchor echoed on the completion screen (F-09).",
+    "placeholders": {
+      "anchor": { "type": "String" }
+    }
+  },
+  "completeStreak": "{days}-day streak",
+  "@completeStreak": {
+    "description": "Streak row on the completion screen (F-09).",
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "completeTokenEarned": "{count, plural, =1{You earned a lock-break token 🎟} other{You earned {count} lock-break tokens 🎟}}",
+  "@completeTokenEarned": {
+    "description": "Milestone token award line, celebrated once (F-09, spec §3.5).",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "completeDone": "Done",
+  "@completeDone": {
+    "description": "Completion screen primary CTA → home (F-09)."
+  },
+  "completeStartAnother": "Start another",
+  "@completeStartAnother": {
+    "description": "Completion screen secondary CTA — repeat config one-tap arrives with F-11 (F-09)."
+  },
+
+  "statsTodayTitle": "Today",
+  "@statsTodayTitle": {
+    "description": "Today-stats section heading (F-09, spec §3.6)."
+  },
+  "statsFocusMinutes": "Focus minutes",
+  "@statsFocusMinutes": {
+    "description": "Today stat label (F-09)."
+  },
+  "statsDistractionsBlocked": "Distractions blocked",
+  "@statsDistractionsBlocked": {
+    "description": "Today stat label (F-09)."
+  },
+  "statsTopApp": "Most intercepted",
+  "@statsTopApp": {
+    "description": "Today stat label — app with most intercepts today (F-09)."
+  },
+  "statsCurrentStreak": "Current streak",
+  "@statsCurrentStreak": {
+    "description": "Today stat label (F-09)."
+  },
+  "statsDaysValue": "{days, plural, =1{1 day} other{{days} days}}",
+  "@statsDaysValue": {
+    "description": "Streak value formatting (F-09).",
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "statsMinutesValue": "{minutes} min",
+  "@statsMinutesValue": {
+    "description": "Minutes value formatting (F-09).",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "statsNoneYet": "None yet",
+  "@statsNoneYet": {
+    "description": "Placeholder when a today stat has no data yet (F-09) — neutral, no guilt."
   }
 }

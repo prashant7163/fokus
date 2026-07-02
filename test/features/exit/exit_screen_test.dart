@@ -9,6 +9,7 @@ import 'package:fokus/core/data/repositories/session_repository.dart';
 import 'package:fokus/core/session/session_controller.dart';
 import 'package:fokus/core/theme/app_theme.dart';
 import 'package:fokus/features/exit/presentation/exit_screen.dart';
+import 'package:fokus/features/session/presentation/session_complete_screen.dart';
 import 'package:fokus/l10n/generated/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
@@ -81,6 +82,10 @@ void main() {
           ),
         ),
         GoRoute(path: '/session', builder: (c, s) => const _Stub('session')),
+        GoRoute(
+          path: '/session-complete',
+          builder: (c, s) => const SessionCompleteScreen(),
+        ),
         GoRoute(path: '/', builder: (c, s) => const _Stub('home')),
       ],
     );
@@ -128,7 +133,8 @@ void main() {
       expect(row!.status, SessionStatus.completed);
       expect(row.completionReason, CompletionReason.finishedTask);
       expect(row.exitReason, ExitReason.finishedTask);
-      expect(find.text('stub:home'), findsOneWidget);
+      // Celebration, not a guilt-free void: the complete screen (F-09).
+      expect(find.text("Task done — that's what counts."), findsOneWidget);
     });
 
     testWidgets('emergency exits immediately — even in strict mode, no dialog',
@@ -301,6 +307,36 @@ void main() {
       expect(state().status, SessionStatus.aborted);
       expect((await sessions().getById(id))!.exitReason, ExitReason.tired);
       expect(find.text('stub:home'), findsOneWidget);
+    });
+
+    testWidgets(
+        'strict with a token: graceful lock-break offer completes via '
+        'lockBreak and celebrates', (tester) async {
+      await container
+          .read(streakRepositoryProvider)
+          .updateSummary(tokensAvailable: 2, tokensLifetime: 2);
+      final id = await startSession(strictMode: true);
+      await pumpExit(tester, confirm: 'stuck');
+      await settle(tester);
+
+      expect(find.textContaining('lock-break token'), findsOneWidget);
+      await tester.tap(find.textContaining('lock-break token'));
+      await settle(tester);
+
+      expect(state().status, SessionStatus.completed);
+      expect(state().completionReason, CompletionReason.lockBreak);
+      final row = await sessions().getById(id);
+      expect(row!.completionReason, CompletionReason.lockBreak);
+      expect(
+        (await container.read(streakRepositoryProvider).getSummary())
+            .tokensAvailable,
+        1,
+      );
+      // Graceful celebration, streak-safe framing (SCREENS §7).
+      expect(
+        find.text('Wrapped with a lock-break — streak safe.'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('strict Keep going resumes the session', (tester) async {

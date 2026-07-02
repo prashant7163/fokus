@@ -56,7 +56,8 @@ never decides transitions; it reports events, Dart decides, result is pushed bac
 - `allowlisted_apps` — packageName, appName, addedAt (never blockable; set at onboarding,
   editable in settings — D-011)
 - `distraction_attempts` — sessionId, packageName, ts, recoveryInvoked
-- `recovery_events` — sessionId, type, startedAt, completedAt, result
+- `recovery_events` — sessionId, type, startedAt, completedAt, result, note (schema v2,
+  D-017: task-reset "next smallest step" text; closes the D-014 open item)
 - `streak_summary` — singleton row: currentDays, longestDays, lastFocusDate, tokensAvailable,
   tokensLifetime
 - `presets` (Phase 2) — name, durationMin, strictMode, recoveryEnabled, blockedAppIds

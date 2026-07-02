@@ -58,9 +58,10 @@ class RecoveryController {
     _eventId = await _recovery.startEvent(sessionId: sessionId, type: type);
   }
 
-  /// "Resume focus" → result `resumed`, back to the active session.
-  Future<void> resume() async {
-    if (!await _close(RecoveryResult.resumed)) return;
+  /// "Resume focus" → result `resumed`, back to the active session. [note]
+  /// carries the task-reset "next smallest step" (schema v2, D-017).
+  Future<void> resume({String? note}) async {
+    if (!await _close(RecoveryResult.resumed, note: note)) return;
     if (_readSessionState().status == SessionStatus.recoveryInProgress) {
       await _session.resumeRecovery();
     }
@@ -82,7 +83,7 @@ class RecoveryController {
 
   /// Writes the terminal result exactly once. Returns whether this call was
   /// the one that closed it (so the caller can run its follow-up transition).
-  Future<bool> _close(RecoveryResult result) async {
+  Future<bool> _close(RecoveryResult result, {String? note}) async {
     if (_closed) return false;
     final id = _eventId;
     if (id == null) {
@@ -90,7 +91,12 @@ class RecoveryController {
       return false;
     }
     _closed = true;
-    await _recovery.completeEvent(id, result: result);
+    final trimmed = note?.trim();
+    await _recovery.completeEvent(
+      id,
+      result: result,
+      note: (trimmed == null || trimmed.isEmpty) ? null : trimmed,
+    );
     return true;
   }
 }

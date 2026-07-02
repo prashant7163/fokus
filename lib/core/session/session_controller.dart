@@ -11,6 +11,7 @@ import '../data/enums.dart';
 import '../data/providers.dart';
 import '../data/repositories/distraction_repository.dart';
 import '../data/repositories/session_repository.dart';
+import '../streaks/streak_service.dart';
 import 'session_machine.dart';
 
 /// Wall clock. Tests override with a fake to drive time deterministically —
@@ -41,6 +42,7 @@ class SessionState {
     this.lostPermission,
     this.passPackage,
     this.passEndTime,
+    this.streakOutcome,
     this.hydrated = false,
   });
 
@@ -71,6 +73,11 @@ class SessionState {
   final String? passPackage;
   final DateTime? passEndTime;
 
+  /// What the completed session did to the streak (F-09) — set on the
+  /// terminal transition of a completed session, consumed by the
+  /// session-complete screen. Null for aborts and while running.
+  final StreakOutcome? streakOutcome;
+
   /// False only during the cold-start window before the first DB hydration
   /// resolves. Deep-linked screens (exit sheet, recovery) must not treat the
   /// transient initial `idle` as "no session" — wait for this flag (M2
@@ -91,6 +98,7 @@ class SessionState {
     PermissionKind? lostPermission,
     String? passPackage,
     DateTime? passEndTime,
+    StreakOutcome? streakOutcome,
     bool clearNotice = false,
     bool clearPass = false,
   }) =>
@@ -109,6 +117,7 @@ class SessionState {
             clearNotice ? null : (lostPermission ?? this.lostPermission),
         passPackage: clearPass ? null : (passPackage ?? this.passPackage),
         passEndTime: clearPass ? null : (passEndTime ?? this.passEndTime),
+        streakOutcome: streakOutcome ?? this.streakOutcome,
         hydrated: hydrated,
       );
 
@@ -129,6 +138,7 @@ class SessionState {
           lostPermission: lostPermission,
           passPackage: passPackage,
           passEndTime: passEndTime,
+          streakOutcome: streakOutcome,
           hydrated: true,
         );
 }
@@ -155,6 +165,7 @@ class SessionController extends Notifier<SessionState>
   late BlockingAdapter _adapter;
   late SessionRepository _sessions;
   late DistractionRepository _distractions;
+  late StreakService _streaks;
   late DateTime Function() _now;
 
   StreamSubscription<void>? _ticker;
@@ -173,6 +184,7 @@ class SessionController extends Notifier<SessionState>
     _adapter = ref.watch(blockingAdapterProvider);
     _sessions = ref.watch(sessionRepositoryProvider);
     _distractions = ref.watch(distractionRepositoryProvider);
+    _streaks = ref.watch(streakServiceProvider);
     _now = ref.watch(clockProvider);
 
     // Listening triggers the native event-bus replay of buffered events
@@ -398,6 +410,36 @@ class SessionController extends Notifier<SessionState>
 
   /// Emergency exit: aborted, exitReason=emergency, no penalty, no lecture.
   Future<void> emergencyExit() => abort(exitReason: ExitReason.emergency);
+
+  /// Lock-break redemption (fokus-specs §3.5, D-011): ends the session as
+  /// completed-via-lockbreak — the day is *excused* (streak preserved, never
+  /// earned), logged distinctly. Uses the finishTask edge (active →
+  /// completed); §3.5 defines the outcome as a completion, not an abort.
+  /// The UI gates on [StreakService.canRedeemLockBreak]; calling without a
+  /// token (or past the weekly cap) is a programming error.
+  Future<void> redeemLockBreak() async {
+    if (!await _streaks.canRedeemLockBreak()) {
+      throw StateError(
+        'lock-break redemption unavailable (no token or weekly cap reached)',
+      );
+    }
+    await _resumeIfInRecovery();
+    final next = _apply(SessionTrigger.finishTask);
+    await _terminate(
+      next,
+      persist: (id) => _sessions.completeSession(
+        id,
+        reason: CompletionReason.lockBreak,
+        actualMin: _elapsedMin(),
+        endTime: _now(),
+      ),
+      completionReason: CompletionReason.lockBreak,
+    );
+    // After the row exists — the excused day derives from it. A crash between
+    // the two writes gifts a free token; the reverse (token gone, session not
+    // ended) can never happen.
+    await _streaks.consumeToken();
+  }
 
   /// Records the reason of an early-exit *attempt* without ending the
   /// session (CONTRACTS §2: logged on every attempt) — F-08's exit flow
@@ -676,11 +718,24 @@ class SessionController extends Notifier<SessionState>
     _stopTicker();
     await persist(id);
     await _silently(() => _adapter.stopSession(id));
+
+    // Streaks react to completions only (F-09). A streak failure must never
+    // mask the terminal transition — state and DB already hold the truth.
+    StreakOutcome? outcome;
+    if (completionReason != null) {
+      try {
+        outcome = await _streaks.onSessionCompleted(id);
+      } catch (e, s) {
+        FlutterError.reportError(FlutterErrorDetails(exception: e, stack: s));
+      }
+    }
+
     state = state.copyWith(
       status: next,
       remaining: Duration.zero,
       completionReason: completionReason,
       exitReason: exitReason,
+      streakOutcome: outcome,
       clearPass: true,
     );
   }

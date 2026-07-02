@@ -6,6 +6,7 @@ import '../../../core/data/enums.dart';
 import '../../../core/data/providers.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/session/session_controller.dart';
+import '../../../core/streaks/streak_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -102,8 +103,7 @@ class _ExitScreenState extends ConsumerState<ExitScreen> {
       case ExitOutcome.completeAsFinished:
         await _controller.finishTask();
         if (!mounted) return;
-        // TODO(F-09): route to the Session Complete celebration instead.
-        context.go(AppRoutes.home);
+        context.go(AppRoutes.sessionComplete);
 
       case ExitOutcome.exitNow:
         await _controller.emergencyExit();
@@ -126,6 +126,17 @@ class _ExitScreenState extends ConsumerState<ExitScreen> {
         _resolving = false;
         await _showStrictDenied();
     }
+  }
+
+  /// Lock-break redemption (spec §3.5): ends as completed-via-lockbreak —
+  /// streak preserved, celebrated gracefully. Offered only when redeemable
+  /// (token exists + weekly cap not hit — [lockBreakOfferProvider]).
+  Future<void> _redeemLockBreak() async {
+    if (_resolving) return;
+    _resolving = true;
+    await _controller.redeemLockBreak();
+    if (!mounted) return;
+    context.go(AppRoutes.sessionComplete);
   }
 
   /// "Stay in focus" — the friendly default. Composes recovery resume when
@@ -280,6 +291,7 @@ class _ExitScreenState extends ConsumerState<ExitScreen> {
           ? _StrictConsequences(
               onEndAnyway: () => _abortNow(confirmReason),
               onKeepGoing: _stay,
+              onRedeemToken: _redeemLockBreak,
             )
           : const SizedBox.shrink(); // aborting + redirecting (_reconcile).
     } else {
@@ -459,19 +471,24 @@ class _ReasonRow extends StatelessWidget {
 /// no red-scary styling, "Keep going" is the primary action, and no time
 /// pressure. When lock-break tokens exist, the graceful redemption offer
 /// renders here.
-class _StrictConsequences extends StatelessWidget {
+class _StrictConsequences extends ConsumerWidget {
   const _StrictConsequences({
     required this.onEndAnyway,
     required this.onKeepGoing,
+    required this.onRedeemToken,
   });
 
   final VoidCallback onEndAnyway;
   final VoidCallback onKeepGoing;
+  final VoidCallback onRedeemToken;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    // 0 while unredeemable (no token or weekly cap — spec §3.5). Tokens are
+    // earned by streak milestones (F-09), so pre-streak users never see it.
+    final offerTokens = ref.watch(lockBreakOfferProvider).value ?? 0;
 
     return Center(
       child: SingleChildScrollView(
@@ -495,12 +512,21 @@ class _StrictConsequences extends StatelessWidget {
                   style: theme.textTheme.bodyMedium
                       ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),
-                // Lock-break redemption (spec §3.5): the offer renders once
-                // the token engine exists. Tokens are only earned by F-09's
-                // streak milestones, so until then tokensAvailable is 0 and
-                // nothing shows here by construction.
-                // TODO(F-09): token offer row (l10n.exitTokenOffer) + redeem
-                // action (completed-via-lockbreak, weekly cap, decrement).
+                if (offerTokens > 0) ...[
+                  const SizedBox(height: FokusSpacing.md),
+                  FilledButton.tonalIcon(
+                    style: FilledButton.styleFrom(
+                      minimumSize:
+                          const Size.fromHeight(FokusSpacing.minTouchTarget),
+                    ),
+                    icon: const Text('🎟'),
+                    onPressed: onRedeemToken,
+                    label: Text(
+                      l10n.exitTokenOffer(offerTokens),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
                 const SizedBox(height: FokusSpacing.lg),
                 FilledButton(
                   style: FilledButton.styleFrom(

@@ -107,7 +107,10 @@ class _RecoveryScreenState extends ConsumerState<RecoveryScreen> {
   Future<void> _resume({bool showNoted = false}) async {
     if (_resolving) return;
     _resolving = true;
-    await _controller.resume();
+    // Task reset saves the "next smallest step" with the event (D-017).
+    await _controller.resume(
+      note: _selected == RecoveryType.taskReset ? _taskNextStep.text : null,
+    );
     if (!mounted) return;
     if (showNoted) {
       ScaffoldMessenger.of(context).showSnackBar(

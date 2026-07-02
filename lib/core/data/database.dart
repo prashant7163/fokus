@@ -33,10 +33,16 @@ class FokusDatabase extends _$FokusDatabase {
   FokusDatabase.open() : super(driftDatabase(name: 'fokus'));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            // v2 (D-017): task-reset note column (closes the D-014 open item).
+            await m.addColumn(recoveryEvents, recoveryEvents.note);
+          }
+        },
         beforeOpen: (details) async {
           await customStatement('PRAGMA foreign_keys = ON');
         },

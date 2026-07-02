@@ -23,17 +23,21 @@ class RecoveryRepository {
             ),
           );
 
-  /// Records the outcome ("Ready to continue?" → resumed / exited).
+  /// Records the outcome ("Ready to continue?" → resumed / exited). [note]
+  /// carries the task-reset "next smallest step" text (schema v2, D-017) —
+  /// only the taskReset module passes it.
   Future<void> completeEvent(
     int eventId, {
     required RecoveryResult result,
     DateTime? completedAt,
+    String? note,
   }) async {
     final rows = await (_db.update(_db.recoveryEvents)
           ..where((e) => e.id.equals(eventId)))
         .write(RecoveryEventsCompanion(
       result: Value(result),
       completedAt: Value(completedAt ?? DateTime.now()),
+      note: note == null ? const Value.absent() : Value(note),
     ));
     if (rows == 0) {
       throw StateError('No recovery_event with id $eventId');

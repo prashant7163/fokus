@@ -89,6 +89,10 @@ class RecoveryEvents extends Table {
 
   /// Null while the module is in progress.
   TextColumn get result => textEnum<RecoveryResult>().nullable()();
+
+  /// Task-reset "next smallest step" text (schema v2, D-017 — closes the
+  /// D-014 open item). Only the taskReset module writes it.
+  TextColumn get note => text().nullable()();
 }
 
 /// Singleton row (id always 1) — CONTRACTS §3 `streak_summary`.
