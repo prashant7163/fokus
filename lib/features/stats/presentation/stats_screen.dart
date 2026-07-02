@@ -7,6 +7,7 @@ import '../../../core/streaks/streak_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import 'dash_section.dart';
 
 /// Today's four MVP stats (F-09, fokus-specs §3.6): focus minutes,
 /// distractions blocked, most-intercepted app, current streak.
@@ -75,7 +76,8 @@ class StatsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            // TODO(F-14): day/week/month dashboard + focus score ("beta").
+            // F-14: day/week/month dashboard + weekly focus score ("beta").
+            const DashSection(),
           ],
         ),
       ),
