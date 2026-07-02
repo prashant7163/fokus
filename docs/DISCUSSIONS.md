@@ -131,3 +131,30 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   testers as exit criterion. Revisit if a physical Samsung/Xiaomi becomes available pre-launch.
 - **Action items:** Orchestrator — after F-01 CI is green, dry-run the pipeline once (build →
   install scaffold on emulator) to fail fast on toolchain issues before F-03..F-05 land.
+
+## 2026-07-02 02:55–03:15 · Worker session: F-02 + F-03 (kickoff prompt v2)
+
+- Worker (mobile-developer + core author) executed Phase A sequentially per D-010.
+- **F-02 → review:** Drift schema per CONTRACTS §3 — all 11 tables shipped at schemaVersion 1
+  (incl. Phase 2 tables, to avoid migrations later); repositories for the Phase 1 tables;
+  40 unit tests incl. a schema-contract guard test that pins table/column names verbatim
+  from §3. Notable choices (implementation, not contract changes): `completionReason`
+  values = timerEnd | finishedTask | lockBreak; `feedback_entries.text` kept as SQL name
+  via Dart rename; app-lists repo enforces the D-011 "never in both lists" invariant.
+- **F-03 → review:** native detection core. Accessibility service reads window-state
+  changes only, `canRetrieveWindowContent=false` (privacy + Play policy). Blocked set +
+  session config cached natively and persisted to SharedPreferences (hot path has zero
+  channel traffic; survives process death). Intercept decision extracted into pure
+  `InterceptDecider` (JVM-tested: session expiry, never-blockable incl. launcher/dialer,
+  1.5 s per-app debounce). Channel handler implements full CONTRACTS §1 surface; payload
+  shapes documented in-code for the F-06 Dart facade. InterceptActivity launch left as a
+  TODO(F-05) seam. Native accessibility-service description strings (EN/DE) are
+  policy-relevant → PM review flagged.
+- **Toolchain notes:** sandbox still cannot reach pub.dev/dl.google.com → codegen + tests
+  run in CI only; CI extended (build_runner, libsqlite3, gradle testDebugUnitTest —
+  wrapper injected by flutter tool during APK build). Stale .git/HEAD.lock + index.lock
+  found and removed (file-delete permission granted in-session); repo-local git identity set.
+- **Deferred per M2 ruling:** F-03 <200 ms on-device criterion; row stays `review`.
+- **Action items:** Prashant — watch CI run on push (F-02/F-03 verification gate).
+  Next worker — F-04 (SessionForegroundService + BootReceiver + resilience); startSession/
+  stopSession TODO(F-04) hooks are in BlockingChannelHandler.
