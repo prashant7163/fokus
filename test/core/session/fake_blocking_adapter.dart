@@ -29,6 +29,10 @@ class FakeBlockingAdapter implements BlockingAdapter {
   /// What `getInstalledApps` returns (F-10 app picker).
   List<InstalledApp> installedApps = const [];
 
+  /// What `getAppIcons` returns (F-11 icon rows) — empty by default, so
+  /// widgets exercise their no-icon glyph fallback.
+  Map<String, List<int>> appIcons = const {};
+
   final _events = StreamController<BlockingEvent>.broadcast();
 
   /// Pushes an event as if the native bus emitted it. Call twice with the
@@ -87,6 +91,14 @@ class FakeBlockingAdapter implements BlockingAdapter {
   @override
   Future<void> ackEvents(int upToSeq) async {
     ackedSeqs.add(upToSeq);
+  }
+
+  @override
+  Future<Map<String, List<int>>> getAppIcons(List<String> packageNames) async {
+    return {
+      for (final pkg in packageNames)
+        if (appIcons.containsKey(pkg)) pkg: appIcons[pkg]!,
+    };
   }
 
   Future<void> dispose() => _events.close();

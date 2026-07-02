@@ -54,5 +54,9 @@ jobs:
         run: flutter build apk --debug
 
       # Wrapper scripts are injected by the flutter tool during the APK build.
+      # :app scope on purpose — the unscoped task also compiles+runs the unit
+      # tests of every Flutter PLUGIN project (e.g. shared_preferences), which
+      # are not ours to gate on and break under Jetifier (byte-buddy compiled
+      # for a newer JDK: "unsupported class file major version").
       - name: Native unit tests (Kotlin blocking core)
-        run: cd android && ./gradlew testDebugUnitTest --no-daemon
+        run: cd android && ./gradlew :app:testDebugUnitTest --no-daemon

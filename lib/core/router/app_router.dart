@@ -6,6 +6,7 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/recovery/presentation/recovery_screen.dart';
 import '../../features/session/presentation/session_complete_screen.dart';
+import '../../features/session/presentation/session_config_screen.dart';
 import '../../features/session/presentation/session_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/stats/presentation/stats_screen.dart';
@@ -16,6 +17,7 @@ abstract final class AppRoutes {
   static const String home = '/';
   static const String onboarding = '/onboarding';
   static const String session = '/session';
+  static const String newSession = '/new-session';
   static const String sessionComplete = '/session-complete';
   static const String recovery = '/recovery';
   static const String exit = '/exit';
@@ -44,6 +46,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.session,
         builder: (context, state) => const SessionScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.newSession,
+        builder: (context, state) => const SessionConfigScreen(),
       ),
       GoRoute(
         path: AppRoutes.sessionComplete,

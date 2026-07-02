@@ -83,6 +83,20 @@ class ChannelBlockingAdapter implements BlockingAdapter {
       _method.invokeMethod<void>('ackEvents', {'upToSeq': upToSeq});
 
   @override
+  Future<Map<String, List<int>>> getAppIcons(List<String> packageNames) async {
+    final raw = await _method.invokeMethod<Map<Object?, Object?>>(
+      'getAppIcons',
+      {'packageNames': packageNames},
+    );
+    return {
+      if (raw != null)
+        for (final entry in raw.entries)
+          if (entry.value is List<int> || entry.value is Uint8List)
+            entry.key! as String: (entry.value! as List).cast<int>(),
+    };
+  }
+
+  @override
   Stream<BlockingEvent> get events => _events ??= _event
       .receiveBroadcastStream()
       .map(_parse)

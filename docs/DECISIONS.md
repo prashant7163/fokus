@@ -162,6 +162,20 @@ Sanctioned by Prashant's standing approval for CONTRACTS changes with a same-com
    before explicit consent. Prashant's verbatim approval is a release blocker (Play policy).
 **Revisit when:** final disclosure wording lands (swap strings, drop markers).
 
+## D-019 · 2026-07-02 18:30 · F-11: getAppIcons contract addendum; CI test scope = :app
+1. **CONTRACTS §1 addendum:** `getAppIcons(packageNames) → Map<pkg, PNG bytes>` (96 px,
+   missing packages omitted) — real launcher icons for the home hero / config / active-session
+   rows. Mechanism only; Dart falls back to a letter glyph.
+2. **CI/local Kotlin gate scoped to `:app:testDebugUnitTest`:** the unscoped task also
+   compiles+runs unit tests of every Flutter plugin project; shared_preferences_android's
+   own tests break under Jetifier (byte-buddy built for a newer JDK). Plugin test suites are
+   not ours to gate on. Found by CI run #12 (only red step) — gate strength for OUR code
+   unchanged.
+3. SCREENS §2's per-session Recovery on/off toggle is deferred to F-13 presets — no contract
+   seam exists for disabling recovery per-session; inventing one mid-F-11 would be silent
+   contract drift.
+**Revisit when:** F-13 presets land (recovery toggle), or plugin tooling stops tripping CI.
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via

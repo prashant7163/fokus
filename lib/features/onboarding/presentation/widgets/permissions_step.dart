@@ -6,12 +6,6 @@ import '../../../../core/blocking/providers.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
-/// Live permission snapshot. Invalidated when the app returns from a
-/// settings screen so badges update in place (SCREENS §8.3 "checking").
-final permissionStatusProvider = FutureProvider.autoDispose<PermissionState>(
-  (ref) => ref.watch(blockingAdapterProvider).getPermissionStatus(),
-);
-
 /// Permission checklist (F-10, SCREENS §8.3): one card per permission with a
 /// plain-language "why" (benefit, not demand), a status badge, and a set-up
 /// deep link. Continue is ALWAYS enabled — partial setup lands in limited

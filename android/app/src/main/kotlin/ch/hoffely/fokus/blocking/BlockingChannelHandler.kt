@@ -21,6 +21,8 @@ import io.flutter.plugin.common.MethodChannel
  *                          "strictMode": bool}
  * - stopSession         ← {"sessionId": String}
  * - grantAppPass        ← {"packageName": String, "endEpochMs": int}
+ * - getAppIcons         ← {"packageNames": List<String>}
+ *                       → Map<String, ByteArray> (PNG, 96 px; missing apps omitted)
  */
 class BlockingChannelHandler(private val activity: Activity) :
     MethodChannel.MethodCallHandler {
@@ -101,6 +103,15 @@ class BlockingChannelHandler(private val activity: Activity) :
                     result.success(null)
                 }
 
+                "getAppIcons" -> {
+                    // F-11 UI polish (D-019): launcher icons as PNG bytes for
+                    // the home hero / config / active-session rows. Missing
+                    // or uninstalled packages are simply omitted.
+                    val packages = call.argument<List<String>>("packageNames")
+                        ?: return result.error(ERROR, "missing packageNames", null)
+                    result.success(appIcons(packages))
+                }
+
                 "ackEvents" -> {
                     // D-013 P1-A: Dart acks the highest journal seq it has
                     // durably written; entries at or below it are dropped.
@@ -117,10 +128,40 @@ class BlockingChannelHandler(private val activity: Activity) :
         }
     }
 
+    /** Launcher icons rendered to 96 px PNG bytes, keyed by package name. */
+    private fun appIcons(packageNames: List<String>): Map<String, ByteArray> {
+        val pm = activity.packageManager
+        val out = mutableMapOf<String, ByteArray>()
+        for (pkg in packageNames.distinct()) {
+            try {
+                val drawable = pm.getApplicationIcon(pkg)
+                val size = 96
+                val bitmap = android.graphics.Bitmap.createBitmap(
+                    size,
+                    size,
+                    android.graphics.Bitmap.Config.ARGB_8888,
+                )
+                val canvas = android.graphics.Canvas(bitmap)
+                drawable.setBounds(0, 0, size, size)
+                drawable.draw(canvas)
+                val stream = java.io.ByteArrayOutputStream()
+                bitmap.compress(
+                    android.graphics.Bitmap.CompressFormat.PNG,
+                    100,
+                    stream,
+                )
+                bitmap.recycle()
+                out[pkg] = stream.toByteArray()
+            } catch (_: PackageManager.NameNotFoundException) {
+                // Uninstalled since — omitted; Dart falls back to a glyph.
+            }
+        }
+        return out
+    }
+
     /**
      * Launchable apps, excluding FOKUS itself. App picker metadata only —
-     * icons are resolved natively by InterceptActivity (F-05); picker icons
-     * arrive with F-11 if needed.
+     * icons arrive separately via getAppIcons (F-11, D-019).
      */
     private fun installedApps(): List<Map<String, String>> {
         val pm = activity.packageManager

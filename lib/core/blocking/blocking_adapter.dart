@@ -165,6 +165,10 @@ abstract class BlockingAdapter {
   /// so Dart must have durably written the attempt before acking.
   Future<void> ackEvents(int upToSeq);
 
+  /// Launcher icons as PNG bytes keyed by package name (F-11 UI, D-019).
+  /// Missing/uninstalled packages are omitted — callers fall back to a glyph.
+  Future<Map<String, List<int>>> getAppIcons(List<String> packageNames);
+
   /// Broadcast stream of native events. The native bus buffers
   /// restore-critical events until this stream is listened to, then replays
   /// them — consumers must handle replay idempotently.

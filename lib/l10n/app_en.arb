@@ -562,5 +562,224 @@
   "onbDone": "Done",
   "@onbDone": {
     "description": "Picker finish CTA (F-10)."
+  },
+
+  "homeGreetingMorning": "Good morning",
+  "@homeGreetingMorning": {
+    "description": "Time-aware greeting, before 12:00 (F-11)."
+  },
+  "homeGreetingAfternoon": "Good afternoon",
+  "@homeGreetingAfternoon": {
+    "description": "Time-aware greeting, 12:00–17:59 (F-11)."
+  },
+  "homeGreetingEvening": "Good evening",
+  "@homeGreetingEvening": {
+    "description": "Time-aware greeting, from 18:00 (F-11)."
+  },
+  "homeRepeatTitle": "Pick up where you left off",
+  "@homeRepeatTitle": {
+    "description": "Hero repeat-card title (F-11) — may wrap to 2 lines in DE."
+  },
+  "homeRepeatCta": "Start focus — {minutes} min",
+  "@homeRepeatCta": {
+    "description": "Sacred one-tap repeat CTA (F-11): 1 tap, no confirm.",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "homeRepeatCtaLabel": "Start focus, {minutes} minutes, blocking {apps} apps",
+  "@homeRepeatCtaLabel": {
+    "description": "TalkBack label for the repeat CTA (F-11).",
+    "placeholders": {
+      "minutes": { "type": "int" },
+      "apps": { "type": "int" }
+    }
+  },
+  "homeFirstSessionTitle": "Your focus starts here",
+  "@homeFirstSessionTitle": {
+    "description": "Hero title when no session history exists (F-11)."
+  },
+  "homeFirstSessionCta": "Start your first session",
+  "@homeFirstSessionCta": {
+    "description": "First-run hero CTA (F-11)."
+  },
+  "homeNewSession": "New session",
+  "@homeNewSession": {
+    "description": "Secondary CTA → start-session config (F-11)."
+  },
+  "homeResumeTitle": "In focus — {remaining} left",
+  "@homeResumeTitle": {
+    "description": "Hero replacement while a session runs (F-11).",
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  },
+  "homeResumeCta": "Back to session",
+  "@homeResumeCta": {
+    "description": "Resume-card CTA → active session (F-11)."
+  },
+  "homeStrictBadge": "Strict",
+  "@homeStrictBadge": {
+    "description": "Strict-mode badge on hero card + active session (F-11)."
+  },
+  "homeLimitedBanner": "Blocking is paused — accessibility off",
+  "@homeLimitedBanner": {
+    "description": "Permissions-health banner text (F-11, spec §3.11) — amber, honest, not an error."
+  },
+  "homeLimitedFix": "Fix",
+  "@homeLimitedFix": {
+    "description": "Banner action → permission settings (F-11)."
+  },
+  "homeTimerOnlyLabel": "Blocking inactive — timer only",
+  "@homeTimerOnlyLabel": {
+    "description": "Honest limited-mode label on the hero (F-11)."
+  },
+  "homeStreakChipLabel": "Current streak, {days} days, opens stats",
+  "@homeStreakChipLabel": {
+    "description": "TalkBack label for the streak chip (F-11).",
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "homeMoreApps": "+{count}",
+  "@homeMoreApps": {
+    "description": "Overflow indicator on the blocked-app icon row (F-11).",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "configTitle": "New session",
+  "@configTitle": {
+    "description": "Start-session config app bar (F-11)."
+  },
+  "configDuration": "Duration",
+  "@configDuration": {
+    "description": "Duration chips section label (F-11)."
+  },
+  "configCustomChip": "Custom",
+  "@configCustomChip": {
+    "description": "Custom-duration chip before a value is picked (F-11)."
+  },
+  "configCustomMinutes": "{minutes} min",
+  "@configCustomMinutes": {
+    "description": "Custom chip once chosen + dialog value (F-11).",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "configCustomTitle": "Custom duration",
+  "@configCustomTitle": {
+    "description": "Custom duration dialog title (F-11) — 5–480 min per spec §3.1."
+  },
+  "configAnchorLabel": "What are you focusing on?",
+  "@configAnchorLabel": {
+    "description": "Task anchor field label (F-11) — prompted, never forced."
+  },
+  "configAnchorHelper": "Optional — but it helps.",
+  "@configAnchorHelper": {
+    "description": "Task anchor helper line (F-11)."
+  },
+  "configAppsSelected": "{count, plural, =0{No apps selected} =1{1 app selected} other{{count} apps selected}}",
+  "@configAppsSelected": {
+    "description": "Blocked-apps summary row (F-11).",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "configEditApps": "Edit",
+  "@configEditApps": {
+    "description": "Opens the app picker from config (F-11)."
+  },
+  "configTimerOnlyHint": "No apps selected — this will be a timer-only session.",
+  "@configTimerOnlyHint": {
+    "description": "Honest, non-blocking hint (F-11)."
+  },
+  "configStrictTitle": "Strict mode",
+  "@configStrictTitle": {
+    "description": "Strict switch row title (F-11)."
+  },
+  "configStrictSubtitle": "No early exits except emergencies. Choose this when you really mean it.",
+  "@configStrictSubtitle": {
+    "description": "Strict switch plain-language subtitle (F-11) — may wrap in DE."
+  },
+  "configStrictInfo": "Ending a strict session early (except emergencies) shows you the consequences first: the session won't count as completed and your streak is at risk. Lock-break tokens, earned by streaks, let you end gracefully. Emergency exit always works instantly.",
+  "@configStrictInfo": {
+    "description": "Strict info sheet — honest facts, no guilt (F-11)."
+  },
+  "configPermissionHint": "Blocking needs accessibility — set up",
+  "@configPermissionHint": {
+    "description": "Limited-mode link on config (F-11) → permission settings."
+  },
+  "configStart": "Start focus",
+  "@configStart": {
+    "description": "Config start CTA (F-11)."
+  },
+
+  "sessionLabel": "Session",
+  "@sessionLabel": {
+    "description": "Active session minimal top label (F-11)."
+  },
+  "sessionRemainingLeft": "left",
+  "@sessionRemainingLeft": {
+    "description": "Word under the countdown number (F-11)."
+  },
+  "sessionMinutesLeftLabel": "{minutes} minutes left",
+  "@sessionMinutesLeftLabel": {
+    "description": "TalkBack countdown label, updated per minute (F-11).",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "sessionBlockedCaption": "Blocked while you focus",
+  "@sessionBlockedCaption": {
+    "description": "Caption under the blocked-app icon row (F-11)."
+  },
+  "sessionRedirects": "{count, plural, =1{1 redirect so far} other{{count} redirects so far}}",
+  "@sessionRedirects": {
+    "description": "Quiet distraction-count pill — neutral fact, no shame (F-11).",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "sessionEncourage1": "You're doing the thing.",
+  "@sessionEncourage1": {
+    "description": "Rotating encouragement (F-11) — warm, never nagging."
+  },
+  "sessionEncourage2": "Steady.",
+  "@sessionEncourage2": {
+    "description": "Rotating encouragement (F-11)."
+  },
+  "sessionEncourage3": "One thing at a time.",
+  "@sessionEncourage3": {
+    "description": "Rotating encouragement (F-11)."
+  },
+  "sessionEncourage4": "This is what focus feels like.",
+  "@sessionEncourage4": {
+    "description": "Rotating encouragement (F-11)."
+  },
+  "sessionEncourage5": "Still here. Still yours.",
+  "@sessionEncourage5": {
+    "description": "Rotating encouragement (F-11)."
+  },
+  "sessionAlmostThere": "Almost there.",
+  "@sessionAlmostThere": {
+    "description": "Encouragement in the final minute (F-11)."
+  },
+  "sessionEnd": "End session",
+  "@sessionEnd": {
+    "description": "De-emphasized honest exit → exit-reason flow (F-11)."
+  },
+  "sessionPermissionLost": "Blocking stopped — accessibility was turned off",
+  "@sessionPermissionLost": {
+    "description": "failedPermissions banner on the active screen (F-11) — the one genuinely-error case."
+  },
+  "sessionPermissionFix": "Resume protection",
+  "@sessionPermissionFix": {
+    "description": "failedPermissions banner action → settings (F-11)."
+  },
+  "sessionGoHome": "Back to home",
+  "@sessionGoHome": {
+    "description": "failedPermissions exit action (F-11)."
   }
 }
