@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Native-side strings only (service labels shown in system settings).
+     All in-app copy lives in lib/l10n/ ARB files (CONVENTIONS).
+     Policy-relevant wording — PM review before release (see F-10/F-20). -->
+<resources>
+    <string name="accessibility_service_label">FOKUS app blocking</string>
+    <string name="accessibility_service_description">FOKUS uses this accessibility service for one purpose: detecting when an app you chose to block is opened during a focus session you started, so it can show a gentle reminder screen. FOKUS does not read screen content, does not collect browsing data, and never sends behavioral data off your device.</string>
+</resources>

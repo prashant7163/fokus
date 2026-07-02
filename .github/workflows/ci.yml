@@ -49,3 +49,7 @@ jobs:
 
       - name: Build debug APK (assembleDebug)
         run: flutter build apk --debug
+
+      # Wrapper scripts are injected by the flutter tool during the APK build.
+      - name: Native unit tests (Kotlin blocking core)
+        run: cd android && ./gradlew testDebugUnitTest --no-daemon

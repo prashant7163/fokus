@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_service_label">FOKUS App-Blockierung</string>
+    <string name="accessibility_service_description">FOKUS nutzt diesen Bedienungshilfen-Dienst für genau einen Zweck: zu erkennen, wenn eine von dir blockierte App während einer von dir gestarteten Fokus-Sitzung geöffnet wird, um einen sanften Erinnerungsbildschirm anzuzeigen. FOKUS liest keine Bildschirminhalte, sammelt keine Browserdaten und sendet niemals Verhaltensdaten von deinem Gerät.</string>
+</resources>

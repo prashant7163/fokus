@@ -39,3 +39,8 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // JVM unit tests for the pure blocking-core logic (CONVENTIONS testing bar).
+    testImplementation("junit:junit:4.13.2")
+}
