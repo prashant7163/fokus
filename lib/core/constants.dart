@@ -28,4 +28,9 @@ abstract final class FokusConstants {
 
   /// Post-session micro-feedback sampling: 1 in N sessions.
   static const int feedbackSamplingOneIn = 3;
+
+  /// Single-app pass length for the "need one app" exit reason, non-strict
+  /// mode (fokus-specs §3.4; CONTRACTS §4 addition per D-015). The session
+  /// timer keeps running — this is a pass, never a pause (D-011).
+  static const int appPassMinutes = 5;
 }

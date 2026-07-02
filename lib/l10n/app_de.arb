@@ -7,7 +7,6 @@
   "recoveryTitle": "Auszeit",
   "statsTitle": "Dein Fortschritt",
   "settingsTitle": "Einstellungen",
-  "exitTitle": "Schon Schluss?",
   "emergencyExit": "Notausgang",
 
   "recoveryHubTitle": "Nimm dir einen Moment.",
@@ -49,5 +48,32 @@
   "recoveryShrinkApplied": "Session auf 10 Minuten verkürzt.",
 
   "recoverySecondsLabel": "{seconds} Sekunden",
-  "recoveryCycleLabel": "Zyklus {current} von {total}"
+  "recoveryCycleLabel": "Zyklus {current} von {total}",
+
+  "exitSheetTitle": "Warum gehst du?",
+  "exitSheetSubtitle": "Kein Urteil — das hilft nur.",
+  "exitReasonFinished": "Aufgabe erledigt",
+  "exitReasonFinishedHint": "Stark — zählt als geschafft.",
+  "exitReasonEmergency": "Notfall",
+  "exitReasonEmergencyHint": "Sofort gehen.",
+  "exitReasonStuck": "Ich komme nicht weiter",
+  "exitReasonStuckHint": "Versuch einen 30-Sekunden-Reset.",
+  "exitReasonTired": "Ich bin müde",
+  "exitReasonTiredHint": "Gönn dir eine Verschnaufpause.",
+  "exitReasonNeedApp": "Ich brauche eine App",
+  "exitReasonNeedAppHint": "Kurzer 5-Minuten-Pass.",
+  "exitStayInFocus": "Im Fokus bleiben",
+  "exitPassPickerTitle": "Welche App brauchst du?",
+  "exitPassGranted": "5-Minuten-Pass — {appName}. Der Timer läuft weiter.",
+  "exitPassChipLabel": "Pass: {appName} · noch {minutes} Min.",
+  "exitStrictDeniedTitle": "Strikter Modus ist aktiv",
+  "exitStrictDeniedBody": "Diese App bleibt bis zum Ende der Session gesperrt. Du schaffst das.",
+  "exitStrictDeniedRecovery": "Versuch stattdessen eine Recovery",
+  "exitStrictDeniedBack": "Zurück zum Fokus",
+  "exitConfirmTitle": "Session vorzeitig beenden?",
+  "exitConfirmBody": "Sie zählt nicht als abgeschlossen, und dein heutiger Streak ist in Gefahr.",
+  "exitConfirmEnd": "Trotzdem beenden",
+  "exitConfirmKeepGoing": "Weitermachen",
+  "exitTokenOffer": "Nutze einen Lock-Break-Token, um ohne Streak-Bruch zu beenden — noch {count}",
+  "exitSessionEnded": "Session beendet."
 }

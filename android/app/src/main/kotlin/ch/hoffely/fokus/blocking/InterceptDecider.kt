@@ -13,11 +13,13 @@ object InterceptDecider {
      * True when a foreground change to [packageName] must trigger the
      * intercept screen.
      *
-     * Rules (fokus-specs §3.2):
+     * Rules (fokus-specs §3.2, §3.4):
      * - only while a session is active ([nowMs] before its endEpochMs),
      * - only for apps in the blocked set,
      * - never for [neverBlockable] packages (FOKUS itself, system UI,
      *   dialer, default launcher),
+     * - never for [passPackage] while [nowMs] is before [passEndEpochMs]
+     *   (the F-08 single-app pass — expiry is wall-clock, no timer),
      * - debounced per package so one app switch produces one intercept.
      */
     fun shouldIntercept(
@@ -26,6 +28,8 @@ object InterceptDecider {
         session: NativeSessionConfig?,
         blockedSet: Set<String>,
         neverBlockable: Set<String>,
+        passPackage: String?,
+        passEndEpochMs: Long,
         lastInterceptPackage: String?,
         lastInterceptAtMs: Long,
     ): Boolean {
@@ -33,6 +37,7 @@ object InterceptDecider {
         if (session == null || nowMs >= session.endEpochMs) return false
         if (packageName in neverBlockable) return false
         if (packageName !in blockedSet) return false
+        if (packageName == passPackage && nowMs < passEndEpochMs) return false
         val debounced = packageName == lastInterceptPackage &&
             nowMs - lastInterceptAtMs < DEBOUNCE_MS
         return !debounced

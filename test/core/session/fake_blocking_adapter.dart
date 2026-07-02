@@ -12,6 +12,9 @@ class FakeBlockingAdapter implements BlockingAdapter {
   /// Every `ackEvents(upToSeq)` call, in order (D-013 P1-A).
   final ackedSeqs = <int>[];
 
+  /// Every `grantAppPass` call, in order (F-08 single-app pass).
+  final grantedPasses = <({String packageName, int endEpochMs})>[];
+
   /// When set, startSession throws — simulates a dead/erroring channel.
   Object? startError;
 
@@ -65,6 +68,11 @@ class FakeBlockingAdapter implements BlockingAdapter {
   @override
   Future<void> stopSession(String sessionId) async {
     stoppedSessionIds.add(sessionId);
+  }
+
+  @override
+  Future<void> grantAppPass(String packageName, int endEpochMs) async {
+    grantedPasses.add((packageName: packageName, endEpochMs: endEpochMs));
   }
 
   @override

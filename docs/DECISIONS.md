@@ -103,6 +103,23 @@ a recovery_events.note) before the data is worth collecting; currently logged in
 **Revisit when:** the open column decision is made (target: before F-09 stats consume
 session rows).
 
+## D-015 · 2026-07-02 15:45 · F-08 rulings: grantAppPass contract addendum + exit/recovery hand-off
+Sanctioned by Prashant's standing approval for CONTRACTS changes with a same-commit entry:
+1. **CONTRACTS §1 addendum:** `grantAppPass(packageName, endEpochMs)` — the needApp 5-minute
+   single-app pass is enforced natively (prefs-persisted wall-clock window: survives process
+   death, expires with no timer — the decider compares `now` per event). Dart keeps policy:
+   the 5-min constant (CONTRACTS §4 row added), strict-mode gating (a strict call is a
+   programming error), one-pass-at-a-time, and the never-outlives-the-session clamp.
+2. **Recovery "End session" → exit flow** (SCREENS §5 CTA3 → Exit-Reason) instead of F-07's
+   interim abort-with-`stuck`. Loop-breaker: a recovery entered FROM the exit flow
+   (stuck/tired, or the strict needApp denial) ends via `/exit?confirm=<reason>` — non-strict
+   aborts immediately with the already-given reason, strict shows the honest-consequences
+   step first. Re-asking "why" would be the interrogation loop FLOWS §4 bans.
+3. **Lock-break redemption offer** on the consequence screen is stubbed behind F-09's token
+   engine: tokens can only be earned there, so `tokensAvailable` is 0 until F-09 lands and
+   the offer renders nothing by construction. l10n string exists; `TODO(F-09)` marks the slot.
+**Revisit when:** F-09 wires redemption, or beta shows pass abuse (repeated re-grants).
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via

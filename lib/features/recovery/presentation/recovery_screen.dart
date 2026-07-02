@@ -23,10 +23,21 @@ import 'widgets/timed_reset_body.dart';
 /// Every invocation logs a RecoveryEvent via [RecoveryController] — including
 /// abandon (back button), which closes the event as `exited`.
 class RecoveryScreen extends ConsumerStatefulWidget {
-  const RecoveryScreen({super.key, this.preselectedModule});
+  const RecoveryScreen({
+    super.key,
+    this.preselectedModule,
+    this.exitReasonName,
+  });
 
   /// RecoveryType name from the deep link (`breathe`, `taskReset`, …).
   final String? preselectedModule;
+
+  /// [ExitReason] name when this recovery was entered FROM the exit flow
+  /// (reasons stuck/tired, or the strict needApp denial). Its "End session"
+  /// then confirms that reason directly (`/exit?confirm=…`) instead of
+  /// re-opening the sheet — asking twice is the interrogation loop FLOWS §4
+  /// bans (F-08).
+  final String? exitReasonName;
 
   @override
   ConsumerState<RecoveryScreen> createState() => _RecoveryScreenState();
@@ -92,9 +103,13 @@ class _RecoveryScreenState extends ConsumerState<RecoveryScreen> {
     _resolving = true;
     await _controller.end();
     if (!mounted) return;
-    // Routes toward the exit flow (F-08 owns the reason picker; the session is
-    // already aborting via the controller with ExitReason.stuck default).
-    context.go(AppRoutes.exit);
+    // The exit flow decides the session's fate (F-08): first visit asks why;
+    // a recovery that was itself entered from the exit flow confirms the
+    // already-given reason instead of asking again.
+    final confirm = widget.exitReasonName;
+    context.go(
+      confirm == null ? AppRoutes.exit : '${AppRoutes.exit}?confirm=$confirm',
+    );
   }
 
   Future<void> _shrink() async {

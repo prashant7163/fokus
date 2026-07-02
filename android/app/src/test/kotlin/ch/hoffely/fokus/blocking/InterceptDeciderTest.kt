@@ -23,6 +23,8 @@ class InterceptDeciderTest {
         session: NativeSessionConfig? = this.session,
         blockedSet: Set<String> = blocked,
         never: Set<String> = neverBlockable,
+        passPkg: String? = null,
+        passEndMs: Long = 0L,
         lastPkg: String? = null,
         lastAtMs: Long = 0L,
     ) = InterceptDecider.shouldIntercept(
@@ -31,6 +33,8 @@ class InterceptDeciderTest {
         session = session,
         blockedSet = blockedSet,
         neverBlockable = never,
+        passPackage = passPkg,
+        passEndEpochMs = passEndMs,
         lastInterceptPackage = lastPkg,
         lastInterceptAtMs = lastAtMs,
     )
@@ -71,6 +75,31 @@ class InterceptDeciderTest {
     fun `null or empty package - no intercept`() {
         assertFalse(decide(pkg = null))
         assertFalse(decide(pkg = ""))
+    }
+
+    @Test
+    fun `single-app pass suppresses intercept while unexpired`() {
+        assertFalse(
+            decide(passPkg = "com.instagram.android", passEndMs = now + 1),
+        )
+    }
+
+    @Test
+    fun `expired pass intercepts again (wall-clock anchored)`() {
+        assertTrue(
+            decide(passPkg = "com.instagram.android", passEndMs = now),
+        )
+    }
+
+    @Test
+    fun `pass covers only its own package`() {
+        assertTrue(
+            decide(
+                pkg = "com.tiktok",
+                passPkg = "com.instagram.android",
+                passEndMs = now + 60_000L,
+            ),
+        )
     }
 
     @Test

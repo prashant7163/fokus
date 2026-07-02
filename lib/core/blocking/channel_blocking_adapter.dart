@@ -72,6 +72,13 @@ class ChannelBlockingAdapter implements BlockingAdapter {
       _method.invokeMethod<void>('stopSession', {'sessionId': sessionId});
 
   @override
+  Future<void> grantAppPass(String packageName, int endEpochMs) =>
+      _method.invokeMethod<void>('grantAppPass', {
+        'packageName': packageName,
+        'endEpochMs': endEpochMs,
+      });
+
+  @override
   Future<void> ackEvents(int upToSeq) =>
       _method.invokeMethod<void>('ackEvents', {'upToSeq': upToSeq});
 

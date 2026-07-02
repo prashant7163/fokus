@@ -19,6 +19,8 @@ object BlockedSetCache {
     private const val KEY_SESSION_END = "session_end_epoch_ms"
     private const val KEY_SESSION_ANCHOR = "session_task_anchor"
     private const val KEY_SESSION_STRICT = "session_strict_mode"
+    private const val KEY_PASS_PACKAGE = "pass_package"
+    private const val KEY_PASS_END = "pass_end_epoch_ms"
 
     @Volatile
     var blockedSet: Set<String> = emptySet()
@@ -26,6 +28,21 @@ object BlockedSetCache {
 
     @Volatile
     var session: NativeSessionConfig? = null
+        private set
+
+    /**
+     * Single-app pass (F-08 "need one app", non-strict): [passPackage] is not
+     * intercepted while the wall clock is before [passEndEpochMs]. Persisted so
+     * the pass survives process death; expiry needs no timer — the decider
+     * compares against `now` on every event. Dart grants it (policy); this is
+     * mechanism only.
+     */
+    @Volatile
+    var passPackage: String? = null
+        private set
+
+    @Volatile
+    var passEndEpochMs: Long = 0L
         private set
 
     @Volatile
@@ -50,6 +67,8 @@ object BlockedSetCache {
                     strictMode = prefs.getBoolean(KEY_SESSION_STRICT, false),
                 )
             }
+            passPackage = prefs.getString(KEY_PASS_PACKAGE, null)
+            passEndEpochMs = prefs.getLong(KEY_PASS_END, 0L)
             loaded = true
         }
     }
@@ -66,13 +85,34 @@ object BlockedSetCache {
         ensureLoaded(context)
         session = config
         // Fresh session → drop any stale journal entries from a prior session
-        // (the seq counter stays monotonic across sessions — see AttemptJournal).
+        // (the seq counter stays monotonic across sessions — see AttemptJournal)
+        // and any pass from the prior session. Note: shrinkTo re-arms with the
+        // SAME id — its pass also drops, which is correct: shrink re-anchors
+        // the commitment, a leftover pass shouldn't outlive that choice.
         AttemptJournal.clear(context)
+        passPackage = null
+        passEndEpochMs = 0L
         prefs(context).edit()
             .putString(KEY_SESSION_ID, config.id)
             .putLong(KEY_SESSION_END, config.endEpochMs)
             .putString(KEY_SESSION_ANCHOR, config.taskAnchor)
             .putBoolean(KEY_SESSION_STRICT, config.strictMode)
+            .remove(KEY_PASS_PACKAGE)
+            .remove(KEY_PASS_END)
+            .apply()
+    }
+
+    /**
+     * Grants the single-app pass (F-08): [packageName] is not intercepted
+     * until [endEpochMs]. One pass at a time — a new grant replaces the old.
+     */
+    fun grantAppPass(context: Context, packageName: String, endEpochMs: Long) {
+        ensureLoaded(context)
+        passPackage = packageName
+        passEndEpochMs = endEpochMs
+        prefs(context).edit()
+            .putString(KEY_PASS_PACKAGE, packageName)
+            .putLong(KEY_PASS_END, endEpochMs)
             .apply()
     }
 
@@ -87,11 +127,15 @@ object BlockedSetCache {
     fun clearSession(context: Context) {
         ensureLoaded(context)
         session = null
+        passPackage = null
+        passEndEpochMs = 0L
         prefs(context).edit()
             .remove(KEY_SESSION_ID)
             .remove(KEY_SESSION_END)
             .remove(KEY_SESSION_ANCHOR)
             .remove(KEY_SESSION_STRICT)
+            .remove(KEY_PASS_PACKAGE)
+            .remove(KEY_PASS_END)
             .apply()
     }
 

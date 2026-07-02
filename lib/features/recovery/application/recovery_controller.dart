@@ -16,8 +16,10 @@ import '../../../core/session/session_controller.dart';
 ///  2. exactly one of:
 ///     - [resume] — user tapped "Resume focus": event result = `resumed`,
 ///       session returns to `active`.
-///     - [end] — user tapped "End session": event result = `exited`, the
-///       session is aborted (exit-reason detail is F-08; default `stuck`).
+///     - [end] — user tapped "End session": event result = `exited`; the
+///       session itself is NOT touched here — the exit flow (F-08) decides
+///       its fate (reason sheet, or confirm-abort when the recovery was
+///       entered from the exit flow).
 ///     - [abandon] — back button / dismiss without choosing: event result =
 ///       `exited` (abandon == exited, per the brief), session left as-is.
 ///
@@ -64,11 +66,11 @@ class RecoveryController {
     }
   }
 
-  /// "End session" → result `exited`, session aborted (F-08 refines the exit
-  /// reason; `stuck` is the default per the F-07 brief).
+  /// "End session" → result `exited`. The session stays in
+  /// `recoveryInProgress`; the exit flow (F-08) owns what happens next —
+  /// it aborts, resumes, or grants a pass, each composing legal transitions.
   Future<void> end() async {
-    if (!await _close(RecoveryResult.exited)) return;
-    await _session.abort(exitReason: ExitReason.stuck);
+    await _close(RecoveryResult.exited);
   }
 
   /// Back-button / dismiss without choosing → result `exited` (abandon ==

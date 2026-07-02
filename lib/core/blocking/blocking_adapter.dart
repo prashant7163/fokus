@@ -152,6 +152,14 @@ abstract class BlockingAdapter {
 
   Future<void> stopSession(String sessionId);
 
+  /// Grants the F-08 single-app pass: [packageName] is not intercepted until
+  /// [endEpochMs] (wall-clock, persisted natively — survives process death,
+  /// expires without a timer). Dart is policy: duration, strict-mode gating
+  /// and the one-pass-at-a-time rule are decided in the session engine; the
+  /// native side only records and enforces the window. CONTRACTS §1 addendum
+  /// (D-015).
+  Future<void> grantAppPass(String packageName, int endEpochMs);
+
   /// Acks journalled events up to and including [upToSeq] (D-013 P1-A). The
   /// native [AttemptJournal] drops acked entries; delivery is at-least-once,
   /// so Dart must have durably written the attempt before acking.

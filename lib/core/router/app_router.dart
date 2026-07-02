@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/exit/presentation/exit_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/recovery/presentation/recovery_screen.dart';
-import '../../features/session/presentation/exit_screen.dart';
 import '../../features/session/presentation/session_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/stats/presentation/stats_screen.dart';
@@ -40,17 +40,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       // Deep-link targets: InterceptActivity lands here via fokus://recovery
       // (optionally `?module=breathe` — the proactive hint pre-selects
-      // Breathe) and fokus://exit. Context is received here and forwarded;
-      // F-07/F-08 own the real screens.
+      // Breathe) and fokus://exit. `exitReason` marks a recovery entered from
+      // the exit flow (its End confirms that reason instead of re-asking);
+      // `confirm` is that confirm-abort entry on /exit (F-08).
       GoRoute(
         path: AppRoutes.recovery,
         builder: (context, state) => RecoveryScreen(
           preselectedModule: state.uri.queryParameters['module'],
+          exitReasonName: state.uri.queryParameters['exitReason'],
         ),
       ),
       GoRoute(
         path: AppRoutes.exit,
-        builder: (context, state) => const ExitScreen(),
+        builder: (context, state) => ExitScreen(
+          confirmReasonName: state.uri.queryParameters['confirm'],
+        ),
       ),
       GoRoute(
         path: AppRoutes.stats,

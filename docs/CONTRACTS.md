@@ -14,6 +14,10 @@ abstract class BlockingAdapter {
   Future<void> setBlockedApps(List<String> packageNames);
   Future<void> startSession(NativeSessionConfig config); // id, endEpochMs, taskAnchor, strictMode
   Future<void> stopSession(String sessionId); // NEVER a silent no-op on id mismatch (D-013)
+  Future<void> grantAppPass(String packageName, int endEpochMs); // F-08 single-app pass (D-015):
+  //   package not intercepted until endEpochMs; native-persisted (survives process death),
+  //   wall-clock expiry, cleared on session start/stop. Dart is policy (duration, strict
+  //   gating, one pass at a time); native is mechanism.
   Future<void> ackEvents(int upToSeq); // acks journaled events; native clears ≤ upToSeq (D-013/D-014)
   Stream<BlockingEvent> get events;
 }
@@ -72,6 +76,7 @@ Streak rule: a day qualifies with ≥ 1 completed session ≥ 10 min, local cale
 | Lock-break earn milestones | 7 d → 1 · 14 d → 2 · 30 d → 3 · 60 d → 5 · 100 d → 10 |
 | Lock-break weekly redeem cap | 3 |
 | Post-session feedback sampling | 1 in 3 sessions |
+| Single-app pass (needApp exit, non-strict) | 5 min, timer keeps running (D-015) |
 | Free tier limits (Phase 3, not built yet) | 5 apps, 2 h sessions, 1 preset |
 
 ## 5. Analytics events (local only — no network sink in current scope)

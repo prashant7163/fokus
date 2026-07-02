@@ -46,6 +46,8 @@ class FokusAccessibilityService : AccessibilityService() {
             session = BlockedSetCache.session,
             blockedSet = BlockedSetCache.blockedSet,
             neverBlockable = neverBlockable,
+            passPackage = BlockedSetCache.passPackage,
+            passEndEpochMs = BlockedSetCache.passEndEpochMs,
             lastInterceptPackage = lastInterceptPackage,
             lastInterceptAtMs = lastInterceptAtMs,
         )

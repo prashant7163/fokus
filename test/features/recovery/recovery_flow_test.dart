@@ -56,17 +56,28 @@ void main() {
   Future<GoRouter> pumpRecovery(
     WidgetTester tester, {
     String? module,
+    String? exitReason,
   }) async {
+    final query = [
+      if (module != null) 'module=$module',
+      if (exitReason != null) 'exitReason=$exitReason',
+    ].join('&');
     final router = GoRouter(
-      initialLocation: module == null ? '/recovery' : '/recovery?module=$module',
+      initialLocation: query.isEmpty ? '/recovery' : '/recovery?$query',
       routes: [
         GoRoute(
           path: '/recovery',
-          builder: (c, s) =>
-              RecoveryScreen(preselectedModule: s.uri.queryParameters['module']),
+          builder: (c, s) => RecoveryScreen(
+            preselectedModule: s.uri.queryParameters['module'],
+            exitReasonName: s.uri.queryParameters['exitReason'],
+          ),
         ),
         GoRoute(path: '/session', builder: (c, s) => const _Stub('session')),
-        GoRoute(path: '/exit', builder: (c, s) => const _Stub('exit')),
+        GoRoute(
+          path: '/exit',
+          builder: (c, s) =>
+              _Stub('exit:${s.uri.queryParameters['confirm'] ?? '-'}'),
+        ),
         GoRoute(path: '/', builder: (c, s) => const _Stub('home')),
       ],
     );
@@ -126,7 +137,8 @@ void main() {
           SessionStatus.active);
     });
 
-    testWidgets('End session closes the event as exited and aborts',
+    testWidgets(
+        'End session closes the event as exited and hands off to the exit flow',
         (tester) async {
       final id = await startSession();
       await pumpRecovery(tester, module: 'water');
@@ -146,10 +158,33 @@ void main() {
 
       final events = await recoveryRepo().eventsForSession(id);
       expect(events.single.result, RecoveryResult.exited);
+      // The session is NOT ended here — the exit flow (F-08) owns its fate.
+      // First-visit entry → the reason sheet (no confirm param).
+      expect(find.text('stub:exit:-'), findsOneWidget);
       expect(container.read(sessionControllerProvider).status,
-          SessionStatus.aborted);
-      expect(container.read(sessionControllerProvider).exitReason,
-          ExitReason.stuck);
+          SessionStatus.recoveryInProgress);
+      expect(container.read(sessionControllerProvider).exitReason, isNull);
+    });
+
+    testWidgets(
+        'End session from an exit-entered recovery confirms the given reason',
+        (tester) async {
+      final id = await startSession();
+      await pumpRecovery(tester, module: 'breathe', exitReason: 'tired');
+      for (var i = 0; i < 4; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+
+      await tester.ensureVisible(find.text('End session'));
+      await tester.pump();
+      await tester.tap(find.text('End session'));
+      await tester.pump();
+      await tester.pump();
+
+      final events = await recoveryRepo().eventsForSession(id);
+      expect(events.single.result, RecoveryResult.exited);
+      // No re-asking (FLOWS §4): straight to confirm-abort with `tired`.
+      expect(find.text('stub:exit:tired'), findsOneWidget);
     });
 
     testWidgets('abandon (back button) writes the event as exited',

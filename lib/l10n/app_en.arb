@@ -28,10 +28,6 @@
   "@settingsTitle": {
     "description": "Settings screen title (stub, F-12)"
   },
-  "exitTitle": "Leaving early?",
-  "@exitTitle": {
-    "description": "Structured exit flow screen title (stub, F-08) — compassionate, never scolding"
-  },
   "emergencyExit": "Emergency exit",
   "@emergencyExit": {
     "description": "Policy-bound label, DESIGN_SYSTEM.md §8 — always visible on intercept/exit screens"
@@ -185,5 +181,120 @@
       "current": { "type": "int" },
       "total": { "type": "int" }
     }
+  },
+
+  "exitSheetTitle": "Why are you leaving?",
+  "@exitSheetTitle": {
+    "description": "Exit-reason sheet heading (F-08, SCREENS §6) — warm, no guilt."
+  },
+  "exitSheetSubtitle": "No judgment — this just helps.",
+  "@exitSheetSubtitle": {
+    "description": "Exit-reason sheet subtitle (F-08)."
+  },
+  "exitReasonFinished": "Finished my task",
+  "@exitReasonFinished": {
+    "description": "Exit reason: finishedTask — counts as completed (F-08)."
+  },
+  "exitReasonFinishedHint": "Nice — counts as done.",
+  "@exitReasonFinishedHint": {
+    "description": "Outcome hint for finishedTask (F-08)."
+  },
+  "exitReasonEmergency": "Emergency",
+  "@exitReasonEmergency": {
+    "description": "Exit reason: emergency — immediate, never gated (F-08, spec §2.3)."
+  },
+  "exitReasonEmergencyHint": "Leave now.",
+  "@exitReasonEmergencyHint": {
+    "description": "Outcome hint for emergency (F-08)."
+  },
+  "exitReasonStuck": "I'm stuck",
+  "@exitReasonStuck": {
+    "description": "Exit reason: stuck — routes to recovery hub (F-08)."
+  },
+  "exitReasonStuckHint": "Try a 30-sec reset.",
+  "@exitReasonStuckHint": {
+    "description": "Outcome hint for stuck (F-08)."
+  },
+  "exitReasonTired": "I'm tired",
+  "@exitReasonTired": {
+    "description": "Exit reason: tired — routes to recovery, Breathe preselected (F-08)."
+  },
+  "exitReasonTiredHint": "Take a breather.",
+  "@exitReasonTiredHint": {
+    "description": "Outcome hint for tired (F-08)."
+  },
+  "exitReasonNeedApp": "I need one app",
+  "@exitReasonNeedApp": {
+    "description": "Exit reason: needApp — 5-min pass (non-strict) or kind denial (strict) (F-08)."
+  },
+  "exitReasonNeedAppHint": "Quick 5-minute pass.",
+  "@exitReasonNeedAppHint": {
+    "description": "Outcome hint for needApp (F-08)."
+  },
+  "exitStayInFocus": "Stay in focus",
+  "@exitStayInFocus": {
+    "description": "Exit-sheet dismiss CTA — the friendly default is to stay (F-08)."
+  },
+  "exitPassPickerTitle": "Which app do you need?",
+  "@exitPassPickerTitle": {
+    "description": "Single-app pass picker heading (F-08)."
+  },
+  "exitPassGranted": "5-minute pass — {appName}. Timer's still running.",
+  "@exitPassGranted": {
+    "description": "Pass-granted snackbar (F-08, SCREENS §6) — no guilt.",
+    "placeholders": {
+      "appName": { "type": "String" }
+    }
+  },
+  "exitPassChipLabel": "Pass: {appName} · {minutes} min left",
+  "@exitPassChipLabel": {
+    "description": "Quiet countdown chip on the active session while a pass runs (F-08; consumed by the active-session screen, F-11).",
+    "placeholders": {
+      "appName": { "type": "String" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "exitStrictDeniedTitle": "Strict mode is on",
+  "@exitStrictDeniedTitle": {
+    "description": "Kind denial heading — needApp in strict mode (F-08)."
+  },
+  "exitStrictDeniedBody": "This one's locked until your session ends. You've got this.",
+  "@exitStrictDeniedBody": {
+    "description": "Kind denial body (F-08, SCREENS §6) — encouraging, never scolding."
+  },
+  "exitStrictDeniedRecovery": "Try a recovery instead",
+  "@exitStrictDeniedRecovery": {
+    "description": "Denial sheet CTA → recovery hub (F-08)."
+  },
+  "exitStrictDeniedBack": "Back to focus",
+  "@exitStrictDeniedBack": {
+    "description": "Denial sheet dismiss CTA → active session (F-08)."
+  },
+  "exitConfirmTitle": "End this session early?",
+  "@exitConfirmTitle": {
+    "description": "Strict-mode consequence heading before a non-emergency abort (F-08, spec §3.4)."
+  },
+  "exitConfirmBody": "It won't count as completed, and today's streak is at risk.",
+  "@exitConfirmBody": {
+    "description": "Honest consequence copy (F-08) — factual, not scary; an abort risks the day, another completed session can still save it."
+  },
+  "exitConfirmEnd": "End anyway",
+  "@exitConfirmEnd": {
+    "description": "Consequence screen abort CTA — plain tonal, never red-scary (F-08)."
+  },
+  "exitConfirmKeepGoing": "Keep going",
+  "@exitConfirmKeepGoing": {
+    "description": "Consequence screen stay CTA — the primary action (F-08)."
+  },
+  "exitTokenOffer": "Use a lock-break token to end without breaking your streak — {count} left",
+  "@exitTokenOffer": {
+    "description": "Graceful lock-break redemption offer on the consequence screen; shown only when tokens exist (F-08 UI, F-09 wires the action).",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "exitSessionEnded": "Session ended.",
+  "@exitSessionEnded": {
+    "description": "Neutral toast after an early end — no celebration, no guilt (F-08, SCREENS §7)."
   }
 }

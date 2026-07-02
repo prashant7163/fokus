@@ -20,6 +20,7 @@ import io.flutter.plugin.common.MethodChannel
  * - startSession        ← {"id": String, "endEpochMs": int, "taskAnchor": String?,
  *                          "strictMode": bool}
  * - stopSession         ← {"sessionId": String}
+ * - grantAppPass        ← {"packageName": String, "endEpochMs": int}
  */
 class BlockingChannelHandler(private val activity: Activity) :
     MethodChannel.MethodCallHandler {
@@ -85,6 +86,18 @@ class BlockingChannelHandler(private val activity: Activity) :
                         BlockedSetCache.clearSession(activity)
                         SessionForegroundService.stop(activity)
                     }
+                    result.success(null)
+                }
+
+                "grantAppPass" -> {
+                    // F-08 "need one app" (non-strict): Dart decides the pass
+                    // (policy — duration, strict gating); this only records it.
+                    // The decider ignores the pass once nowMs passes its end.
+                    val packageName = call.argument<String>("packageName")
+                        ?: return result.error(ERROR, "missing packageName", null)
+                    val endEpochMs = call.argument<Number>("endEpochMs")?.toLong()
+                        ?: return result.error(ERROR, "missing endEpochMs", null)
+                    BlockedSetCache.grantAppPass(activity, packageName, endEpochMs)
                     result.success(null)
                 }
 

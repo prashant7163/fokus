@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../blocking/blocking_adapter.dart';
 import '../blocking/providers.dart';
+import '../constants.dart';
 import '../data/enums.dart';
 import '../data/providers.dart';
 import '../data/repositories/distraction_repository.dart';
@@ -38,6 +39,8 @@ class SessionState {
     this.completionReason,
     this.exitReason,
     this.lostPermission,
+    this.passPackage,
+    this.passEndTime,
   });
 
   const SessionState.idle() : this(status: SessionStatus.idle);
@@ -60,9 +63,18 @@ class SessionState {
   /// (requirement: never silent). F-12 owns the full permissions-health UI.
   final PermissionKind? lostPermission;
 
+  /// Live single-app pass (F-08 "need one app", non-strict): [passPackage] is
+  /// usable until [passEndTime] while the session timer keeps running. UI-side
+  /// mirror of the native pass — drives the countdown chip; cleared on expiry
+  /// by the tick, on shrink, and on any terminal transition.
+  final String? passPackage;
+  final DateTime? passEndTime;
+
   bool get isRunning =>
       status == SessionStatus.active ||
       status == SessionStatus.recoveryInProgress;
+
+  bool get hasActivePass => passPackage != null;
 
   SessionState copyWith({
     SessionStatus? status,
@@ -70,7 +82,10 @@ class SessionState {
     CompletionReason? completionReason,
     ExitReason? exitReason,
     PermissionKind? lostPermission,
+    String? passPackage,
+    DateTime? passEndTime,
     bool clearNotice = false,
+    bool clearPass = false,
   }) =>
       SessionState(
         status: status ?? this.status,
@@ -85,6 +100,8 @@ class SessionState {
         exitReason: exitReason ?? this.exitReason,
         lostPermission:
             clearNotice ? null : (lostPermission ?? this.lostPermission),
+        passPackage: clearPass ? null : (passPackage ?? this.passPackage),
+        passEndTime: clearPass ? null : (passEndTime ?? this.passEndTime),
       );
 }
 
@@ -283,6 +300,34 @@ class SessionController extends Notifier<SessionState>
     _startTicker();
   }
 
+  /// F-08 "need one app" (non-strict only): grants [packageName] a
+  /// [FokusConstants.appPassMinutes]-minute pass while the session timer keeps
+  /// running (fokus-specs §3.4 — this is NOT a pause, D-011). The pass never
+  /// outlives the session. One pass at a time: a new grant replaces the old.
+  ///
+  /// Strict mode never reaches here (the exit flow shows the kind denial
+  /// instead); a call anyway is a programming error.
+  Future<void> grantAppPass(String packageName) async {
+    if (!state.isRunning) return;
+    if (state.strictMode) {
+      throw StateError(
+        'needApp pass is not available in strict mode (fokus-specs §3.4)',
+      );
+    }
+    await _resumeIfInRecovery();
+
+    final now = _now();
+    var passEnd =
+        now.add(const Duration(minutes: FokusConstants.appPassMinutes));
+    final sessionEnd = state.endTime!;
+    if (passEnd.isAfter(sessionEnd)) passEnd = sessionEnd;
+
+    // Not best-effort: if native can't record the pass the app stays
+    // intercepted, so pretending it was granted would gaslight the user.
+    await _adapter.grantAppPass(packageName, passEnd.millisecondsSinceEpoch);
+    state = state.copyWith(passPackage: packageName, passEndTime: passEnd);
+  }
+
   /// Exit reason `finishedTask` → completed (CONTRACTS §2). Legal from
   /// recovery too (composed as resume → finish).
   Future<void> finishTask() async {
@@ -341,7 +386,13 @@ class SessionController extends Notifier<SessionState>
     final end = state.endTime!;
     final now = _now();
     if (now.isBefore(end)) {
-      state = state.copyWith(remaining: end.difference(now));
+      // The single-app pass expires by wall clock too (native mirrors this).
+      final passOver =
+          state.passEndTime != null && !now.isBefore(state.passEndTime!);
+      state = state.copyWith(
+        remaining: end.difference(now),
+        clearPass: passOver,
+      );
       return;
     }
     // Timer end. If we were mid-recovery, compose resume → complete
@@ -590,6 +641,7 @@ class SessionController extends Notifier<SessionState>
       remaining: Duration.zero,
       completionReason: completionReason,
       exitReason: exitReason,
+      clearPass: true,
     );
   }
 
