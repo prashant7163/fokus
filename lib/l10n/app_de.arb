@@ -1,0 +1,11 @@
+{
+  "@@locale": "de",
+  "appTitle": "FOKUS",
+  "homeTitle": "Start",
+  "onboardingTitle": "Willkommen",
+  "sessionTitle": "Fokus-Session",
+  "recoveryTitle": "Auszeit",
+  "statsTitle": "Dein Fortschritt",
+  "settingsTitle": "Einstellungen",
+  "emergencyExit": "Notausgang"
+}

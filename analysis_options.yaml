@@ -1,0 +1,11 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - lib/l10n/generated/**
+
+linter:
+  rules:
+    # CONVENTIONS.md: no `dynamic` in public APIs
+    avoid_annotating_with_dynamic: true
+    always_declare_return_types: true

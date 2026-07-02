@@ -70,3 +70,25 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
 - **Action items:** Prashant — review brand v2 + website, answer D-A…D-F, icon variant
   sign-off, domain + waitlist inbox, trademark check, git locks + push. Orchestrator — next:
   F-01 scaffold (suggest worker session per D-010).
+
+## 2026-07-02 · Worker session: F-01 scaffold (per D-010)
+
+- Prashant opened this second Cowork session as a build worker; instruction: "claim and
+  execute F-01". Claimed on TASKBOARD, executed inline (core-owner work).
+- Built: Flutter scaffold — M3 theme straight from DESIGN_SYSTEM.md v2 literals, go_router
+  nav skeleton (6 feature stubs matching lib/features/* boundaries), Riverpod wiring,
+  l10n EN/DE ARB pipeline, CONTRACTS §4 constants, Android embedding (ch.hoffely.fokus,
+  Gradle KTS, gradle-wrapper jar/scripts gitignored per Flutter convention), CI workflow
+  (Flutter 3.32.0 pinned: analyze, test, build apk --debug), tests.
+- Sandbox constraints noted: no Flutter SDK available in-session (pub.dev/dl.google.com
+  blocked by network allowlist) → Dart/Gradle could not be compiled locally. All
+  JSON/XML/YAML validated; Dart verified by review only. CI is the real gate.
+- Theme decisions within scope: `ThemeMode.light` per D-009 (toggle arrives with F-12);
+  Plus Jakarta Sans NOT bundled (font decision still open with Prashant) — TextTheme ships
+  metrics only; spec's deprecated `surfaceVariant` role carried as FokusColors.ringTrack.
+- Dev launcher icon generated (charcoal + orange broken ring/dot) — placeholder until B-03.
+- **F-01 status: review.** Done-criterion "green in CI" is blocked on Prashant's pending
+  action item: push repo to GitHub. Once pushed, first Actions run verifies; any fixes are
+  small follow-ups under F-01.
+- **Action items:** Prashant — push to GitHub, watch first CI run. Orchestrator — mark F-01
+  done after CI green; F-02 (Drift schema) is next core task.

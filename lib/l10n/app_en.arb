@@ -1,0 +1,35 @@
+{
+  "@@locale": "en",
+  "appTitle": "FOKUS",
+  "@appTitle": {
+    "description": "Application name shown in the task switcher"
+  },
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Home dashboard screen title (stub, F-11)"
+  },
+  "onboardingTitle": "Welcome",
+  "@onboardingTitle": {
+    "description": "Onboarding screen title (stub, F-10)"
+  },
+  "sessionTitle": "Focus session",
+  "@sessionTitle": {
+    "description": "Active session screen title (stub, F-06)"
+  },
+  "recoveryTitle": "Recovery",
+  "@recoveryTitle": {
+    "description": "Recovery flow screen title (stub, F-07)"
+  },
+  "statsTitle": "Your progress",
+  "@statsTitle": {
+    "description": "Stats screen title (stub, F-09)"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings screen title (stub, F-12)"
+  },
+  "emergencyExit": "Emergency exit",
+  "@emergencyExit": {
+    "description": "Policy-bound label, DESIGN_SYSTEM.md §8 — always visible on intercept/exit screens"
+  }
+}

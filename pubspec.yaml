@@ -1,0 +1,26 @@
+name: fokus
+description: "FOKUS — AI-assisted focus companion. Blocks distracting apps, guides recovery, builds streaks."
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.8.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
+  go_router: ^15.0.0
+  intl: any
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
