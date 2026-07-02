@@ -861,5 +861,129 @@
   "setLicenses": "Open-source licenses",
   "@setLicenses": {
     "description": "Opens the license page incl. the bundled font's OFL (F-12)."
+  },
+  "dashTitle": "Dashboard",
+  "@dashTitle": {
+    "description": "Stats dashboard section title (F-14, spec §3.6)."
+  },
+  "dashRangeDay": "Day",
+  "@dashRangeDay": {
+    "description": "Segmented range: today, hourly buckets (F-14)."
+  },
+  "dashRangeWeek": "Week",
+  "@dashRangeWeek": {
+    "description": "Segmented range: this week Mon–Sun, daily buckets (F-14)."
+  },
+  "dashRangeMonth": "Month",
+  "@dashRangeMonth": {
+    "description": "Segmented range: this calendar month, daily buckets (F-14)."
+  },
+  "dashRangeSemantics": "Time range",
+  "@dashRangeSemantics": {
+    "description": "Screen-reader label for the day/week/month segmented control (F-14)."
+  },
+  "dashFocusTime": "Focus time",
+  "@dashFocusTime": {
+    "description": "Chart title: focused minutes per bucket (F-14)."
+  },
+  "dashSessions": "Sessions",
+  "@dashSessions": {
+    "description": "Chart title: completed vs ended-early sessions (F-14)."
+  },
+  "dashCompleted": "Completed",
+  "@dashCompleted": {
+    "description": "Legend: sessions that completed (F-14)."
+  },
+  "dashEndedEarly": "Ended early",
+  "@dashEndedEarly": {
+    "description": "Legend: aborted/failed sessions — neutral, guilt-free wording (F-14)."
+  },
+  "dashDistractions": "Distractions blocked",
+  "@dashDistractions": {
+    "description": "Chart title: intercepted attempts per bucket (F-14)."
+  },
+  "dashResumeRate": "Recovery resume rate",
+  "@dashResumeRate": {
+    "description": "Meter title: share of recoveries that led back to focus (F-14)."
+  },
+  "dashResumeRateDetail": "{resumed} of {total} recoveries led back to focus",
+  "@dashResumeRateDetail": {
+    "description": "Sample counts under the resume-rate meter (F-14).",
+    "placeholders": {
+      "resumed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "dashResumeRateEmpty": "No recoveries in this period.",
+  "@dashResumeRateEmpty": {
+    "description": "Resume-rate empty state — zero completed recovery events in range (F-14)."
+  },
+  "dashNoData": "No sessions in this period yet.",
+  "@dashNoData": {
+    "description": "Dashboard empty state for a range with no data (F-14)."
+  },
+  "dashFocusScore": "Focus score",
+  "@dashFocusScore": {
+    "description": "Weekly focus score card title (F-14, spec §3.6)."
+  },
+  "dashBetaTag": "Beta",
+  "@dashBetaTag": {
+    "description": "Mandatory beta tag on the v1 focus-score formula (spec §3.6)."
+  },
+  "dashFocusScoreEmpty": "Finish a session this week to see your first score.",
+  "@dashFocusScoreEmpty": {
+    "description": "Focus-score empty state — no terminal session this week (F-14)."
+  },
+  "dashScoreOutOf": "out of 100",
+  "@dashScoreOutOf": {
+    "description": "Suffix under the focus-score hero number (F-14)."
+  },
+  "dashScoreCompletion": "Completion",
+  "@dashScoreCompletion": {
+    "description": "Focus-score breakdown row: completion rate, 50% weight (F-14)."
+  },
+  "dashScoreVolume": "Volume vs 4-week baseline",
+  "@dashScoreVolume": {
+    "description": "Focus-score breakdown row: volume component, 30% weight (F-14)."
+  },
+  "dashScoreRecovery": "Recovery",
+  "@dashScoreRecovery": {
+    "description": "Focus-score breakdown row: resume-rate component, 20% weight (F-14)."
+  },
+  "dashPercent": "{percent}%",
+  "@dashPercent": {
+    "description": "Percent formatting for dashboard rates (F-14).",
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "dashFocusTimeSemantics": "Focus time chart. {minutes} focused minutes in this period.",
+  "@dashFocusTimeSemantics": {
+    "description": "Screen-reader summary of the focus-time chart (F-14).",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "dashSessionsSemantics": "Sessions chart. {completed} completed, {endedEarly} ended early.",
+  "@dashSessionsSemantics": {
+    "description": "Screen-reader summary of the sessions chart (F-14).",
+    "placeholders": {
+      "completed": { "type": "int" },
+      "endedEarly": { "type": "int" }
+    }
+  },
+  "dashDistractionsSemantics": "Distractions chart. {count} blocked attempts.",
+  "@dashDistractionsSemantics": {
+    "description": "Screen-reader summary of the distractions chart (F-14).",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "dashFocusScoreSemantics": "Focus score, beta: {score} out of 100.",
+  "@dashFocusScoreSemantics": {
+    "description": "Screen-reader summary of the focus-score card (F-14).",
+    "placeholders": {
+      "score": { "type": "int" }
+    }
   }
 }

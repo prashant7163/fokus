@@ -26,7 +26,7 @@ Status: `todo | doing | review | done | blocked`. Owner: `core` = single-author 
 | ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
 | F-13 | Presets CRUD + schedules (WorkManager) | core | todo | Scheduled session auto-starts at local time |
-| F-14 | Stats dashboard day/week/month + focus score | agent-ok | todo | Charts render from fixtures + real data |
+| F-14 | Stats dashboard day/week/month + focus score | agent-ok (mobile-dev agent, 2026-07-02) | review | Charts render from fixtures + real data — widget test renders all 3 charts + resume-rate meter + beta-labeled focus score from fixture DB rows across day/week/month segments; pure unit tests for score formula (no-baseline, zero-session, <1-sample edges) and bucketing (day boundaries, midnight-crossers, month lengths); light/dark render eyeballed; `flutter analyze` + `flutter test` green (239) |
 | F-15 | Achievements engine + badge screen | agent-ok | todo | All 8 CONTRACTS-listed triggers fire once |
 | F-16 | Post-session micro-feedback + contextual triggers | agent-ok | todo | 1-in-3 sampling; 😔 branch captures reason |
 | F-17 | Local AI suggestions (distraction windows, optimal length, recovery ordering) | core | todo | Suggestions from ≥ 2 weeks of fixture data match expected |
