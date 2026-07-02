@@ -67,10 +67,33 @@ class BlockingChannelHandler(private val activity: Activity) :
                 "stopSession" -> {
                     val sessionId = call.argument<String>("sessionId")
                         ?: return result.error(ERROR, "missing sessionId", null)
-                    if (BlockedSetCache.session?.id == sessionId) {
+                    // D-013 P1-C: Dart decides liveness, always. Decision is
+                    // pure (StopDecision) so it is JVM-tested; a mismatch emits
+                    // a `stopMismatch` diagnostic carrying both ids (D-013
+                    // sanctions this diagnostic; CONTRACTS §1 addendum flagged
+                    // in the F-22 summary). Stop is unconditional — never a
+                    // silent no-op.
+                    val live = BlockedSetCache.session?.id
+                    val decision = StopDecision.decide(live, sessionId)
+                    if (decision.emitMismatch) {
+                        FokusEventBus.emitStopMismatch(
+                            requestedId = sessionId,
+                            liveId = live!!,
+                        )
+                    }
+                    if (decision.stop) {
                         BlockedSetCache.clearSession(activity)
                         SessionForegroundService.stop(activity)
                     }
+                    result.success(null)
+                }
+
+                "ackEvents" -> {
+                    // D-013 P1-A: Dart acks the highest journal seq it has
+                    // durably written; entries at or below it are dropped.
+                    val upToSeq = call.argument<Number>("upToSeq")?.toLong()
+                        ?: return result.error(ERROR, "missing upToSeq", null)
+                    FokusEventBus.ackJournal(activity, upToSeq)
                     result.success(null)
                 }
 
@@ -118,6 +141,7 @@ class BlockingChannelHandler(private val activity: Activity) :
         /** Wire both channels onto [engine]. Called from MainActivity. */
         fun register(activity: Activity, engine: FlutterEngine) {
             BlockedSetCache.ensureLoaded(activity)
+            FokusEventBus.attachContext(activity)
             val messenger = engine.dartExecutor.binaryMessenger
             MethodChannel(messenger, METHOD_CHANNEL)
                 .setMethodCallHandler(BlockingChannelHandler(activity))

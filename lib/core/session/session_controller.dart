@@ -321,15 +321,17 @@ class SessionController extends Notifier<SessionState>
   /// does not apply to the current state is dropped, never an error.
   Future<void> _handle(BlockingEvent event) async {
     switch (event) {
-      case DistractionAttemptEvent(:final packageName, :final ts):
-        await _logAttempt(packageName, ts);
+      case DistractionAttemptEvent(:final packageName, :final ts, :final seq):
+        await _logAttempt(packageName, ts, seq);
 
-      case RecoveryRequestedEvent():
+      case RecoveryRequestedEvent(:final seq):
         // Idempotent: already in recovery (replay) or session already
-        // over → ignore.
+        // over → ignore. Acked regardless: the journal entry has been
+        // consumed once the state is (or already was) reconciled.
         if (state.status == SessionStatus.active) {
           await enterRecovery();
         }
+        await _ack(seq);
 
       case PermissionLostEvent(:final kind):
         await _onPermissionLost(kind);
@@ -337,38 +339,103 @@ class SessionController extends Notifier<SessionState>
       case SessionRestoredEvent(:final sessionId):
         await _hydrate(sessionId);
 
+      case StopMismatchEvent(:final requestedId, :final liveId):
+        await _onStopMismatch(requestedId, liveId);
+
       case InterceptShownEvent():
         break; // informational; nothing to decide.
     }
   }
 
-  Future<void> _logAttempt(String packageName, DateTime ts) async {
-    final key = '$packageName|${ts.millisecondsSinceEpoch}';
-    if (!_seenAttempts.add(key)) return; // replay duplicate
+  /// Acks a journalled event by seq (D-013 P1-A) once it is durably written.
+  /// Best-effort: a dead channel just means the entry replays next attach and
+  /// the `pkg|ts` guard dedupes it.
+  Future<void> _ack(int? seq) async {
+    if (seq == null) return;
+    await _silently(() => _adapter.ackEvents(seq));
+  }
 
-    // Attribute to the live session, else (replay after retroactive
-    // completion) to the most recent session whose window covers ts.
-    var sessionId = state.isRunning ? state.sessionId : null;
-    if (sessionId == null) {
-      final recent = await _sessions.getMostRecentSession();
-      if (recent != null) {
-        final windowEnd = (recent.endTime ??
-                recent.startTime.add(Duration(minutes: recent.plannedMin)))
-            .add(_attributionGrace);
-        final inWindow = !ts.isBefore(recent.startTime) &&
-            !ts.isAfter(windowEnd);
-        if (inWindow) sessionId = recent.id;
-      }
+  Future<void> _logAttempt(String packageName, DateTime ts, int? seq) async {
+    final key = '$packageName|${ts.millisecondsSinceEpoch}';
+    if (!_seenAttempts.add(key)) {
+      // Already written on a prior replay → still ack so native can drop it.
+      await _ack(seq);
+      return;
     }
+
+    final sessionId = await _attributeAttempt(ts);
     if (sessionId == null) {
+      // Orphan: no session's window contains ts (D-013 P1-D — never fall back
+      // to "most recent regardless of window"). Log + discard. Ack anyway so
+      // the journal does not replay an event we will always discard.
       _seenAttempts.remove(key);
-      return; // orphan event — nothing to attach it to.
+      debugPrint(
+        'fokus: distraction attempt at $ts (pkg=$packageName) matched no '
+        'session window — discarded (D-013 P1-D).',
+      );
+      await _ack(seq);
+      return;
     }
     await _distractions.logAttempt(
       sessionId: sessionId,
       packageName: packageName,
       ts: ts,
     );
+    await _ack(seq);
+  }
+
+  /// Attributes an attempt at [ts] to a session by **timestamp containment
+  /// only** (D-013 P1-D). The live session wins if its window contains ts;
+  /// otherwise the newest already-started session whose window
+  /// `[startTime, endTime|planned end + grace]` strictly contains ts. Never
+  /// "most recent session regardless of window" — that misattributes a
+  /// replayed attempt from a dead session to a newer one.
+  Future<String?> _attributeAttempt(DateTime ts) async {
+    if (state.isRunning &&
+        state.sessionId != null &&
+        _windowContains(state.startTime!, state.endTime!, ts)) {
+      return state.sessionId;
+    }
+    final candidates = await _sessions.sessionsStartedBefore(ts);
+    for (final row in candidates) {
+      final end =
+          row.endTime ?? row.startTime.add(Duration(minutes: row.plannedMin));
+      if (_windowContains(row.startTime, end, ts)) return row.id;
+    }
+    return null;
+  }
+
+  /// True when [ts] is within `[start, end + grace]` — the grace absorbs clock
+  /// skew between the native attempt ts and the Dart-side end anchor.
+  bool _windowContains(DateTime start, DateTime end, DateTime ts) {
+    final windowEnd = end.add(_attributionGrace);
+    return !ts.isBefore(start) && !ts.isAfter(windowEnd);
+  }
+
+  /// D-013 P1-C: native dropped [liveId] because Dart asked to stop
+  /// [requestedId]. If Dart is still tracking [liveId] as live, its native
+  /// arming is now gone — Dart's decision wins, so abort the orphaned session
+  /// (structured as a `stuck` abort; F-08 refines exit reasons). Otherwise the
+  /// mismatch is already reconciled — just log it.
+  Future<void> _onStopMismatch(String requestedId, String liveId) async {
+    debugPrint(
+      'fokus: stopSession($requestedId) mismatched live native session '
+      '$liveId (D-013 P1-C) — reconciling.',
+    );
+    if (state.isRunning && state.sessionId == liveId) {
+      await _resumeIfInRecovery();
+      final next = _apply(SessionTrigger.abort);
+      await _terminate(
+        next,
+        persist: (id) => _sessions.abortSession(
+          id,
+          exitReason: ExitReason.stuck,
+          actualMin: _elapsedMin(),
+          endTime: _now(),
+        ),
+        exitReason: ExitReason.stuck,
+      );
+    }
   }
 
   Future<void> _onPermissionLost(PermissionKind kind) async {

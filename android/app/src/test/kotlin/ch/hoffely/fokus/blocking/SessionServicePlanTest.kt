@@ -84,6 +84,33 @@ class SessionServicePlanTest {
         assertEquals(60_000L, SessionServicePlan.nextTickDelayMs(30 * 60_000L))
     }
 
+    // --- clearsCacheOnStop: D-013 P1-B ---------------------------------
+
+    @Test
+    fun `expiry clears the blocked-set cache`() {
+        assertTrue(
+            SessionServicePlan.clearsCacheOnStop(SessionServicePlan.Plan.Expired),
+        )
+    }
+
+    @Test
+    fun `no-session stop does not clear (nothing to clear)`() {
+        assertEquals(
+            false,
+            SessionServicePlan.clearsCacheOnStop(SessionServicePlan.Plan.NoSession),
+        )
+    }
+
+    @Test
+    fun `a running plan never triggers a cache clear`() {
+        assertEquals(
+            false,
+            SessionServicePlan.clearsCacheOnStop(
+                SessionServicePlan.Plan.Run(remainingMinutes = 5, nextTickDelayMs = 1000L),
+            ),
+        )
+    }
+
     @Test
     fun `final stretch - tick lands exactly at session end`() {
         // 59 s left (displaying 1 min): next tick after 59 s = at expiry,

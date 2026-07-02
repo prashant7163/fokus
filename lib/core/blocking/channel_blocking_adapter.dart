@@ -72,6 +72,10 @@ class ChannelBlockingAdapter implements BlockingAdapter {
       _method.invokeMethod<void>('stopSession', {'sessionId': sessionId});
 
   @override
+  Future<void> ackEvents(int upToSeq) =>
+      _method.invokeMethod<void>('ackEvents', {'upToSeq': upToSeq});
+
+  @override
   Stream<BlockingEvent> get events => _events ??= _event
       .receiveBroadcastStream()
       .map(_parse)
@@ -90,11 +94,12 @@ class ChannelBlockingAdapter implements BlockingAdapter {
         return DistractionAttemptEvent(
           packageName: raw['pkg'] as String,
           ts: DateTime.fromMillisecondsSinceEpoch((raw['ts'] as num).toInt()),
+          seq: (raw['seq'] as num?)?.toInt(),
         );
       case 'interceptShown':
         return InterceptShownEvent(packageName: raw['pkg'] as String);
       case 'recoveryRequested':
-        return const RecoveryRequestedEvent();
+        return RecoveryRequestedEvent(seq: (raw['seq'] as num?)?.toInt());
       case 'permissionLost':
         for (final kind in PermissionKind.values) {
           if (kind.name == raw['kind']) return PermissionLostEvent(kind: kind);
@@ -103,6 +108,11 @@ class ChannelBlockingAdapter implements BlockingAdapter {
         return null;
       case 'sessionRestored':
         return SessionRestoredEvent(sessionId: raw['sessionId'] as String);
+      case 'stopMismatch':
+        return StopMismatchEvent(
+          requestedId: raw['requestedId'] as String,
+          liveId: raw['liveId'] as String,
+        );
       default:
         debugPrint('fokus/events: unknown event type "$type" skipped');
         return null;

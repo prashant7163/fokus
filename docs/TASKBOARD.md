@@ -19,7 +19,7 @@ Status: `todo | doing | review | done | blocked`. Owner: `core` = single-author 
 | F-10 | Onboarding: 3 value screens + permission setup + disclosure | agent-ok | todo | Disclosure precedes accessibility request (Play policy); "later" → limited mode |
 | F-11 | Home dashboard + start-session config screen | agent-ok | todo | One-tap repeat of last config works |
 | F-12 | Settings/profile: permissions health, notifications | agent-ok | todo | Revoked permission surfaces as warning banner |
-| F-22 | P1 fixes from F-18 core review per D-013 (attempt journal, stopSession tiebreak, expiry cache clear, ts-containment attribution) | core | todo | All 4 P1s fixed with tests per D-013; review report findings marked resolved |
+| F-22 | P1 fixes from F-18 core review per D-013 (attempt journal, stopSession tiebreak, expiry cache clear, ts-containment attribution) | core (mobile-dev agent, 2026-07-02) | review | All 4 P1s fixed with tests per D-013; review report findings marked resolved — CI is the verification gate (sandbox cannot run flutter/gradle) |
 
 ## Phase B — Engagement (blueprint Phase 2, local-only subset)
 

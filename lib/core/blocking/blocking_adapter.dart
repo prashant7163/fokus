@@ -72,12 +72,22 @@ sealed class BlockingEvent {
 }
 
 /// User opened a blocked app; the intercept fired. `ts` is the original
-/// attempt time — buffered events are delivered late with their true ts.
+/// attempt time — journalled events are delivered late with their true ts.
+///
+/// [seq] is the native [AttemptJournal] sequence number (D-013 P1-A). It is
+/// present for journalled deliveries (the normal case) and null only for a
+/// legacy/live event without a journal entry. Dart acks the highest seq it has
+/// durably written so the native journal can drop it.
 class DistractionAttemptEvent extends BlockingEvent {
-  const DistractionAttemptEvent({required this.packageName, required this.ts});
+  const DistractionAttemptEvent({
+    required this.packageName,
+    required this.ts,
+    this.seq,
+  });
 
   final String packageName;
   final DateTime ts;
+  final int? seq;
 }
 
 /// Intercept screen became visible for [packageName].
@@ -89,8 +99,13 @@ class InterceptShownEvent extends BlockingEvent {
 
 /// User tapped "I'm stuck" on the intercept. Navigation happens separately
 /// via the `fokus://recovery` deep link; this event drives the state machine.
+///
+/// Journalled like [DistractionAttemptEvent] (D-013 P1-A): [seq] is the native
+/// journal sequence number, acked once handled.
 class RecoveryRequestedEvent extends BlockingEvent {
-  const RecoveryRequestedEvent();
+  const RecoveryRequestedEvent({this.seq});
+
+  final int? seq;
 }
 
 /// A required permission was revoked (never silent — fokus-specs §4).
@@ -108,6 +123,19 @@ class SessionRestoredEvent extends BlockingEvent {
   final String sessionId;
 }
 
+/// Diagnostic (D-013 P1-C): `stopSession(requestedId)` was called while native
+/// held a *different* live session [liveId]. Native has already dropped its
+/// session (Dart decides liveness); Dart logs the mismatch and reconciles —
+/// if it is still tracking [liveId] as live, that session's native arming is
+/// gone, so Dart must terminate it too. CONTRACTS §1 addendum (sanctioned by
+/// D-013).
+class StopMismatchEvent extends BlockingEvent {
+  const StopMismatchEvent({required this.requestedId, required this.liveId});
+
+  final String requestedId;
+  final String liveId;
+}
+
 /// CONTRACTS §1 — facade over MethodChannel `fokus/blocking` and
 /// EventChannel `fokus/events`.
 abstract class BlockingAdapter {
@@ -123,6 +151,11 @@ abstract class BlockingAdapter {
   Future<void> startSession(NativeSessionConfig config);
 
   Future<void> stopSession(String sessionId);
+
+  /// Acks journalled events up to and including [upToSeq] (D-013 P1-A). The
+  /// native [AttemptJournal] drops acked entries; delivery is at-least-once,
+  /// so Dart must have durably written the attempt before acking.
+  Future<void> ackEvents(int upToSeq);
 
   /// Broadcast stream of native events. The native bus buffers
   /// restore-critical events until this stream is listened to, then replays

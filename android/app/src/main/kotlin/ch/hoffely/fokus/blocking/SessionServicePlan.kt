@@ -27,6 +27,15 @@ object SessionServicePlan {
         ) : Plan
     }
 
+    /**
+     * D-013 P1-B: whether the stop path must clear [BlockedSetCache]. True only
+     * on natural [Plan.Expired] — so native and Dart agree no session is live
+     * even if the process dies before Dart reconciles (BootReceiver would
+     * otherwise read a stale expired row). [Plan.NoSession] has nothing to
+     * clear; a [Plan.Run] never stops here.
+     */
+    fun clearsCacheOnStop(plan: Plan): Boolean = plan is Plan.Expired
+
     fun planFor(session: NativeSessionConfig?, nowMs: Long): Plan {
         if (session == null) return Plan.NoSession
         val remainingMs = session.endEpochMs - nowMs

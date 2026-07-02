@@ -54,7 +54,7 @@ class FokusAccessibilityService : AccessibilityService() {
         lastInterceptPackage = packageName
         lastInterceptAtMs = nowMs
 
-        FokusEventBus.emitDistractionAttempt(packageName!!, nowMs)
+        FokusEventBus.emitDistractionAttempt(this, packageName!!, nowMs)
         val attemptsInWindow = attemptTracker.record(nowMs)
         // Background-activity-start is permitted here: accessibility
         // services are system-bound (documented BAL exemption).

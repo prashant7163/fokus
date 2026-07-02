@@ -65,7 +65,7 @@ class SessionForegroundService : Service() {
             }
 
             else -> {
-                stopAndRemove()
+                stopForPlan(plan)
                 START_NOT_STICKY
             }
         }
@@ -90,8 +90,22 @@ class SessionForegroundService : Service() {
 
             // Timer end (or session cleared): stop. Dart decides the
             // resulting transition (CONTRACTS §2).
-            else -> stopAndRemove()
+            else -> stopForPlan(plan)
         }
+    }
+
+    /**
+     * Stop path for a non-Run plan. On natural expiry (D-013 P1-B) the stale
+     * session config is cleared from [BlockedSetCache] so native and Dart agree
+     * no session is live, even if the process is killed before Dart reconciles
+     * (BootReceiver would otherwise read an expired row). `NoSession` has
+     * nothing to clear.
+     */
+    private fun stopForPlan(plan: SessionServicePlan.Plan) {
+        if (SessionServicePlan.clearsCacheOnStop(plan)) {
+            BlockedSetCache.clearSession(this)
+        }
+        stopAndRemove()
     }
 
     private fun scheduleTick(delayMs: Long) {

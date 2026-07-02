@@ -241,7 +241,7 @@ class InterceptActivity : Activity() {
     }
 
     private fun openRecovery() {
-        FokusEventBus.emitRecoveryRequested()
+        FokusEventBus.emitRecoveryRequested(this, System.currentTimeMillis())
         val uri = if (hintActive) "$URI_RECOVERY?module=breathe" else URI_RECOVERY
         deepLink(uri)
     }

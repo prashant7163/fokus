@@ -287,10 +287,13 @@ void main() {
       final id = await startSession();
       final ts = t0.add(const Duration(minutes: 2));
 
-      final event =
-          DistractionAttemptEvent(packageName: 'com.instagram.android', ts: ts);
+      final event = DistractionAttemptEvent(
+        packageName: 'com.instagram.android',
+        ts: ts,
+        seq: 0,
+      );
       fake.emit(event);
-      fake.emit(event); // buffered replay — same pkg, same original ts
+      fake.emit(event); // journalled replay — same pkg, same original ts
       await pumpEventQueue();
 
       final rows = await attemptRows();
@@ -298,6 +301,8 @@ void main() {
       expect(rows.single.sessionId, id);
       expect(rows.single.packageName, 'com.instagram.android');
       expect(rows.single.ts, ts);
+      // D-013 P1-A: both deliveries ack the journal seq so native drops it.
+      expect(fake.ackedSeqs, [0, 0]);
     });
 
     test('replay after retroactive completion attributes by ts window',
@@ -305,28 +310,102 @@ void main() {
       final id = await startSession(plannedMin: 30);
       final ts = t0.add(const Duration(minutes: 10));
 
-      // App was dead: session completes retroactively first, the buffered
+      // App was dead: session completes retroactively first, the journalled
       // attempt arrives after.
       now = t0.add(const Duration(minutes: 45));
       await controller().syncWithClock();
       expect(state().status, SessionStatus.completed);
 
-      fake.emit(DistractionAttemptEvent(packageName: 'com.tiktok', ts: ts));
+      fake.emit(
+        DistractionAttemptEvent(packageName: 'com.tiktok', ts: ts, seq: 3),
+      );
       await pumpEventQueue();
 
       final rows = await attemptRows();
       expect(rows.single.sessionId, id);
+      expect(fake.ackedSeqs, contains(3));
     });
 
-    test('orphan attempt (no session it could belong to) is dropped',
+    test(
+        'D-013 P1-D: buffered attempt from a dead session is NOT misattributed '
+        'to a newer session (window containment only)', () async {
+      // Session A: t0 .. t0+30. An attempt happens at t0+5 but its journalled
+      // delivery is delayed. A then completes on its timer at t0+30.
+      final idA = await startSession(plannedMin: 30);
+      final tsA = t0.add(const Duration(minutes: 5));
+      now = t0.add(const Duration(minutes: 30));
+      await controller().syncWithClock(); // A completes (endTime = t0+30)
+      expect(state().status, SessionStatus.completed);
+
+      // Later, a NEW session B starts and is the "most recent" row.
+      now = t0.add(const Duration(minutes: 40));
+      await controller().start(plannedMin: 30, taskAnchor: 'B');
+      final idB = state().sessionId!;
+      expect(idB, isNot(idA));
+
+      // The old buffered attempt (tsA, inside A's window [t0, t0+31], OUTSIDE
+      // B's window [t0+40, t0+71]) now replays. It must attach to A, never B —
+      // the old getMostRecentSession() path would have wrongly picked B.
+      fake.emit(
+        DistractionAttemptEvent(packageName: 'com.reddit', ts: tsA, seq: 7),
+      );
+      await pumpEventQueue();
+
+      final rows = await attemptRows();
+      expect(rows.single.sessionId, idA); // correct owner
+      expect(rows.single.sessionId, isNot(idB)); // not the newer session
+    });
+
+    test('orphan attempt (no session window contains ts) is dropped + acked',
         () async {
       controller(); // build with empty DB
       fake.emit(
-        DistractionAttemptEvent(packageName: 'com.x', ts: t0),
+        DistractionAttemptEvent(packageName: 'com.x', ts: t0, seq: 0),
       );
       await pumpEventQueue();
 
       expect(await attemptRows(), isEmpty);
+      // Acked anyway so the journal never replays a permanently-orphan event.
+      expect(fake.ackedSeqs, [0]);
+    });
+
+    test('recoveryRequested is acked once handled', () async {
+      await startSession();
+      fake.emit(const RecoveryRequestedEvent(seq: 2));
+      await pumpEventQueue();
+      expect(state().status, SessionStatus.recoveryInProgress);
+      expect(fake.ackedSeqs, contains(2));
+    });
+  });
+
+  group('stopMismatch (D-013 P1-C)', () {
+    test('mismatch on the tracked live session aborts it (Dart wins)',
+        () async {
+      final id = await startSession(plannedMin: 30);
+      now = t0.add(const Duration(minutes: 3));
+
+      // Native reports it dropped session `id` because Dart stopped some other
+      // id → Dart's arming for `id` is gone, so it must terminate `id`.
+      fake.emit(StopMismatchEvent(requestedId: 'other-session', liveId: id));
+      await pumpEventQueue();
+
+      expect(state().status, SessionStatus.aborted);
+      expect(state().exitReason, ExitReason.stuck);
+      expect((await repo().getById(id))!.status, SessionStatus.aborted);
+    });
+
+    test('mismatch for a session we are not tracking is a logged no-op',
+        () async {
+      final id = await startSession(plannedMin: 30);
+
+      fake.emit(
+        const StopMismatchEvent(requestedId: 'x', liveId: 'some-dead-session'),
+      );
+      await pumpEventQueue();
+
+      // Our live session is untouched.
+      expect(state().status, SessionStatus.active);
+      expect(state().sessionId, id);
     });
   });
 

@@ -9,6 +9,9 @@ class FakeBlockingAdapter implements BlockingAdapter {
   final stoppedSessionIds = <String>[];
   final blockedAppSets = <List<String>>[];
 
+  /// Every `ackEvents(upToSeq)` call, in order (D-013 P1-A).
+  final ackedSeqs = <int>[];
+
   /// When set, startSession throws — simulates a dead/erroring channel.
   Object? startError;
 
@@ -62,6 +65,11 @@ class FakeBlockingAdapter implements BlockingAdapter {
   @override
   Future<void> stopSession(String sessionId) async {
     stoppedSessionIds.add(sessionId);
+  }
+
+  @override
+  Future<void> ackEvents(int upToSeq) async {
+    ackedSeqs.add(upToSeq);
   }
 
   Future<void> dispose() => _events.close();

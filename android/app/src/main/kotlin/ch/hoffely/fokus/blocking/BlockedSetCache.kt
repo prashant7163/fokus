@@ -65,6 +65,9 @@ object BlockedSetCache {
     fun startSession(context: Context, config: NativeSessionConfig) {
         ensureLoaded(context)
         session = config
+        // Fresh session → drop any stale journal entries from a prior session
+        // (the seq counter stays monotonic across sessions — see AttemptJournal).
+        AttemptJournal.clear(context)
         prefs(context).edit()
             .putString(KEY_SESSION_ID, config.id)
             .putLong(KEY_SESSION_END, config.endEpochMs)
@@ -73,6 +76,14 @@ object BlockedSetCache {
             .apply()
     }
 
+    /**
+     * Clears the cached session. Called by `stopSession` AND on natural native
+     * expiry (D-013 P1-B) so native and Dart agree no session is live,
+     * independent of who reconciles first. The attempt journal is NOT cleared
+     * here: attempts logged during the (now-expired) session may still be
+     * awaiting Dart attach + ack, and dropping them would lose "the product
+     * hypothesis" data. It is cleared on the next `startSession` (or ack).
+     */
     fun clearSession(context: Context) {
         ensureLoaded(context)
         session = null

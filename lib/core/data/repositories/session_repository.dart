@@ -129,10 +129,29 @@ class SessionRepository {
           .get();
 
   /// Most recently started session — one-tap repeat of last config (F-11).
+  ///
+  /// NOTE: ordering semantics (most-recent-by-startTime) are load-bearing for
+  /// F-11 ONLY. Attempt attribution must NOT use this (D-013 P1-D): a replayed
+  /// attempt from a dead session could be misattributed to a newer session.
+  /// Use [sessionsStartedBefore] with strict window containment instead.
   Future<FocusSession?> getMostRecentSession() => (_db.select(_db.focusSessions)
         ..orderBy([(s) => OrderingTerm.desc(s.startTime)])
         ..limit(1))
       .getSingleOrNull();
+
+  /// Sessions whose `startTime` is at or before [ts], newest first (bounded by
+  /// [limit]). Attempt-attribution input (D-013 P1-D): a distraction attempt at
+  /// [ts] can only belong to a session that had already started, so the caller
+  /// picks the newest such session whose end-window strictly contains [ts].
+  Future<List<FocusSession>> sessionsStartedBefore(
+    DateTime ts, {
+    int limit = 8,
+  }) =>
+      (_db.select(_db.focusSessions)
+            ..where((s) => s.startTime.isSmallerOrEqualValue(ts))
+            ..orderBy([(s) => OrderingTerm.desc(s.startTime)])
+            ..limit(limit))
+          .get();
 
   Future<void> _update(String id, FocusSessionsCompanion companion) async {
     final rows = await (_db.update(_db.focusSessions)

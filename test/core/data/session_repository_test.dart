@@ -161,6 +161,20 @@ void main() {
     expect((await repo.getMostRecentSession())!.id, latest);
   });
 
+  test('sessionsStartedBefore returns already-started sessions newest-first',
+      () async {
+    final a = await repo.createSession(
+        plannedMin: 30, strictMode: false, startTime: DateTime(2026, 7, 2, 9));
+    final b = await repo.createSession(
+        plannedMin: 30, strictMode: false, startTime: DateTime(2026, 7, 2, 10));
+    // Started after the query ts → excluded.
+    await repo.createSession(
+        plannedMin: 30, strictMode: false, startTime: DateTime(2026, 7, 2, 12));
+
+    final rows = await repo.sessionsStartedBefore(DateTime(2026, 7, 2, 11));
+    expect(rows.map((s) => s.id).toList(), [b, a]); // newest first, no future
+  });
+
   test('updating a nonexistent session throws', () {
     expect(
       () => repo.setStatus('missing', SessionStatus.active),

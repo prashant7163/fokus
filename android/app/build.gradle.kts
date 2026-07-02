@@ -43,4 +43,7 @@ flutter {
 dependencies {
     // JVM unit tests for the pure blocking-core logic (CONVENTIONS testing bar).
     testImplementation("junit:junit:4.13.2")
+    // Real org.json on the test classpath (android.jar's is a throwing stub) so
+    // the pure JournalCore (D-013 P1-A) is testable without Robolectric.
+    testImplementation("org.json:json:20240303")
 }

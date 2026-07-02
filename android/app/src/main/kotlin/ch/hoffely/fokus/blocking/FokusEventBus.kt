@@ -1,21 +1,30 @@
 package ch.hoffely.fokus.blocking
 
+import android.content.Context
 import io.flutter.plugin.common.EventChannel
 
 /**
  * Holds the `fokus/events` EventChannel sink so native components (the
- * accessibility service, session service, and F-05 later) can push
- * BlockingEvents to Dart. Event names/payloads per CONTRACTS §1.
+ * accessibility service, session service, intercept) can push BlockingEvents
+ * to Dart. Event names/payloads per CONTRACTS §1.
  *
- * Hot-path events are best-effort: if the Flutter engine is not attached the
- * event is dropped — resilience for engine-dead intercepts is
- * InterceptActivity's job (F-05 launches the engine). Restore-critical
- * events (`sessionRestored`, `permissionLost`) are buffered until a sink
- * attaches, because they typically fire while the engine is down (boot,
- * process-kill restart) and Dart must not miss them.
+ * Two-tier buffering (D-013 P1-A):
+ *  - **Restore-critical** events (`sessionRestored`, `permissionLost`) are rare
+ *    and must never be missed; they stay in a small in-memory deque here,
+ *    replayed the moment a sink attaches. With the high-volume traffic moved
+ *    off this channel (below), they can no longer be evicted.
+ *  - **High-volume** events (`distractionAttempt`, `recoveryRequested`) carry
+ *    "the product hypothesis" data (fokus-specs §3.2) and MUST NOT drop. They
+ *    are persisted to [AttemptJournal] (SharedPreferences), unbounded within a
+ *    session, replayed to Dart on attach, and cleared only on explicit ack.
+ *    Delivery is at-least-once; Dart's `pkg|ts` guard dedupes replays.
+ *
+ * Hot-path events other than the above (`interceptShown`) remain best-effort:
+ * if the engine is not attached they are dropped (informational only).
  *
  * All calls happen on the main thread (channel callbacks, service handler,
- * broadcast receiver) — no extra synchronization needed.
+ * broadcast receiver, accessibility callback) — no extra synchronization needed
+ * for the sink; the journal adds its own guard.
  */
 object FokusEventBus : EventChannel.StreamHandler {
 
@@ -24,11 +33,27 @@ object FokusEventBus : EventChannel.StreamHandler {
     private var sink: EventChannel.EventSink? = null
     private val pending = ArrayDeque<Map<String, Any?>>()
 
+    /** Application context for journal access; set at channel registration. */
+    @Volatile
+    private var appContext: Context? = null
+
+    fun attachContext(context: Context) {
+        appContext = context.applicationContext
+    }
+
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         sink = events
         if (events == null) return
+        // Restore-critical deque first (order within a boot does not matter to
+        // Dart — every handler is idempotent), then the persisted journal so
+        // no distraction attempt is lost across a process death.
         while (pending.isNotEmpty()) {
             events.success(pending.removeFirst())
+        }
+        appContext?.let { ctx ->
+            for (entry in AttemptJournal.entries(ctx)) {
+                events.success(entry)
+            }
         }
     }
 
@@ -36,28 +61,64 @@ object FokusEventBus : EventChannel.StreamHandler {
         sink = null
     }
 
-    // distractionAttempt is buffered too: cold intercepts fire while the
-    // engine is down, and every attempt must land as a DistractionAttempt
-    // row (spec §3.2 — this data is the product hypothesis). The original
-    // ts travels with the event, so late delivery stays accurate.
-    fun emitDistractionAttempt(packageName: String, tsEpochMs: Long) =
-        emit(
-            "distractionAttempt",
-            mapOf("pkg" to packageName, "ts" to tsEpochMs),
-            buffered = true,
+    // --- high-volume, journalled (never drop) -----------------------------
+
+    /**
+     * Persists the attempt to the journal, then delivers live if a sink is
+     * attached. The journal is the source of truth: if the engine is down the
+     * entry waits there and replays on attach; if it is up, Dart also acks the
+     * seq, clearing it. Either way the attempt lands exactly once in the DB.
+     */
+    fun emitDistractionAttempt(context: Context, packageName: String, tsEpochMs: Long) {
+        val seq = AttemptJournal.appendDistraction(context, packageName, tsEpochMs)
+        sink?.success(
+            mapOf(
+                "type" to AttemptJournal.TYPE_DISTRACTION,
+                "seq" to seq,
+                "pkg" to packageName,
+                "ts" to tsEpochMs,
+            ),
         )
+    }
+
+    fun emitRecoveryRequested(context: Context, tsEpochMs: Long) {
+        val seq = AttemptJournal.appendRecoveryRequested(context, tsEpochMs)
+        sink?.success(
+            mapOf(
+                "type" to AttemptJournal.TYPE_RECOVERY,
+                "seq" to seq,
+                "ts" to tsEpochMs,
+            ),
+        )
+    }
+
+    /** Dart acks the highest journal seq it has durably written (P1-A). */
+    fun ackJournal(context: Context, upToSeq: Long) =
+        AttemptJournal.ack(context, upToSeq)
+
+    // --- restore-critical, in-memory deque (never evicted) ----------------
 
     fun emitInterceptShown(packageName: String) =
         emit("interceptShown", mapOf("pkg" to packageName))
-
-    fun emitRecoveryRequested() =
-        emit("recoveryRequested", emptyMap(), buffered = true)
 
     fun emitPermissionLost(kind: String) =
         emit("permissionLost", mapOf("kind" to kind), buffered = true)
 
     fun emitSessionRestored(sessionId: String) =
         emit("sessionRestored", mapOf("sessionId" to sessionId), buffered = true)
+
+    /**
+     * Diagnostic for a `stopSession` id mismatch (D-013 P1-C): native was
+     * holding [liveId] when Dart asked to stop [requestedId]. Buffered on the
+     * restore-critical channel so it is never lost — Dart logs it and reconciles.
+     * CONTRACTS §1 addendum (sanctioned by D-013).
+     */
+    fun emitStopMismatch(requestedId: String, liveId: String) =
+        emit(
+            "stopMismatch",
+            mapOf("requestedId" to requestedId, "liveId" to liveId),
+            buffered = true,
+        )
 
     private fun emit(
         type: String,
