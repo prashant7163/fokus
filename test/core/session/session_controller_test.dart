@@ -341,6 +341,7 @@ void main() {
         startTime: start,
       );
 
+      controller(); // build first: subscribes before the event, like app boot
       fake.emit(const SessionRestoredEvent(sessionId: 'restored-1'));
       await pumpEventQueue();
 
@@ -360,6 +361,7 @@ void main() {
         startTime: start,
       );
 
+      controller(); // build first: subscribes before the event, like app boot
       fake.emit(const SessionRestoredEvent(sessionId: 'restored-2'));
       await pumpEventQueue();
 
@@ -398,6 +400,7 @@ void main() {
         actualMin: 5,
       );
 
+      controller(); // build first: subscribes before the event, like app boot
       fake.emit(const SessionRestoredEvent(sessionId: 'stale-1'));
       await pumpEventQueue();
 
@@ -433,6 +436,7 @@ void main() {
       );
       await repo().setStatus('rec-1', SessionStatus.recoveryInProgress);
 
+      controller(); // build first: subscribes before the event, like app boot
       fake.emit(const SessionRestoredEvent(sessionId: 'rec-1'));
       await pumpEventQueue();
 

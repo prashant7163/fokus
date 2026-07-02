@@ -20,7 +20,19 @@ class FakeBlockingAdapter implements BlockingAdapter {
 
   /// Pushes an event as if the native bus emitted it. Call twice with the
   /// same payload to simulate a buffered replay.
-  void emit(BlockingEvent event) => _events.add(event);
+  ///
+  /// UNLIKE the real native FokusEventBus, this fake does NOT buffer events
+  /// emitted before a subscriber exists — a broadcast stream drops them.
+  /// Always build the controller (subscribe) BEFORE emitting, mirroring app
+  /// boot order: engine attaches first, then native replays its buffer.
+  void emit(BlockingEvent event) {
+    assert(
+      _events.hasListener,
+      'emit() before the controller subscribed — the event would be silently '
+      'dropped. Build the controller first (see doc comment).',
+    );
+    _events.add(event);
+  }
 
   @override
   Stream<BlockingEvent> get events => _events.stream;

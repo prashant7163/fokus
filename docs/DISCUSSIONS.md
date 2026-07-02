@@ -254,3 +254,15 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
 - Test/assembleDebug/Kotlin steps were skipped after analyze failure — expect possible new
   findings on next push (run #3). CI run #1 was GREEN on 395779f → F-01 done.
 - **Action items:** Prashant — push, watch run #3. Worker — F-22 (D-013) then F-07.
+
+## 2026-07-02 12:45–12:55 · CI run #3 triage (main session)
+
+- Run #3: analyze ✅, 4 failures in session_controller_test "restore & reconcile". Diagnosis:
+  controller-side logic verified CORRECT (subscribes at build, serialized handlers, awaited
+  hydration; native bus buffers pre-attach events in production). Test-side bug: 4 tests
+  emitted events before anything built the controller — the fake's broadcast stream drops
+  subscriber-less events; state() then built the controller mid-assertion → idle.
+- Fix: `controller()` before emit in the 4 tests (mirrors app boot order) + `hasListener`
+  assert in FakeBlockingAdapter.emit so this failure class is loud, not silent.
+- **Action items:** Prashant — push, watch run #4 (Kotlin/assembleDebug still first-run
+  territory). GitHub connector suggested for orchestrator self-serve CI logs.
