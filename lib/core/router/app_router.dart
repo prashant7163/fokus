@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/recovery/presentation/recovery_screen.dart';
+import '../../features/session/presentation/exit_screen.dart';
 import '../../features/session/presentation/session_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/stats/presentation/stats_screen.dart';
@@ -14,6 +15,7 @@ abstract final class AppRoutes {
   static const String onboarding = '/onboarding';
   static const String session = '/session';
   static const String recovery = '/recovery';
+  static const String exit = '/exit';
   static const String stats = '/stats';
   static const String settings = '/settings';
 }
@@ -36,9 +38,19 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.session,
         builder: (context, state) => const SessionScreen(),
       ),
+      // Deep-link targets: InterceptActivity lands here via fokus://recovery
+      // (optionally `?module=breathe` — the proactive hint pre-selects
+      // Breathe) and fokus://exit. Context is received here and forwarded;
+      // F-07/F-08 own the real screens.
       GoRoute(
         path: AppRoutes.recovery,
-        builder: (context, state) => const RecoveryScreen(),
+        builder: (context, state) => RecoveryScreen(
+          preselectedModule: state.uri.queryParameters['module'],
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.exit,
+        builder: (context, state) => const ExitScreen(),
       ),
       GoRoute(
         path: AppRoutes.stats,

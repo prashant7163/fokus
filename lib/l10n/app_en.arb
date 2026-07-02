@@ -28,6 +28,10 @@
   "@settingsTitle": {
     "description": "Settings screen title (stub, F-12)"
   },
+  "exitTitle": "Leaving early?",
+  "@exitTitle": {
+    "description": "Structured exit flow screen title (stub, F-08) — compassionate, never scolding"
+  },
   "emergencyExit": "Emergency exit",
   "@emergencyExit": {
     "description": "Policy-bound label, DESIGN_SYSTEM.md §8 — always visible on intercept/exit screens"

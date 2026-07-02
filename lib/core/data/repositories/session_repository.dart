@@ -13,13 +13,18 @@ class SessionRepository {
   final String Function() _newId;
 
   /// Inserts a new `active` session and returns its id.
+  ///
+  /// [id] may be supplied by the caller when it must be known before the
+  /// row exists (F-06 arms the native side, keyed by session id, before
+  /// persisting); defaults to a fresh UUID.
   Future<String> createSession({
     required int plannedMin,
     required bool strictMode,
     String? taskAnchor,
     DateTime? startTime,
+    String? id,
   }) async {
-    final id = _newId();
+    id ??= _newId();
     await _db.into(_db.focusSessions).insert(
           FocusSessionsCompanion.insert(
             id: id,
