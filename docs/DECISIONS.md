@@ -120,6 +120,19 @@ Sanctioned by Prashant's standing approval for CONTRACTS changes with a same-com
    the offer renders nothing by construction. l10n string exists; `TODO(F-09)` marks the slot.
 **Revisit when:** F-09 wires redemption, or beta shows pass abuse (repeated re-grants).
 
+## D-016 · 2026-07-02 16:15 · M2 pass executed; integration_test dep; deep-link path convention
+1. M2 emulator pass executed per D-012 — full evidence in `docs/reviews/M2-emulator-pass.md`.
+   M2 + M3 done; the <200 ms *visible-render* bar and OEM battery behavior remain
+   closed-track confirms (detection itself measured instantaneous).
+2. **Dependency added:** `integration_test` (SDK-bundled, dev-only) — arms a real session
+   through the real channel stack on the emulator until F-11's start UI exists.
+3. **Deep-link convention (binding):** `fokus://` links carry the route in the URI *path*
+   (`fokus://app/recovery`), never the host — Flutter's Android embedding drops the host.
+   Found in M2: both intercept deep links were dead on arrival. Second M2 fix in the same
+   class: `SessionState.hydrated` gates deep-linked screens so the pre-hydration `idle` is
+   never read as "no session".
+**Revisit when:** a physical device is available (hardware latency + OEM rows).
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via

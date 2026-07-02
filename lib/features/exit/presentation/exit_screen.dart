@@ -52,17 +52,26 @@ class _ExitScreenState extends ConsumerState<ExitScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final reason = _confirmReason;
-      if (!_session.isRunning) {
-        // Stale deep link or the session already ended — nothing to exit.
-        context.go(AppRoutes.home);
-      } else if (reason != null && !_session.strictMode) {
-        // Non-strict confirm-abort: the reason was already given in the
-        // sheet; asking again would be the interrogation loop FLOWS §4 bans.
-        _abortNow(reason);
-      }
+      if (mounted) _reconcile(_session);
     });
+  }
+
+  /// Cold-start deep links (intercept CTA3) land here before the async DB
+  /// hydration resolves — the transient initial `idle` must NOT be read as
+  /// "no session" (M2 finding). Every decision waits for [SessionState
+  /// .hydrated]; build() re-invokes this via ref.listen when it flips.
+  void _reconcile(SessionState session) {
+    if (_resolving || !session.hydrated) return;
+    final reason = _confirmReason;
+    if (!session.isRunning) {
+      // Stale deep link or the session already ended — nothing to exit.
+      _resolving = true;
+      context.go(AppRoutes.home);
+    } else if (reason != null && !session.strictMode) {
+      // Non-strict confirm-abort: the reason was already given in the
+      // sheet; asking again would be the interrogation loop FLOWS §4 bans.
+      _abortNow(reason);
+    }
   }
 
   // --- terminal paths --------------------------------------------------
@@ -254,28 +263,25 @@ class _ExitScreenState extends ConsumerState<ExitScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // A session that ends while the user is deciding (timer end, native
-    // stop) leaves nothing to exit — go home quietly. _resolving guards the
-    // races where this screen caused the terminal transition itself.
-    ref.listen(sessionControllerProvider, (prev, next) {
-      if (_resolving) return;
-      if ((prev?.isRunning ?? false) && !next.isRunning) {
-        context.go(AppRoutes.home);
-      }
-    });
+    // Re-decide whenever the session changes: hydration concluding, or a
+    // session that ends while the user is deciding (timer end, native stop)
+    // — both route away quietly. _resolving guards the races where this
+    // screen caused the transition itself.
+    ref.listen(sessionControllerProvider, (_, next) => _reconcile(next));
     final session = ref.watch(sessionControllerProvider);
     final confirmReason = _confirmReason;
 
     final Widget body;
-    if (!session.isRunning) {
-      body = const SizedBox.shrink(); // redirecting home (initState).
+    if (!session.hydrated || !session.isRunning) {
+      // Waiting for hydration, or redirecting home (_reconcile).
+      body = const SizedBox.shrink();
     } else if (confirmReason != null) {
       body = session.strictMode
           ? _StrictConsequences(
               onEndAnyway: () => _abortNow(confirmReason),
               onKeepGoing: _stay,
             )
-          : const SizedBox.shrink(); // aborting + redirecting (initState).
+          : const SizedBox.shrink(); // aborting + redirecting (_reconcile).
     } else {
       body = _ReasonSheet(onPick: _pick, onStay: _stay);
     }

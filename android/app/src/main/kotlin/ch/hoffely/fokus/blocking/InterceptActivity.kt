@@ -36,11 +36,11 @@ import ch.hoffely.fokus.R
  * CTA wiring:
  * - "Return to focus"  → home screen (leaves the blocked app behind).
  * - "I'm stuck"        → `recoveryRequested` event (CONTRACTS §1, buffered)
- *                        + deep link `fokus://recovery` (Flutter's own
+ *                        + deep link `fokus://app/recovery` (Flutter's own
  *                        deep-linking; cold + warm engine both covered).
  *                        With the proactive hint active, Breathe is
  *                        pre-selected via `?module=breathe`.
- * - "Emergency exit"   → deep link `fokus://exit` → Dart exit-reason flow
+ * - "Emergency exit"   → deep link `fokus://app/exit` → Dart exit-reason flow
  *                        (F-08). Navigation only — Dart decides transitions.
  *
  * go_router must register `/recovery` and `/exit` for these URIs — seam
@@ -346,8 +346,12 @@ class InterceptActivity : Activity() {
     companion object {
         private const val EXTRA_PKG = "pkg"
         private const val EXTRA_ATTEMPTS = "attemptsInWindow"
-        private const val URI_RECOVERY = "fokus://recovery"
-        private const val URI_EXIT = "fokus://exit"
+        // The route must live in the URI *path*: Flutter's Android embedding
+        // maps a deep link to path+query only (the host is dropped), so
+        // `fokus://recovery` would boot the engine at "/" (found in the M2
+        // emulator pass). The `app` host is arbitrary and not matched.
+        private const val URI_RECOVERY = "fokus://app/recovery"
+        private const val URI_EXIT = "fokus://app/exit"
 
         private const val MATCH = LinearLayout.LayoutParams.MATCH_PARENT
         private const val WRAP = LinearLayout.LayoutParams.WRAP_CONTENT

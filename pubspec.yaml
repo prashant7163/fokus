@@ -25,6 +25,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  # Drives the real app on the emulator for the M2 device pass (D-012/D-016):
+  # arms a session through the real channel stack since the start-config UI
+  # lands with F-11. SDK-bundled, dev-only.
+  integration_test:
+    sdk: flutter
   flutter_lints: ^5.0.0
   drift_dev: ^2.26.0
   build_runner: ^2.4.15

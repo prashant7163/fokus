@@ -41,6 +41,7 @@ class SessionState {
     this.lostPermission,
     this.passPackage,
     this.passEndTime,
+    this.hydrated = false,
   });
 
   const SessionState.idle() : this(status: SessionStatus.idle);
@@ -69,6 +70,12 @@ class SessionState {
   /// by the tick, on shrink, and on any terminal transition.
   final String? passPackage;
   final DateTime? passEndTime;
+
+  /// False only during the cold-start window before the first DB hydration
+  /// resolves. Deep-linked screens (exit sheet, recovery) must not treat the
+  /// transient initial `idle` as "no session" — wait for this flag (M2
+  /// finding: the intercept's emergency-exit deep link bounced home).
+  final bool hydrated;
 
   bool get isRunning =>
       status == SessionStatus.active ||
@@ -102,7 +109,28 @@ class SessionState {
             clearNotice ? null : (lostPermission ?? this.lostPermission),
         passPackage: clearPass ? null : (passPackage ?? this.passPackage),
         passEndTime: clearPass ? null : (passEndTime ?? this.passEndTime),
+        hydrated: hydrated,
       );
+
+  /// The same state with [hydrated] set — the first DB look-up concluded.
+  SessionState asHydrated() => hydrated
+      ? this
+      : SessionState(
+          status: status,
+          sessionId: sessionId,
+          startTime: startTime,
+          endTime: endTime,
+          plannedMin: plannedMin,
+          taskAnchor: taskAnchor,
+          strictMode: strictMode,
+          remaining: remaining,
+          completionReason: completionReason,
+          exitReason: exitReason,
+          lostPermission: lostPermission,
+          passPackage: passPackage,
+          passEndTime: passEndTime,
+          hydrated: true,
+        );
 }
 
 /// Owns the active session lifecycle. All CONTRACTS §2 transitions are
@@ -178,12 +206,15 @@ class SessionController extends Notifier<SessionState>
     // start; the new session begins from a fresh idle (SessionMachine.terminal
     // — a trigger never leaves a terminal state).
     if (SessionMachine.isTerminal(state.status)) {
-      state = const SessionState.idle();
+      state = SessionState(status: SessionStatus.idle, hydrated: true);
     }
 
     // Throws unless idle; holding pendingStart also blocks a concurrent
     // second start() while native is being armed.
-    state = SessionState(status: _apply(SessionTrigger.startRequested));
+    state = SessionState(
+      status: _apply(SessionTrigger.startRequested),
+      hydrated: true,
+    );
 
     final id = _uuid.v4();
     final startTime = _now();
@@ -210,7 +241,7 @@ class SessionController extends Notifier<SessionState>
       // armed (then disarm). Machine returns to a fresh idle — pendingStart
       // is transient and never persisted (see enums.dart).
       await _silently(() => _adapter.stopSession(id));
-      state = const SessionState.idle();
+      state = SessionState(status: SessionStatus.idle, hydrated: true);
       rethrow;
     }
 
@@ -226,6 +257,7 @@ class SessionController extends Notifier<SessionState>
       taskAnchor: taskAnchor,
       strictMode: strictMode,
       remaining: Duration(minutes: plannedMin),
+      hydrated: true,
     );
     _startTicker();
   }
@@ -296,6 +328,7 @@ class SessionController extends Notifier<SessionState>
       taskAnchor: state.taskAnchor,
       strictMode: state.strictMode,
       remaining: newEnd.difference(now),
+      hydrated: true,
     );
     _startTicker();
   }
@@ -585,12 +618,18 @@ class SessionController extends Notifier<SessionState>
     final row = id != null
         ? await _sessions.getById(id)
         : await _sessions.getActiveSession();
-    if (row == null) return;
+    if (row == null) {
+      // The look-up concluded: there really is no session. Deep-linked
+      // screens may now trust `idle` (M2 finding — see SessionState.hydrated).
+      state = state.asHydrated();
+      return;
+    }
 
     if (row.status != SessionStatus.active &&
         row.status != SessionStatus.recoveryInProgress) {
       // DB already terminal but native restored it → disarm native.
       await _silently(() => _adapter.stopSession(row.id));
+      state = state.asHydrated();
       return;
     }
 
@@ -604,6 +643,7 @@ class SessionController extends Notifier<SessionState>
       taskAnchor: row.taskAnchor,
       strictMode: row.strictMode,
       remaining: endTime.difference(_now()),
+      hydrated: true,
     );
     state = hydrated;
 

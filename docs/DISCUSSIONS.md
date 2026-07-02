@@ -380,3 +380,39 @@ correlation id. Prashant — push both commits, watch CI (real gate). After gree
 - **Prashant-only remainder tracked for publish:** Play Console app, keystore/signing,
   verbatim copy approvals, screenshots sign-off, domain/waitlist/trademark, D-A/D-B/D-F,
   tester invites, rollout click.
+
+## 2026-07-02 15:20–16:25 · Worker session (Claude Code): F-08 built + CI green; M2/M3 emulator pass done
+
+**F-08 structured exit flow → done.** `/exit` reason sheet (5 reasons per spec §3.4), every
+pick writes exitReason; emergency immediate and never gated; stuck/tired → recovery (tired
+preselects Breathe); needApp → native 5-min single-app pass in non-strict (grantAppPass —
+CONTRACTS §1 addendum, D-015), kind denial + recovery offer in strict. Recovery "End session"
+now hands off to the exit flow; exit-entered recoveries confirm via `/exit?confirm=<reason>`
+(no re-asking). Strict abort shows the honest-consequences card; lock-break redemption offer
+is a built slot stubbed behind F-09's token engine (tokens always 0 until then — flagged).
+CI run #9 green on 81823c5 (analyze, 170 Dart tests, Kotlin JVM, assembleDebug).
+
+**M2 emulator pass → M2 + M3 done** (evidence: docs/reviews/M2-emulator-pass.md + 6
+screenshots in m2-assets/). Verified on AVD API 35: intercept + latency (detection instant;
+visible render 212–384 ms on software GPU — hardware <200 ms confirm stays closed-track per
+D-012), attempt pipeline (16 rows correctly attributed — D-013 P1-A/P1-D in production),
+crash→restart ~2 s, reboot→BootReceiver re-arm, FGS notification, permission-loss →
+failedPermissions (incidental, spec §4 bar), stuck→recovery-hub→breathe→resumed row,
+emergency→exit-sheet→aborted + unblock.
+
+**Two real bugs found by the pass, fixed + regression-tested (the point of D-012):**
+1. Deep links were dead on arrival — route was in the URI host (`fokus://recovery`), which
+   Flutter's Android embedding drops. Now `fokus://app/recovery|exit` (D-016 convention).
+2. Cold-start hydration race — deep-linked screens read pre-hydration idle as "no session"
+   (emergency exit bounced home). New `SessionState.hydrated` gate; recovery defers its
+   begin() similarly.
+
+**Bookkeeping:** F-03/F-04/F-05/F-08 → done on the taskboard; ROADMAP M2+M3 → done; D-015
+(grantAppPass + exit/recovery hand-off), D-016 (M2 executed, integration_test dep, deep-link
+path convention). Toolchain notes for future passes are in the report (accessibility grant
+wiped on package update; force-stopped apps skip BOOT_COMPLETED; arm-test APK re-arms on
+every cold start).
+
+**Next:** retention layer — F-09 (streaks/tokens/today stats/complete screen, D-011
+semantics), then F-10/F-11/F-12 → M4 + independent review. Prashant owes nothing here;
+disclosure copy approval comes with F-10.

@@ -189,6 +189,21 @@ void main() {
       await settle(tester);
       expect(find.text('stub:home'), findsOneWidget);
     });
+
+    testWidgets(
+        'cold-start deep link: a session only in the DB still shows the sheet',
+        (tester) async {
+      // The intercept's emergency-exit deep link boots the engine cold: the
+      // session exists in the DB but hydration is async — the transient idle
+      // must not bounce home (M2 emulator finding).
+      await sessions().createSession(plannedMin: 30, strictMode: false);
+      await pumpExit(tester);
+      await settle(tester);
+
+      expect(find.text('Why are you leaving?'), findsOneWidget);
+      expect(find.text('stub:home'), findsNothing);
+      expect(state().isRunning, isTrue); // hydrated from the DB row
+    });
   });
 
   group('need one app', () {

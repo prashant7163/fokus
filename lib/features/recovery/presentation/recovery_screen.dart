@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -76,7 +78,24 @@ class _RecoveryScreenState extends ConsumerState<RecoveryScreen> {
   RecoveryController get _controller =>
       ref.read(recoveryControllerProvider);
 
-  Future<void> _begin(RecoveryType type) => _controller.begin(type);
+  Future<void> _begin(RecoveryType type) async {
+    // Cold-start deep link (proactive `?module=breathe`): the first frame
+    // runs before the async DB hydration, when the session still reads as
+    // idle — beginning then would skip the RecoveryEvent row (M2 finding).
+    await _ensureHydrated();
+    if (!mounted) return;
+    await _controller.begin(type);
+  }
+
+  Future<void> _ensureHydrated() async {
+    if (ref.read(sessionControllerProvider).hydrated) return;
+    final done = Completer<void>();
+    final sub = ref.listenManual(sessionControllerProvider, (_, next) {
+      if (next.hydrated && !done.isCompleted) done.complete();
+    });
+    await done.future;
+    sub.close();
+  }
 
   void _selectModule(RecoveryType type) {
     setState(() => _selected = type);
