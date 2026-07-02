@@ -42,6 +42,8 @@ flutter:
   generate: true
   assets:
     - assets/recovery/
+    # F-15 badge art (copied from design/assets/badge_*.svg).
+    - assets/achievements/
   # Plus Jakarta Sans (OFL — assets/fonts/OFL.txt; bundling ruled in D-020,
   # closing the open font question from F-01/D-009).
   fonts:

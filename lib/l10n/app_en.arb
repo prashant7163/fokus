@@ -861,5 +861,92 @@
   "setLicenses": "Open-source licenses",
   "@setLicenses": {
     "description": "Opens the license page incl. the bundled font's OFL (F-12)."
+  },
+
+  "achievementsTitle": "Achievements",
+  "@achievementsTitle": {
+    "description": "Badge-gallery screen title + stats app-bar tooltip (F-15)."
+  },
+  "achUnlockedHeadline": "{count, plural, one{Achievement unlocked} other{Achievements unlocked}}",
+  "@achUnlockedHeadline": {
+    "description": "Celebration header on session complete when this session newly unlocked badges (F-15).",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "achUnlockedOn": "Unlocked {date}",
+  "@achUnlockedOn": {
+    "description": "Unlock-date line on a badge tile; {date} is pre-formatted (F-15).",
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "achLocked": "Locked",
+  "@achLocked": {
+    "description": "Status line on a not-yet-earned badge tile (F-15)."
+  },
+  "achFirstSessionName": "First Session",
+  "@achFirstSessionName": {
+    "description": "Achievement name (F-15, spec §3.8)."
+  },
+  "achFirstSessionDesc": "Complete your first focus session.",
+  "@achFirstSessionDesc": {
+    "description": "One-line trigger description (F-15)."
+  },
+  "achEarlyBirdName": "Early Bird",
+  "@achEarlyBirdName": {
+    "description": "Achievement name (F-15, spec §3.8)."
+  },
+  "achEarlyBirdDesc": "Complete a session that starts before 7 am.",
+  "@achEarlyBirdDesc": {
+    "description": "One-line trigger description (F-15)."
+  },
+  "achNightOwlName": "Night Owl",
+  "@achNightOwlName": {
+    "description": "Achievement name (F-15, spec §3.8)."
+  },
+  "achNightOwlDesc": "Complete a session that starts after 10 pm.",
+  "@achNightOwlDesc": {
+    "description": "One-line trigger description (F-15)."
+  },
+  "achDistractionDestroyerName": "Distraction Destroyer",
+  "@achDistractionDestroyerName": {
+    "description": "Achievement name (F-15, spec §3.8)."
+  },
+  "achDistractionDestroyerDesc": "Block 100 distraction attempts.",
+  "@achDistractionDestroyerDesc": {
+    "description": "One-line trigger description (F-15)."
+  },
+  "achRecoveryChampionName": "Recovery Champion",
+  "@achRecoveryChampionName": {
+    "description": "Achievement name (F-15, spec §3.8)."
+  },
+  "achRecoveryChampionDesc": "Return to focus 10 times through recovery.",
+  "@achRecoveryChampionDesc": {
+    "description": "One-line trigger description (F-15)."
+  },
+  "achIronWillName": "Iron Will",
+  "@achIronWillName": {
+    "description": "Achievement name (F-15, spec §3.8)."
+  },
+  "achIronWillDesc": "Complete 10 strict-mode sessions.",
+  "@achIronWillDesc": {
+    "description": "One-line trigger description (F-15)."
+  },
+  "achExamHeroName": "Exam Hero",
+  "@achExamHeroName": {
+    "description": "Achievement name (F-15, spec §3.8)."
+  },
+  "achExamHeroDesc": "Focus for 20 hours within 7 days.",
+  "@achExamHeroDesc": {
+    "description": "One-line trigger description (F-15)."
+  },
+  "achTwoWeekWarriorName": "Two Week Warrior",
+  "@achTwoWeekWarriorName": {
+    "description": "Achievement name (F-15, spec §3.8)."
+  },
+  "achTwoWeekWarriorDesc": "Keep a 14-day streak.",
+  "@achTwoWeekWarriorDesc": {
+    "description": "One-line trigger description (F-15)."
   }
 }

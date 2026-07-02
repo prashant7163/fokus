@@ -9,6 +9,7 @@ import '../../../core/session/session_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../achievements/presentation/widgets/session_achievements_banner.dart';
 
 /// Session Complete (F-09, SCREENS §7): full-screen celebration — warm,
 /// earned, never infantilizing. Reached right after a session lands on
@@ -144,6 +145,9 @@ class _SessionCompleteScreenState extends ConsumerState<SessionCompleteScreen> {
                     textAlign: TextAlign.center,
                   ),
                 ],
+                // F-15: evaluates achievements post-frame; celebrates only
+                // what THIS completion newly unlocked (unlock/celebrate once).
+                const SessionAchievementsBanner(),
                 // TODO(F-16): micro-feedback row (1-in-3 sampling, spec §3.9).
                 const Spacer(),
                 FilledButton(

@@ -47,6 +47,15 @@ class DistractionRepository {
     return row.read(count) ?? 0;
   }
 
+  /// Lifetime intercept count across all sessions — Distraction Destroyer
+  /// input (F-15, fokus-specs §3.8).
+  Future<int> totalCount() async {
+    final count = _db.distractionAttempts.id.count();
+    final query = _db.selectOnly(_db.distractionAttempts)..addColumns([count]);
+    final row = await query.getSingle();
+    return row.read(count) ?? 0;
+  }
+
   /// Live distraction count for the active-session screen.
   Stream<int> watchCountForSession(String sessionId) {
     final count = _db.distractionAttempts.id.count();

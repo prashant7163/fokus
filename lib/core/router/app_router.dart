@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/achievements/presentation/achievements_screen.dart';
 import '../../features/exit/presentation/exit_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
@@ -22,6 +23,7 @@ abstract final class AppRoutes {
   static const String recovery = '/recovery';
   static const String exit = '/exit';
   static const String stats = '/stats';
+  static const String achievements = '/achievements';
   static const String settings = '/settings';
 }
 
@@ -76,6 +78,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.stats,
         builder: (context, state) => const StatsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.achievements,
+        builder: (context, state) => const AchievementsScreen(),
       ),
       GoRoute(
         path: AppRoutes.settings,

@@ -27,7 +27,7 @@ Status: `todo | doing | review | done | blocked`. Owner: `core` = single-author 
 |---|---|---|---|---|
 | F-13 | Presets CRUD + schedules (WorkManager) | core | todo | Scheduled session auto-starts at local time |
 | F-14 | Stats dashboard day/week/month + focus score | agent-ok | todo | Charts render from fixtures + real data |
-| F-15 | Achievements engine + badge screen | agent-ok | todo | All 8 CONTRACTS-listed triggers fire once |
+| F-15 | Achievements engine + badge screen | agent-ok (mobile-dev agent, 2026-07-02) | review | All 8 CONTRACTS-listed triggers fire once — engine tests prove each §3.8 trigger fires at threshold and not below (incl. 7am/10pm boundaries, rolling-7-day Exam Hero window); service unlock/celebrate-once idempotency + badge-screen widget test; analyze + 247 tests green locally. Debt: Night Owl + Exam Hero badge art missing (Icon fallback) — ux-designer |
 | F-16 | Post-session micro-feedback + contextual triggers | agent-ok | todo | 1-in-3 sampling; 😔 branch captures reason |
 | F-17 | Local AI suggestions (distraction windows, optimal length, recovery ordering) | core | todo | Suggestions from ≥ 2 weeks of fixture data match expected |
 
