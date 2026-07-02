@@ -2,4 +2,10 @@
 <resources>
     <string name="accessibility_service_label">FOKUS App-Blockierung</string>
     <string name="accessibility_service_description">FOKUS nutzt diesen Bedienungshilfen-Dienst für genau einen Zweck: zu erkennen, wenn eine von dir blockierte App während einer von dir gestarteten Fokus-Sitzung geöffnet wird, um einen sanften Erinnerungsbildschirm anzuzeigen. FOKUS liest keine Bildschirminhalte, sammelt keine Browserdaten und sendet niemals Verhaltensdaten von deinem Gerät.</string>
+
+    <!-- F-04 Sitzungs-Benachrichtigung (nativ; PM-Review mit F-20). -->
+    <string name="session_notification_channel_name">Fokus-Sitzung</string>
+    <string name="session_notification_channel_description">Zeigt deine laufende Fokus-Sitzung und die verbleibende Zeit.</string>
+    <string name="session_notification_title_fallback">Fokus-Sitzung</string>
+    <string name="session_notification_text">Noch %1$d Min.</string>
 </resources>

@@ -60,7 +60,7 @@ class BlockingChannelHandler(private val activity: Activity) :
                         strictMode = call.argument<Boolean>("strictMode") ?: false,
                     )
                     BlockedSetCache.startSession(activity, config)
-                    // TODO(F-04): start SessionForegroundService for resilience.
+                    SessionForegroundService.start(activity, restored = false)
                     result.success(null)
                 }
 
@@ -69,8 +69,8 @@ class BlockingChannelHandler(private val activity: Activity) :
                         ?: return result.error(ERROR, "missing sessionId", null)
                     if (BlockedSetCache.session?.id == sessionId) {
                         BlockedSetCache.clearSession(activity)
+                        SessionForegroundService.stop(activity)
                     }
-                    // TODO(F-04): stop SessionForegroundService.
                     result.success(null)
                 }
 

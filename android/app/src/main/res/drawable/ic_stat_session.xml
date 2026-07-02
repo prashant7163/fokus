@@ -1,0 +1,14 @@
+<!-- F-04 status-bar icon: FOKUS broken focus ring (345° arc, 15° gap).
+     Status icons render alpha-only; white stroke per platform convention. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M12,3 A9,9 0 1,1 9.671,3.306"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>

@@ -10,6 +10,13 @@
     <!-- Lets us open the direct battery-exemption request dialog. -->
     <uses-permission
         android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- F-04: session resilience — countdown notification + foreground
+         service + re-arm after reboot. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:label="FOKUS"
@@ -47,6 +54,29 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
         </service>
+
+        <!-- F-04: session resilience — persistent countdown notification,
+             START_STICKY re-hydration after process kill. specialUse: no
+             standard FGS type covers "keep a user-started app-blocking
+             session alive"; subtype declared for Play review. -->
+        <service
+            android:name=".blocking.SessionForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keeps a user-started focus session and its countdown notification running so chosen app-blocking survives process death. No standard foregroundServiceType covers app-blocking focus timers." />
+        </service>
+
+        <!-- F-04: re-arm an active session after reboot. BOOT_COMPLETED is
+             a protected broadcast — only the system can send it. -->
+        <receiver
+            android:name=".blocking.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="flutterEmbedding"

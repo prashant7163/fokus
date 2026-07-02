@@ -4,19 +4,32 @@ import io.flutter.plugin.common.EventChannel
 
 /**
  * Holds the `fokus/events` EventChannel sink so native components (the
- * accessibility service, and F-04/F-05 later) can push BlockingEvents to
- * Dart. Event names/payloads per CONTRACTS §1.
+ * accessibility service, session service, and F-05 later) can push
+ * BlockingEvents to Dart. Event names/payloads per CONTRACTS §1.
  *
- * Events are best-effort: if the Flutter engine is not attached the event is
- * dropped — resilience for engine-dead intercepts is InterceptActivity's job
- * (F-05 launches the engine).
+ * Hot-path events are best-effort: if the Flutter engine is not attached the
+ * event is dropped — resilience for engine-dead intercepts is
+ * InterceptActivity's job (F-05 launches the engine). Restore-critical
+ * events (`sessionRestored`, `permissionLost`) are buffered until a sink
+ * attaches, because they typically fire while the engine is down (boot,
+ * process-kill restart) and Dart must not miss them.
+ *
+ * All calls happen on the main thread (channel callbacks, service handler,
+ * broadcast receiver) — no extra synchronization needed.
  */
 object FokusEventBus : EventChannel.StreamHandler {
 
+    private const val PENDING_LIMIT = 16
+
     private var sink: EventChannel.EventSink? = null
+    private val pending = ArrayDeque<Map<String, Any?>>()
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         sink = events
+        if (events == null) return
+        while (pending.isNotEmpty()) {
+            events.success(pending.removeFirst())
+        }
     }
 
     override fun onCancel(arguments: Any?) {
@@ -32,12 +45,21 @@ object FokusEventBus : EventChannel.StreamHandler {
     fun emitRecoveryRequested() = emit("recoveryRequested", emptyMap())
 
     fun emitPermissionLost(kind: String) =
-        emit("permissionLost", mapOf("kind" to kind))
+        emit("permissionLost", mapOf("kind" to kind), buffered = true)
 
     fun emitSessionRestored(sessionId: String) =
-        emit("sessionRestored", mapOf("sessionId" to sessionId))
+        emit("sessionRestored", mapOf("sessionId" to sessionId), buffered = true)
 
-    private fun emit(type: String, payload: Map<String, Any?>) {
-        sink?.success(mapOf("type" to type) + payload)
+    private fun emit(
+        type: String,
+        payload: Map<String, Any?>,
+        buffered: Boolean = false,
+    ) {
+        val event = mapOf("type" to type) + payload
+        val current = sink
+        when {
+            current != null -> current.success(event)
+            buffered && pending.size < PENDING_LIMIT -> pending.addLast(event)
+        }
     }
 }

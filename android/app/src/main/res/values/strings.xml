@@ -5,4 +5,10 @@
 <resources>
     <string name="accessibility_service_label">FOKUS app blocking</string>
     <string name="accessibility_service_description">FOKUS uses this accessibility service for one purpose: detecting when an app you chose to block is opened during a focus session you started, so it can show a gentle reminder screen. FOKUS does not read screen content, does not collect browsing data, and never sends behavioral data off your device.</string>
+
+    <!-- F-04 session notification (native-side copy; PM review with F-20). -->
+    <string name="session_notification_channel_name">Focus session</string>
+    <string name="session_notification_channel_description">Shows your running focus session and the time remaining.</string>
+    <string name="session_notification_title_fallback">Focus session</string>
+    <string name="session_notification_text">%1$d min remaining</string>
 </resources>
