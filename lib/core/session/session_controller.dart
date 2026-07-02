@@ -157,6 +157,13 @@ class SessionController extends Notifier<SessionState>
     String? taskAnchor,
     bool strictMode = false,
   }) async {
+    // A finished session's terminal state stays on screen until the next
+    // start; the new session begins from a fresh idle (SessionMachine.terminal
+    // — a trigger never leaves a terminal state).
+    if (SessionMachine.isTerminal(state.status)) {
+      state = const SessionState.idle();
+    }
+
     // Throws unless idle; holding pendingStart also blocks a concurrent
     // second start() while native is being armed.
     state = SessionState(status: _apply(SessionTrigger.startRequested));
@@ -235,7 +242,12 @@ class SessionController extends Notifier<SessionState>
     if (!state.isRunning) return;
     final now = _now();
     final currentRemaining = state.endTime!.difference(now);
-    if (currentRemaining <= Duration(minutes: remainingMin)) return;
+    if (currentRemaining <= Duration(minutes: remainingMin)) {
+      // Never extends — but `remaining` is wall-clock-derived, so refresh it
+      // to the value just computed instead of leaving the last tick's.
+      state = state.copyWith(remaining: currentRemaining);
+      return;
+    }
 
     await _resumeIfInRecovery();
 

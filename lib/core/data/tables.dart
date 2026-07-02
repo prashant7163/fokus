@@ -61,10 +61,16 @@ class AllowlistedApps extends Table {
   Set<Column<Object>> get primaryKey => {packageName};
 }
 
+// FK columns use customConstraint instead of `.references()`: drift_dev ≤2.31
+// with analyzer ≥10 parses the bare class name as a TypeLiteral, silently
+// dropping the REFERENCES clause from the DDL (fixed upstream in 2.34).
+// customConstraint replaces the generated NOT NULL, so it is restated.
+
 /// Every intercept of a blocked app (CONTRACTS §3 `distraction_attempts`).
 class DistractionAttempts extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get sessionId => text().references(FocusSessions, #id)();
+  TextColumn get sessionId =>
+      text().customConstraint('NOT NULL REFERENCES focus_sessions (id)')();
   TextColumn get packageName => text()();
   DateTimeColumn get ts => dateTime()();
   BoolColumn get recoveryInvoked =>
@@ -75,7 +81,8 @@ class DistractionAttempts extends Table {
 /// (CONTRACTS §3 `recovery_events`; fokus-specs §3.3).
 class RecoveryEvents extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get sessionId => text().references(FocusSessions, #id)();
+  TextColumn get sessionId =>
+      text().customConstraint('NOT NULL REFERENCES focus_sessions (id)')();
   TextColumn get type => textEnum<RecoveryType>()();
   DateTimeColumn get startedAt => dateTime()();
   DateTimeColumn get completedAt => dateTime().nullable()();
@@ -126,7 +133,8 @@ class Presets extends Table {
 /// Recurring auto-start schedule for a preset (CONTRACTS §3 `schedules`).
 class Schedules extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get presetId => integer().references(Presets, #id)();
+  IntColumn get presetId =>
+      integer().customConstraint('NOT NULL REFERENCES presets (id)')();
 
   /// JSON-encoded list of ISO weekday ints (1 = Monday … 7 = Sunday).
   TextColumn get daysOfWeek => text()();

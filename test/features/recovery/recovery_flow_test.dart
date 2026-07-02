@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fokus/core/blocking/providers.dart';
 import 'package:fokus/core/data/database.dart';
-import 'package:fokus/core/data/enums.dart';
 import 'package:fokus/core/data/providers.dart';
 import 'package:fokus/core/data/repositories/recovery_repository.dart';
 import 'package:fokus/core/session/session_controller.dart';
@@ -135,6 +134,10 @@ void main() {
         await tester.pump(const Duration(milliseconds: 50));
       }
 
+      // The water body can overflow the 600px test surface — scrolled out of
+      // view, the button's center lands on the footer and taps "Resume focus".
+      await tester.ensureVisible(find.text("I'm back"));
+      await tester.pump();
       await tester.tap(find.text("I'm back"));
       await tester.pump();
       await tester.tap(find.text('End session'));

@@ -325,3 +325,30 @@ entry) + recovery SVGs copied into `assets/recovery/`.
 **Action items:** Orchestrator — DECISIONS entries for flutter_svg and for the ackEvents/
 stopMismatch CONTRACTS §1 addenda; tech-lead ruling on the task-reset notes column and P2-D
 correlation id. Prashant — push both commits, watch CI (real gate). After green: F-08 exit flow.
+
+## 2026-07-02 14:15–14:45 · CI run #6 triage + first full local gate (main session)
+
+- Run #6: analyze RED, 1 finding (unnecessary enums import, recovery_flow_test) — fixed.
+- Flutter 3.44.2 is available on this Mac, so the full CI gate ran locally for the first
+  time; it surfaced four issues CI had never reached (runs #5/#6 died before the test step):
+  1. **FK constraints silently missing** from generated DDL: drift_dev 2.31 + analyzer 10
+     parses the bare class name in `.references(FocusSessions, #id)` as a TypeLiteral and
+     drops the REFERENCES clause with only a build warning (upstream fix lands in drift 2.34,
+     blocked here by the sqlite3 2.x→3.x major chain). Fixed version-proof: the three FK
+     columns now use explicit `customConstraint('NOT NULL REFERENCES …')`; F-02's FK test
+     passes again. No schema/contract change — this restores what CONTRACTS §3 intends.
+  2. **Toolchain skew, root cause of "green CI, red Mac":** pubspec.lock (committed in
+     D-014, created under Dart 3.12) requires Dart ≥3.11; CI's Flutter 3.32.0 (Dart 3.8)
+     silently re-resolved different package versions and generated different drift code.
+     ci.yml bumped to Flutter 3.44.2 — the lockfile is now authoritative on both sides.
+  3. **Real product bug (F-06/F-22 seam):** SessionController.start threw
+     IllegalSessionTransition from a terminal state — after a completed session the user
+     could never start another. start() now resets terminal → fresh idle first (machine
+     unchanged; its own doc says a new session starts from a fresh idle).
+  4. Two test-hygiene fixes: shrinkTo's never-extends no-op path now refreshes the
+     wall-clock-derived `remaining`; recovery End-session widget test scrolls the button
+     into view before tapping (600px test surface mis-tapped the footer's Resume).
+- Full local gate green: analyze clean, 146 Dart tests, assembleDebug, Kotlin JVM tests.
+- **Action items:** watch CI run #7 (should now mirror local exactly). Tech-lead (later,
+  unhurried): evaluate the drift 2.34 + drift_flutter 0.3 + sqlite3 3.x upgrade to retire
+  the customConstraint workaround.
