@@ -19,6 +19,10 @@ abstract class BlockingAdapter {
   //   wall-clock expiry, cleared on session start/stop. Dart is policy (duration, strict
   //   gating, one pass at a time); native is mechanism.
   Future<void> ackEvents(int upToSeq); // acks journaled events; native clears ≤ upToSeq (D-013/D-014)
+  Future<NativeSession?> getActiveNativeSession(); // F-13 (D-024): the session the native
+  //   cache currently holds (id, startedEpochMs, endEpochMs, taskAnchor, strictMode,
+  //   recoveryEnabled) or null. Cold-start reconciliation synthesizes a missing DB row from
+  //   it when a schedule auto-started a session while the Flutter engine was dead.
   Future<Map<String, List<int>>> getAppIcons(List<String> packageNames); // F-11 (D-019):
   //   launcher icons as 96 px PNG bytes keyed by package; missing/uninstalled packages
   //   omitted — Dart falls back to a letter glyph. Display-only, on-device only.

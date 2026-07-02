@@ -119,6 +119,30 @@ class BlockingChannelHandler(private val activity: Activity) :
                     result.success(null)
                 }
 
+                "getActiveNativeSession" -> {
+                    // F-13 (D-024): cold-start reconciliation. A schedule may
+                    // have started a session natively while the Flutter engine
+                    // was dead — the buffered sessionRestored event is then
+                    // lost (in-memory only). Dart queries the persisted cache
+                    // on hydrate and synthesizes the missing DB row from this.
+                    BlockedSetCache.ensureLoaded(activity)
+                    val s = BlockedSetCache.session
+                    result.success(
+                        if (s == null) {
+                            null
+                        } else {
+                            mapOf(
+                                "sessionId" to s.id,
+                                "startedEpochMs" to s.startedEpochMs,
+                                "endEpochMs" to s.endEpochMs,
+                                "taskAnchor" to s.taskAnchor,
+                                "strictMode" to s.strictMode,
+                                "recoveryEnabled" to s.recoveryEnabled,
+                            )
+                        },
+                    )
+                }
+
                 "getAppIcons" -> {
                     // F-11 UI polish (D-019): launcher icons as PNG bytes for
                     // the home hero / config / active-session rows. Missing

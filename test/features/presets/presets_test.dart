@@ -162,6 +162,47 @@ void main() {
       expect(row.strictMode, isTrue);
     });
 
+    test(
+        'cold start with no event synthesizes from the native cache (D-024) '
+        '— schedule started while the engine was dead', () async {
+      // Native holds a schedule-started session; no DB row, no restore event.
+      final started = t0.subtract(const Duration(minutes: 5));
+      final end = t0.add(const Duration(minutes: 10));
+      fake.activeNativeSession = SessionRestoredEvent(
+        sessionId: 'sched-cold',
+        startedEpochMs: started.millisecondsSinceEpoch,
+        endEpochMs: end.millisecondsSinceEpoch,
+        taskAnchor: 'Morning focus',
+        strictMode: false,
+        recoveryEnabled: true,
+      );
+
+      // Fresh container so build()'s cold-start hydrate runs against native.
+      final freshContainer = ProviderContainer(overrides: [
+        databaseProvider.overrideWithValue(db),
+        blockingAdapterProvider.overrideWithValue(fake),
+        clockProvider.overrideWithValue(() => now),
+        tickerFactoryProvider.overrideWithValue((_) => const Stream.empty()),
+      ]);
+      addTearDown(freshContainer.dispose);
+
+      // Reading the provider triggers build() → cold-start _hydrate(null).
+      freshContainer.read(sessionControllerProvider);
+      for (var i = 0; i < 5; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+
+      final state = freshContainer.read(sessionControllerProvider);
+      expect(state.status, SessionStatus.active);
+      expect(state.sessionId, 'sched-cold');
+      expect(state.plannedMin, 15);
+      final row = await freshContainer
+          .read(sessionRepositoryProvider)
+          .getById('sched-cold');
+      expect(row, isNotNull);
+      expect(row!.taskAnchor, 'Morning focus');
+    });
+
     test('restore event without config for an unknown id stays idle',
         () async {
       final controller =

@@ -665,9 +665,11 @@ class SessionController extends Notifier<SessionState>
   /// null) and reconciles against the wall clock: if endEpochMs passed
   /// while the app was dead, the session completes retroactively.
   ///
-  /// A restore event with no DB row is a schedule-auto-started session
-  /// (F-13, D-022): native started it while Dart was dead, so the row is
-  /// synthesized here from the event's config before hydrating.
+  /// A native session with no DB row is a schedule-auto-started session
+  /// (F-13): native started it while Dart was dead. The row is synthesized
+  /// here from config — carried on the restore event if the engine was alive
+  /// (D-022), or queried from the native cache on a cold start when the
+  /// buffered event was lost (D-024).
   Future<void> _hydrate(
     String? id, {
     SessionRestoredEvent? restoredEvent,
@@ -679,27 +681,36 @@ class SessionController extends Notifier<SessionState>
     // Never clobber a live or starting session.
     if (state.isRunning || state.status == SessionStatus.pendingStart) return;
 
+    var config = restoredEvent;
     var row = id != null
         ? await _sessions.getById(id)
         : await _sessions.getActiveSession();
-    if (row == null &&
-        id != null &&
-        restoredEvent != null &&
-        restoredEvent.hasConfig) {
-      final start =
-          DateTime.fromMillisecondsSinceEpoch(restoredEvent.startedEpochMs!);
-      final end =
-          DateTime.fromMillisecondsSinceEpoch(restoredEvent.endEpochMs!);
-      final planned = end.difference(start).inMinutes;
-      await _sessions.createSession(
-        id: id,
-        plannedMin: planned < 1 ? 1 : planned,
-        strictMode: restoredEvent.strictMode ?? false,
-        taskAnchor: restoredEvent.taskAnchor,
-        startTime: start,
-      );
-      row = await _sessions.getById(id);
+
+    // Cold start (id == null) with no active row: a schedule may have started
+    // a session natively while the engine was dead (buffered event lost).
+    // Ask native directly (D-024).
+    if (row == null && id == null && config == null) {
+      config = await _silentlyGet(_adapter.getActiveNativeSession);
     }
+    if (row == null && config != null && config.hasConfig) {
+      final synthId = id ?? config.sessionId;
+      row = await _sessions.getById(synthId);
+      if (row == null) {
+        final start =
+            DateTime.fromMillisecondsSinceEpoch(config.startedEpochMs!);
+        final end = DateTime.fromMillisecondsSinceEpoch(config.endEpochMs!);
+        final planned = end.difference(start).inMinutes;
+        await _sessions.createSession(
+          id: synthId,
+          plannedMin: planned < 1 ? 1 : planned,
+          strictMode: config.strictMode ?? false,
+          taskAnchor: config.taskAnchor,
+          startTime: start,
+        );
+        row = await _sessions.getById(synthId);
+      }
+    }
+    restoredEvent ??= config;
     if (row == null) {
       // The look-up concluded: there really is no session. Deep-linked
       // screens may now trust `idle` (M2 finding — see SessionState.hydrated).
@@ -807,6 +818,15 @@ class SessionController extends Notifier<SessionState>
     try {
       await call();
     } catch (_) {/* channel unavailable; native re-syncs via restore */}
+  }
+
+  /// Best-effort native query — returns null if the channel is unavailable.
+  Future<T?> _silentlyGet<T>(Future<T?> Function() call) async {
+    try {
+      return await call();
+    } catch (_) {
+      return null;
+    }
   }
 }
 

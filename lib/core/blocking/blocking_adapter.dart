@@ -238,6 +238,12 @@ abstract class BlockingAdapter {
   /// already live). Pass the ENABLED schedules only.
   Future<void> syncSchedules(List<ScheduleSync> schedules);
 
+  /// The session the native cache currently holds, or null (F-13, D-024).
+  /// Cold-start reconciliation reads this so a schedule-auto-started session
+  /// is not lost when the buffered sessionRestored event never reached a
+  /// live engine.
+  Future<SessionRestoredEvent?> getActiveNativeSession();
+
   /// Broadcast stream of native events. The native bus buffers
   /// restore-critical events until this stream is listened to, then replays
   /// them — consumers must handle replay idempotently.

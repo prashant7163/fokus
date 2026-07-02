@@ -115,5 +115,13 @@ class FakeBlockingAdapter implements BlockingAdapter {
     syncedScheduleSets.add(List.of(schedules));
   }
 
+  /// What `getActiveNativeSession` returns (F-13/D-024) — null unless a test
+  /// simulates a schedule-started native session.
+  SessionRestoredEvent? activeNativeSession;
+
+  @override
+  Future<SessionRestoredEvent?> getActiveNativeSession() async =>
+      activeNativeSession;
+
   Future<void> dispose() => _events.close();
 }

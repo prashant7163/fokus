@@ -76,6 +76,22 @@ class ChannelBlockingAdapter implements BlockingAdapter {
       });
 
   @override
+  Future<SessionRestoredEvent?> getActiveNativeSession() async {
+    final raw = await _method.invokeMethod<Map<Object?, Object?>>(
+      'getActiveNativeSession',
+    );
+    if (raw == null) return null;
+    return SessionRestoredEvent(
+      sessionId: raw['sessionId']! as String,
+      startedEpochMs: (raw['startedEpochMs'] as num?)?.toInt(),
+      endEpochMs: (raw['endEpochMs'] as num?)?.toInt(),
+      taskAnchor: raw['taskAnchor'] as String?,
+      strictMode: raw['strictMode'] as bool?,
+      recoveryEnabled: raw['recoveryEnabled'] as bool?,
+    );
+  }
+
+  @override
   Future<void> stopSession(String sessionId) =>
       _method.invokeMethod<void>('stopSession', {'sessionId': sessionId});
 

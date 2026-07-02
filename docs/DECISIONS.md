@@ -244,6 +244,17 @@ justify AlarmManager exact alarms + its permission).
 3. Both features write ONLY to their CONTRACTS §3 tables; nothing transmits (spec §3.9/§3.10).
 **Revisit when:** closed-track feedback data suggests different thresholds.
 
+## D-024 · 2026-07-02 20:20 · F-13 cold-start reconciliation (found by the M5 QA device pass)
+On-device QA of the schedule auto-start (row 11) surfaced a gap: the WorkManager job starts a
+native session correctly (device-verified — blocking fired on schedule), but the buffered
+`sessionRestored` event is in-memory only, so when the Flutter engine is DEAD at fire time the
+event is lost and Dart never writes the DB row → that scheduled session would miss streaks/stats.
+Fix: CONTRACTS §1 `getActiveNativeSession()`; the cold-start hydrate (id == null, no active row)
+queries the native cache and synthesizes the row from it — closing the loop regardless of the
+buffered event. The engine-alive path (D-022 restore event) is device-verified; the engine-dead
+synthesis is unit-verified (a full kill-wait-reopen device cycle is a closed-track confirm).
+**Revisit when:** a physical device runs the full engine-dead scheduled-session cycle.
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via
