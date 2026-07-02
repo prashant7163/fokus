@@ -301,8 +301,8 @@ class SessionController extends Notifier<SessionState>
   // ------------------------------------------------------- app lifecycle
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState lifecycle) {
-    if (lifecycle == AppLifecycleState.resumed) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
       _enqueueWork(syncWithClock);
     }
   }

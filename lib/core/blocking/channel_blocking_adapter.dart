@@ -82,7 +82,7 @@ class ChannelBlockingAdapter implements BlockingAdapter {
   /// Maps a raw `fokus/events` payload to a [BlockingEvent]. Unknown types
   /// return null (skipped) so an older Dart build survives a newer native
   /// side — the mismatch is logged, never fatal.
-  BlockingEvent? _parse(dynamic raw) {
+  BlockingEvent? _parse(Object? raw) {
     if (raw is! Map) return null;
     final type = raw['type'];
     switch (type) {

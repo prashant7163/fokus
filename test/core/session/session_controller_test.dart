@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fokus/core/blocking/blocking_adapter.dart';
 import 'package:fokus/core/blocking/providers.dart';
 import 'package:fokus/core/data/database.dart';
-import 'package:fokus/core/data/enums.dart';
 import 'package:fokus/core/data/providers.dart';
 import 'package:fokus/core/data/repositories/session_repository.dart';
 import 'package:fokus/core/session/session_controller.dart';

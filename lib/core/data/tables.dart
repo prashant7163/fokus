@@ -85,9 +85,11 @@ class RecoveryEvents extends Table {
 }
 
 /// Singleton row (id always 1) — CONTRACTS §3 `streak_summary`.
+/// The singleton invariant is enforced by a table-level CHECK (see
+/// [customConstraints]) — a column-level `check(id.equals(1))` would be a
+/// recursive getter (analyzer: recursive_getters).
 class StreakSummary extends Table {
-  IntColumn get id =>
-      integer().withDefault(const Constant(1)).check(id.equals(1))();
+  IntColumn get id => integer().withDefault(const Constant(1))();
   IntColumn get currentDays => integer().withDefault(const Constant(0))();
   IntColumn get longestDays => integer().withDefault(const Constant(0))();
 
@@ -100,6 +102,9 @@ class StreakSummary extends Table {
 
   @override
   Set<Column<Object>> get primaryKey => {id};
+
+  @override
+  List<String> get customConstraints => ['CHECK (id = 1)'];
 }
 
 // ── Phase 2 tables (schema shipped now to avoid migrations; repositories

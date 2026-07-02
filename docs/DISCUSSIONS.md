@@ -243,3 +243,14 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   "most recent session". Orchestrator rulings recorded as D-013; fixes queued as F-22 (core).
 - **Action items:** worker session — F-22 before or alongside F-07/F-08 (F-22 first if F-07
   not yet started); P2s opportunistic. Prashant — CI status still unconfirmed in main channel.
+
+## 2026-07-02 12:30–12:40 · CI run #2 red → analyze fixes (main session)
+
+- Prashant relayed CI run #2 failure (Analyze step, 4 findings). Orchestrator fixed inline —
+  no gate weakening: (1) tables.dart recursive getter was a real anti-pattern — singleton
+  CHECK moved to table-level customConstraints + new guard test inserting id=2 must fail;
+  (2) Object? instead of dynamic in ChannelBlockingAdapter._parse; (3) overridden lifecycle
+  param renamed back to `state`; (4) redundant enums import dropped in controller test.
+- Test/assembleDebug/Kotlin steps were skipped after analyze failure — expect possible new
+  findings on next push (run #3). CI run #1 was GREEN on 395779f → F-01 done.
+- **Action items:** Prashant — push, watch run #3. Worker — F-22 (D-013) then F-07.

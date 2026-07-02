@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fokus/core/data/database.dart';
 import 'package:fokus/core/data/repositories/streak_repository.dart';
@@ -55,6 +56,17 @@ void main() {
     final summary = await repo.getSummary();
     expect(summary.currentDays, 3);
     expect(summary.lastFocusDate, DateTime(2026, 7, 2));
+  });
+
+  test('singleton CHECK rejects any row with id != 1', () async {
+    await repo.getSummary(); // creates the id=1 row
+
+    expect(
+      () => db
+          .into(db.streakSummary)
+          .insert(const StreakSummaryCompanion(id: Value(2))),
+      throwsA(anything), // SQLite CHECK violation surfaces as an exception
+    );
   });
 
   test('watchSummary emits updates', () async {
