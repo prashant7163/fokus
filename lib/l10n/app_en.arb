@@ -394,5 +394,173 @@
   "statsNoneYet": "None yet",
   "@statsNoneYet": {
     "description": "Placeholder when a today stat has no data yet (F-09) — neutral, no guilt."
+  },
+
+  "onbSkip": "Skip",
+  "@onbSkip": {
+    "description": "Onboarding value-screens skip link — always available (F-10)."
+  },
+  "onbNext": "Next",
+  "@onbNext": {
+    "description": "Onboarding pager next (F-10)."
+  },
+  "onbGetStarted": "Get started",
+  "@onbGetStarted": {
+    "description": "Last value screen CTA (F-10)."
+  },
+  "onbValue1Title": "Take back control of your screen time",
+  "@onbValue1Title": {
+    "description": "Value screen 1 headline — blueprint §6.7 verbatim (F-10)."
+  },
+  "onbValue1Body": "Block distracting apps and build real focus habits.",
+  "@onbValue1Body": {
+    "description": "Value screen 1 subtext — blueprint §6.7 (F-10)."
+  },
+  "onbValue2Title": "Stay focused when it matters",
+  "@onbValue2Title": {
+    "description": "Value screen 2 headline — blueprint §6.7 (F-10)."
+  },
+  "onbValue2Body": "Exams, coding, deep work, reading, writing.",
+  "@onbValue2Body": {
+    "description": "Value screen 2 subtext — blueprint §6.7 (F-10)."
+  },
+  "onbValue3Title": "More than a blocker",
+  "@onbValue3Title": {
+    "description": "Value screen 3 headline — blueprint §6.7; sells the recovery differentiator (F-10)."
+  },
+  "onbValue3Body": "Recover from distractions, build streaks, and train your attention.",
+  "@onbValue3Body": {
+    "description": "Value screen 3 subtext — blueprint §6.7 (F-10)."
+  },
+  "onbDisclosureTitle": "How FOKUS blocks apps",
+  "@onbDisclosureTitle": {
+    "description": "Accessibility disclosure heading (F-10) — calm, trustworthy, no alarm."
+  },
+  "onbDisclosureBody": "[PLACEHOLDER COPY — requires Prashant's verbatim approval before any release; Google Play policy.]\n\nFOKUS uses Android's accessibility service for one purpose: during a focus session it notices which app comes to the foreground, so it can gently step in when you open an app you chose to block.\n\nFOKUS does not read screen content, does not collect personal data, and never sends anything off your device. Everything stays local.\n\nYou can turn the service off in system settings at any time.",
+  "@onbDisclosureBody": {
+    "description": "PROMINENT DISCLOSURE BODY — PLACEHOLDER, marked in-string on purpose so it cannot ship unnoticed. Final wording is PM-drafted and approved verbatim by Prashant (Play policy). The consent button must follow this text in reading order."
+  },
+  "onbDisclosureConsent": "I understand — continue",
+  "@onbDisclosureConsent": {
+    "description": "Explicit consent CTA — no settings redirect fires before this (F-10, Play policy)."
+  },
+  "onbDisclosureNotNow": "Not now",
+  "@onbDisclosureNotNow": {
+    "description": "Disclosure decline → limited mode, respected without guilt (F-10)."
+  },
+  "onbPermsTitle": "Set up FOKUS",
+  "@onbPermsTitle": {
+    "description": "Permission checklist heading (F-10)."
+  },
+  "onbPermsSubtitle": "Each of these keeps your sessions safe.",
+  "@onbPermsSubtitle": {
+    "description": "Permission checklist subtitle (F-10)."
+  },
+  "permAccessibilityName": "Accessibility",
+  "@permAccessibilityName": {
+    "description": "Permission card name (F-10, blueprint §6.7)."
+  },
+  "permAccessibilityWhy": "Needed to detect when you open a blocked app.",
+  "@permAccessibilityWhy": {
+    "description": "Permission why-line — benefit, not demand (F-10)."
+  },
+  "permUsageName": "Usage access",
+  "@permUsageName": {
+    "description": "Permission card name (F-10)."
+  },
+  "permUsageWhy": "Needed to know which app is currently active.",
+  "@permUsageWhy": {
+    "description": "Permission why-line (F-10)."
+  },
+  "permNotificationsName": "Notifications",
+  "@permNotificationsName": {
+    "description": "Permission card name (F-10)."
+  },
+  "permNotificationsWhy": "To show your focus timer and remind you of sessions.",
+  "@permNotificationsWhy": {
+    "description": "Permission why-line (F-10)."
+  },
+  "permBatteryName": "Battery exemption",
+  "@permBatteryName": {
+    "description": "Permission card name (F-10)."
+  },
+  "permBatteryWhy": "So your focus session doesn't get interrupted.",
+  "@permBatteryWhy": {
+    "description": "Permission why-line (F-10)."
+  },
+  "permStatusActive": "Active",
+  "@permStatusActive": {
+    "description": "Permission status badge (F-10)."
+  },
+  "permStatusNeeded": "Action needed",
+  "@permStatusNeeded": {
+    "description": "Permission status badge — amber, never alarming (F-10)."
+  },
+  "permSetUp": "Set up",
+  "@permSetUp": {
+    "description": "Permission card CTA → correct settings deep link (F-10)."
+  },
+  "onbPermsProgress": "{done} of {total} set up",
+  "@onbPermsProgress": {
+    "description": "Informational progress line, never a nag (F-10).",
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "onbPermsFinishAnytime": "You can finish these anytime in Settings.",
+  "@onbPermsFinishAnytime": {
+    "description": "Reassurance under the checklist (F-10)."
+  },
+  "onbContinue": "Continue",
+  "@onbContinue": {
+    "description": "Checklist continue — enabled always; partial setup → limited mode (F-10)."
+  },
+  "onbLater": "I'll do this later",
+  "@onbLater": {
+    "description": "Respected exit to limited mode (F-10, spec §3.11)."
+  },
+  "onbPickerBlockedTitle": "Which apps pull you away?",
+  "@onbPickerBlockedTitle": {
+    "description": "Blocked-app picker heading (F-10)."
+  },
+  "onbPickerBlockedSubtitle": "These pause during focus sessions. Change anytime.",
+  "@onbPickerBlockedSubtitle": {
+    "description": "Blocked-app picker subtitle (F-10)."
+  },
+  "onbPickerAllowTitle": "Any apps you always need?",
+  "@onbPickerAllowTitle": {
+    "description": "Allowlist picker heading (F-10, D-011)."
+  },
+  "onbPickerAllowSubtitle": "Music, navigation — these stay available during every session.",
+  "@onbPickerAllowSubtitle": {
+    "description": "Allowlist picker subtitle (F-10, D-011)."
+  },
+  "onbPickerSearchHint": "Search apps",
+  "@onbPickerSearchHint": {
+    "description": "App picker search field hint (F-10)."
+  },
+  "onbPickerSelected": "{count} selected",
+  "@onbPickerSelected": {
+    "description": "Running selection count (F-10).",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "onbPickerCommon": "Commonly blocked",
+  "@onbPickerCommon": {
+    "description": "Suggested distractors section header (F-10)."
+  },
+  "onbPickerAllApps": "All apps",
+  "@onbPickerAllApps": {
+    "description": "Rest-of-list section header (F-10)."
+  },
+  "onbPickerEmptySearch": "No apps match.",
+  "@onbPickerEmptySearch": {
+    "description": "Empty search state (F-10)."
+  },
+  "onbDone": "Done",
+  "@onbDone": {
+    "description": "Picker finish CTA (F-10)."
   }
 }

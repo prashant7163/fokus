@@ -9,6 +9,7 @@ import '../../features/session/presentation/session_complete_screen.dart';
 import '../../features/session/presentation/session_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/stats/presentation/stats_screen.dart';
+import '../prefs.dart';
 
 /// Route names — single source for navigation targets.
 abstract final class AppRoutes {
@@ -25,8 +26,12 @@ abstract final class AppRoutes {
 /// App-wide router. Placeholder screens; each feature task (F-07…F-12)
 /// replaces its stub and may add sub-routes within its own feature folder.
 final routerProvider = Provider<GoRouter>((ref) {
+  // First launch lands on onboarding (F-10). Deep links still override the
+  // initial location, but they only exist once a session runs — after
+  // onboarding by definition.
+  final seen = ref.watch(onboardingSeenProvider);
   return GoRouter(
-    initialLocation: AppRoutes.home,
+    initialLocation: seen ? AppRoutes.home : AppRoutes.onboarding,
     routes: [
       GoRoute(
         path: AppRoutes.home,

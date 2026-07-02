@@ -150,6 +150,18 @@ Sanctioned by Prashant's standing approval for CONTRACTS changes with a same-com
    generous; revisit with data).
 **Revisit when:** F-14 stats or beta data suggest different award semantics.
 
+## D-018 · 2026-07-02 17:40 · F-10: shared_preferences for app-level flags; onboarding shape
+1. **Dependency added:** `shared_preferences` — app-level key-value flags only (onboarding
+   seen now; F-12 theme/toggles next). Behavioral data stays in drift; this is config.
+2. "Limited mode" is DERIVED from permission state (no stored flag) — the home/settings
+   surfaces label blocking inactive whenever accessibility is missing (F-11/F-12 consume).
+3. Onboarding order per SCREENS §8 with the D-011 allowlist appended as a second picker
+   step (blocked picks are excluded from it — an app is never both).
+4. **⚠ Disclosure copy is a placeholder**, marked `[PLACEHOLDER …]` inside the l10n strings
+   (EN+DE) on purpose so it cannot ship unnoticed. Tests prove no settings redirect fires
+   before explicit consent. Prashant's verbatim approval is a release blocker (Play policy).
+**Revisit when:** final disclosure wording lands (swap strings, drop markers).
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via

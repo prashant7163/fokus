@@ -18,6 +18,9 @@ dependencies:
   drift: ^2.26.0
   drift_flutter: ^0.2.4
   uuid: ^4.5.1
+  # App-level flags (onboarding seen; F-12 adds theme/toggles). Local-only
+  # key-value — never behavioral data (that lives in drift). D-018.
+  shared_preferences: ^2.3.0
   # F-07 recovery illustrations (design/assets/recovery_*.svg). Adding this
   # dependency is PRE-APPROVED by the orchestrator (noted for DECISIONS log).
   flutter_svg: ^2.0.10+1

@@ -22,6 +22,13 @@ class FakeBlockingAdapter implements BlockingAdapter {
     for (final k in PermissionKind.values) k: true,
   };
 
+  /// Every `requestPermission` call, in order — F-10 asserts none fire
+  /// before disclosure consent (Play policy).
+  final requestedPermissions = <PermissionKind>[];
+
+  /// What `getInstalledApps` returns (F-10 app picker).
+  List<InstalledApp> installedApps = const [];
+
   final _events = StreamController<BlockingEvent>.broadcast();
 
   /// Pushes an event as if the native bus emitted it. Call twice with the
@@ -48,10 +55,12 @@ class FakeBlockingAdapter implements BlockingAdapter {
       PermissionState(permissionMap);
 
   @override
-  Future<void> requestPermission(PermissionKind kind) async {}
+  Future<void> requestPermission(PermissionKind kind) async {
+    requestedPermissions.add(kind);
+  }
 
   @override
-  Future<List<InstalledApp>> getInstalledApps() async => const [];
+  Future<List<InstalledApp>> getInstalledApps() async => installedApps;
 
   @override
   Future<void> setBlockedApps(List<String> packageNames) async {
