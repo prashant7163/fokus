@@ -442,3 +442,44 @@ Retention layer complete, each task CI-verified (runs #11–#14 on e511171/43d55
 **Next:** independent M4 code review (agent, read-only, scope F-22/F-07…F-12 + M2 fixes),
 self-triage P0/P1, then Phase B (F-13…F-17). Prashant-only items unchanged (disclosure verbatim
 approval now pending on top).
+
+## 2026-07-02 20:00–23:20 · Worker session (Claude Code): Phase B + M5 + ship prep → build-ready for M6
+
+Long autonomous run from the M4 boundary to publish-ready. All CI-green.
+
+**M4 review triaged (D-021):** independent agent → approve-with-fixes, 0 P0 / 2 P1. Both P1s
+fixed same-commit: CONTRACTS getAppIcons doc drift; the exit/recovery `_resolving` latch could
+dead-lock every CTA + system back if a terminal call threw (the strict-mode escape hatch) —
+now `_guarded` always-release + retry snackbar + regression test.
+
+**Phase B (F-13…F-17), M5 done:**
+- F-13 presets + WorkManager schedules (inline/core): pure ScheduleLogic, prefs mirror, reminder
+  (T−5, one-shot Skip) + auto-start workers (never clobber a live session), restore-with-config
+  row synthesis. CONTRACTS §1: syncSchedules, startSession +startedEpochMs/+recoveryEnabled,
+  richer sessionRestored (D-022). recoveryEnabled hides the intercept CTA (closes D-019).
+- F-14 dashboard + beta focus score, F-15 8 achievements + badges — parallel worktree agents,
+  merged (261-key EN/DE l10n parity kept through the merge conflicts).
+- F-16 micro-feedback (deterministic 1-in-3, 😔 reason chips), F-17 rule-based suggestions
+  (opt-in, 14-day gate, 1/day cap, dismissible why-line; hub re-ordering) — inline (D-023).
+
+**M5 QA matrix (docs/reviews/M5-qa-matrix.md):** all buildable P0/P1 PASS on the AVD. Highlight:
+created a preset + Thu-19:53 schedule on-device; the reminder fired at T−5 and the **auto-start
+started a native session + FGS while the app was backgrounded** — schedule auto-start works.
+That pass FOUND D-024: the buffered sessionRestored event is in-memory, so an engine-dead
+fire-time loses the Dart DB row. Fixed via getActiveNativeSession() + cold-start query
+(native blocking half was device-correct; synthesis half unit-verified).
+
+**Ship prep:** release build config (R8/shrink + proguard protecting the blocking core/drift/
+workers; signing reads android/key.properties w/ debug fallback; appbundle builds clean 61 MB).
+F-20 drafts (listing EN+DE, all four declarations, privacy policy) + B-03 raw storyboard
+captures + handoff staged in planning/. **PUBLISH_READY.md** written at repo root.
+
+**Handoff — Prashant-only remainder (all in PUBLISH_READY.md):** Play Console app, keystore +
+Play App Signing, ⚠ verbatim disclosure/listing copy approval (disclosure body is a marked
+PLACEHOLDER, must match the accessibility declaration), privacy-policy hosting, store-graphics
+composition (SVG export + Figma caption bands + release/dark recapture), content rating, tester
+list, rollout. Closed-track exit criteria (D-012): OEM battery survival, <200 ms hardware render,
+engine-dead scheduled cycle.
+
+**Stopping per the escalation list:** the remaining work is product/legal/account decisions and
+physical-hardware verification — all owned by Prashant.
