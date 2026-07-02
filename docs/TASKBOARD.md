@@ -13,13 +13,13 @@ Status: `todo | doing | review | done | blocked`. Owner: `core` = single-author 
 | F-04 | Kotlin: SessionForegroundService + BootReceiver + resilience | core (worker session, 2026-07-02) | review | Session survives process kill + reboot — service (START_STICKY, wall-clock re-hydration) + BootReceiver built, plan logic JVM-tested (10 cases); kill/reboot device check deferred to M2 pass |
 | F-05 | Kotlin: InterceptActivity (anchor, countdown, 3 CTAs) | core (worker session, 2026-07-02) | review | Renders from a cold intercept; buttons wired to channel — activity per SCREENS §4 (code-built UI, no engine), CTAs wired (events + fokus:// deep links), proactive hint JVM-tested; cold-render emulator check deferred to M2 pass |
 | F-06 | Dart: session state machine + timer + channel facade | core (worker session, 2026-07-02) | done | All CONTRACTS §2 transitions unit-tested — VERIFIED: CI run #4 green (full pipeline incl. all Dart tests, 2026-07-02 13:05) |
-| F-07 | Recovery flow: 5 modules + result logging | agent-ok (mobile-dev agent, 2026-07-02) | review | Each module completable; RecoveryEvent rows written; resume returns to session — 5 modules + hub + shrink controller op + abandon-writes-exited; flutter_svg added (pre-approved); CI is the verification gate |
+| F-07 | Recovery flow: 5 modules + result logging | agent-ok (mobile-dev agent, 2026-07-02) | done | Each module completable; RecoveryEvent rows written; resume returns to session — 5 modules + hub + shrink controller op + abandon-writes-exited; flutter_svg added (pre-approved) — VERIFIED: CI run #7 green on 077d42d (2026-07-02 ~15:00) |
 | F-08 | Structured exit flow (5 reasons, strict-mode consequences) | agent-ok | todo | Every early exit writes exitReason; strict mode blocks needApp path |
 | F-09 | Streaks + today stats + session-complete screen | agent-ok | todo | Streak unit tests incl. timezone/day-boundary; today view shows 4 stats |
 | F-10 | Onboarding: 3 value screens + permission setup + disclosure | agent-ok | todo | Disclosure precedes accessibility request (Play policy); "later" → limited mode |
 | F-11 | Home dashboard + start-session config screen | agent-ok | todo | One-tap repeat of last config works |
 | F-12 | Settings/profile: permissions health, notifications | agent-ok | todo | Revoked permission surfaces as warning banner |
-| F-22 | P1 fixes from F-18 core review per D-013 (attempt journal, stopSession tiebreak, expiry cache clear, ts-containment attribution) | core (mobile-dev agent, 2026-07-02) | review | All 4 P1s fixed with tests per D-013; review report findings marked resolved — CI is the verification gate (sandbox cannot run flutter/gradle) |
+| F-22 | P1 fixes from F-18 core review per D-013 (attempt journal, stopSession tiebreak, expiry cache clear, ts-containment attribution) | core (mobile-dev agent, 2026-07-02) | done | All 4 P1s fixed with tests per D-013; review report findings marked resolved — VERIFIED: CI run #7 green on 077d42d (2026-07-02 ~15:00; incl. the start-after-terminal fix from run #6 triage) |
 
 ## Phase B — Engagement (blueprint Phase 2, local-only subset)
 

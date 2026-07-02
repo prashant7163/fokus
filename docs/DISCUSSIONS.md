@@ -352,3 +352,15 @@ correlation id. Prashant — push both commits, watch CI (real gate). After gree
 - **Action items:** watch CI run #7 (should now mirror local exactly). Tech-lead (later,
   unhurried): evaluate the drift 2.34 + drift_flutter 0.3 + sqlite3 3.x upgrade to retire
   the customConstraint workaround.
+
+## 2026-07-02 15:01 · CI run #7 GREEN (main session)
+
+- Run #7 on 077d42d: full pipeline green (analyze, 146 Dart tests, assembleDebug, Kotlin
+  JVM tests) — first run on the aligned toolchain (Flutter 3.44.2, lockfile honored).
+  Prashant confirmed in-channel; verified via API (completed/success 14:56).
+- Taskboard: **F-22 → done, F-07 → done** (their gates were CI). F-03/F-04/F-05 remain
+  `review` awaiting the M2 emulator pass (D-012).
+- **Next:** worker session — F-08 (structured exit flow; the `/exit` route, ExitScreen stub
+  and abort-with-exitReason controller API are ready seams). Prashant — M2 emulator pass
+  when convenient. Tech-lead (unhurried) — drift 2.34 upgrade evaluation to retire the
+  customConstraint FK workaround (see 14:15 entry).
