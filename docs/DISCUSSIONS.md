@@ -193,3 +193,39 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   copy EN/DE review (with F-20). Next worker — F-06 (Dart session state machine + timer +
   channel facade); note the deep-link route seam and the buffered-event contract above;
   startSession/stopSession + event payload shapes documented in BlockingChannelHandler.
+
+## 2026-07-02 11:20–11:50 · Worker session: F-06 (kickoff prompt v2)
+
+- Worker (mobile-developer + core author) executed the keystone Dart task connecting
+  F-02 (DB), F-03/F-04 (native services), F-05 (intercept).
+- **F-06 → review:** Dart session engine. Pure `SessionMachine` encodes CONTRACTS §2 verbatim
+  as a trigger→states table (8 legal edges; everything else throws IllegalSessionTransition);
+  terminal edges leave from `active` only, so terminal outcomes reached mid-recovery are
+  composed as resume → terminal (two legal steps, no new edge). `SessionController`
+  (Riverpod Notifier) owns the lifecycle: wall-clock-anchored timer (remaining always derived
+  from endEpochMs, recomputed on tick/app-resume — never accumulated), every transition
+  persisted via the F-02 repositories, distractionAttempt rows written with original native ts,
+  buffered-event replay handled idempotently (attempt dedupe on pkg|ts; restored/permission
+  events state-guarded), sessionRestored → DB re-hydration with retroactive completion when
+  endEpochMs passed while dead, permissionLost → failedPermissions + minimal notice field
+  (F-12 owns full UI), emergency exit → aborted/emergency with no penalty. Channel facade
+  matches BlockingChannelHandler.kt/FokusEventBus.kt payloads exactly. go_router: `/recovery`
+  (forwards `?module=` from the intercept's proactive hint) + `/exit` registered; ExitScreen
+  stub (F-08) added.
+- **Judgment calls (implementation, not contract changes — flag if disagreeing):**
+  (1) `SessionRepository.createSession` gained an optional caller-supplied `id` — native is
+  armed before the row is written, so the id must exist first; on native failure no DB row is
+  created and the machine returns to a fresh idle. (2) `pendingStart` is held in state during
+  native arming to block concurrent double-starts; it remains never-persisted (transient per
+  enums.dart). (3) Replayed attempts arriving after a retroactive completion are attributed
+  to the most recent session whose window covers the original ts (+1 min grace); orphans drop.
+- **CONTRACT GAP (escalation, per brief §8):** CONTRACTS §5 defines 10 analytics events but
+  §3 defines no table/sink to record them. No schema invented; nothing is written. Needs a
+  tech-lead/orchestrator ruling (likely ties into the D-012-adjacent telemetry question).
+- **Toolchain:** sandbox still has no Flutter/Dart — tests written to the F-02 patterns
+  (in-memory Drift, ProviderContainer overrides, fake adapter, injected clock/ticker); CI is
+  the verification gate. Stale .git/HEAD.lock reappeared; file-delete permission granted
+  in-session, cleared.
+- **Action items:** Prashant — watch CI on push (F-06 gate). Orchestrator — rule on the §5
+  analytics sink gap. Next worker — F-07 (recovery modules; `/recovery` route + preselected
+  `module` param and `enterRecovery`/`resumeRecovery`/`abort` controller API are ready seams).
