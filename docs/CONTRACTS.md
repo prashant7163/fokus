@@ -45,6 +45,8 @@ never decides transitions; it reports events, Dart decides, result is pushed bac
 - `focus_sessions` — id, status, startTime, endTime, plannedMin, actualMin, taskAnchor,
   strictMode, completionReason, exitReason
 - `blocked_apps` — packageName, appName, addedAt
+- `allowlisted_apps` — packageName, appName, addedAt (never blockable; set at onboarding,
+  editable in settings — D-011)
 - `distraction_attempts` — sessionId, packageName, ts, recoveryInvoked
 - `recovery_events` — sessionId, type, startedAt, completedAt, result
 - `streak_summary` — singleton row: currentDays, longestDays, lastFocusDate, tokensAvailable,

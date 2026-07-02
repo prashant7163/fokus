@@ -62,3 +62,15 @@ Prashant opens separate Cowork sessions for heavy build work (they coordinate vi
 TASKBOARD claiming, and MOM); the main session stays available for live discussion. Roadmap
 structure in docs/ROADMAP.md; execution state only in TASKBOARD.md.
 **Revisit when:** taskboard claiming conflicts appear.
+
+## D-011 · 2026-07-02 · Prashant's rulings on audit items D-C, D-D, D-E
+1. **Streaks (D-C):** lock-break redemptions and sub-10-min sessions never *earn* a streak
+   day. A lock-break **excuses** the day: streak neither resets nor increments. Only a
+   completed ≥ 10-min session increments.
+2. **No `paused` state (D-D):** the session state machine stays as CONTRACTS §2 — the
+   temporary 5-min single-app pass in non-strict mode is NOT a pause; the timer keeps running.
+3. **Always-on apps (D-E):** user allowlist, asked during onboarding (music/navigation
+   examples), editable in settings. Allowlisted apps are never blockable.
+Remaining audit items: D-A/D-B (priority semantics — editorial, PM applies), D-F (AI
+micro-coaching surface) still open.
+**Revisit when:** beta feedback on streak fairness or allowlist abuse.

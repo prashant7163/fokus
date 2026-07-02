@@ -71,6 +71,21 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   sign-off, domain + waitlist inbox, trademark check, git locks + push. Orchestrator — next:
   F-01 scaffold (suggest worker session per D-010).
 
+## 2026-07-02 · Rulings D-C/D-D/D-E + monetization discussion
+
+- **Prashant ruled (D-011):** lock-breaks/sub-10-min preserve (excuse) but never earn a streak
+  day; no `paused` state; always-on apps handled via user allowlist asked at onboarding.
+  Specs + CONTRACTS updated (allowlisted_apps table added).
+- Git locks cleared by Prashant; worker session landed F-01 scaffold (D-010 model working).
+- **Monetization discussed.** Orchestrator recommendation: NO ads ever (an attention-protection
+  app selling attention is brand suicide; also negligible revenue at our scale). NO backend/
+  accounts needed for monetization: Google Play Billing handles subscriptions + free/paid
+  entitlement fully on-device, and Play Console provides conversion/churn/MRR analytics
+  natively. Accounts/backend arrive only when features demand them (web unlock, rooms, sync,
+  parental) — not for billing. Open telemetry question flagged: validation metrics (D7,
+  recovery-resume) need opt-in anonymous analytics OR closed-beta tester exports — needs a
+  ruling before Phase B ends (candidate D-012).
+
 ## 2026-07-02 · Worker session: F-01 scaffold (per D-010)
 
 - Prashant opened this second Cowork session as a build worker; instruction: "claim and

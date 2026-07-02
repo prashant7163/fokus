@@ -49,6 +49,10 @@ Cloud AI. Everything runs offline; the app has zero network calls in this scope.
   recovery suggestion proactively on the intercept screen.
 - FOKUS itself, system UI, phone/dialer, and default launcher are never blockable. Currently
   ringing/active calls are never intercepted.
+- **Always-on allowlist (D-011):** onboarding asks which always-needed apps (music, navigation
+  examples) stay available during focus; the allowlist is user-editable in settings and its
+  apps are never blockable. Allowlist ≠ blocked-list absence: allowlisted apps are excluded
+  from the app picker entirely.
 
 ### 3.3 Recovery system (the differentiator — polish over feature count)
 Five modules, all offline, each ending in "Ready to continue?" → Resume / End session:
@@ -79,6 +83,9 @@ impact. If lock-break tokens exist, offer redemption (3.5) as a graceful alterna
 - Milestones award tokens per CONTRACTS.md §4 (7 d → 1 … 100 d → 10) plus badges.
 - Redeeming a token ends/skips one session with status completed-via-lockbreak: streak intact,
   logged distinctly. Max 3 redemptions per calendar week. Tokens never expire, never purchasable.
+- **Earning vs preserving (D-011):** lock-break redemptions and sub-10-min sessions never earn
+  a streak day. A lock-break excuses the calendar day — the streak neither resets nor
+  increments that day. Only a completed ≥ 10-min session increments.
 
 ### 3.6 Stats & focus score
 - Today view (MVP): focus minutes, distractions blocked, most-intercepted app, current streak.
