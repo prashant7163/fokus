@@ -20,7 +20,7 @@ Progress at a glance = milestones table below + taskboard statuses. Append-only 
 | Milestone | Definition of done | Epics | Status |
 |---|---|---|---|
 | M1 "It builds" | Scaffold + CI green (analyze, test, assembleDebug) | E1 partial | todo |
-| M2 "It blocks" | Blocked app intercepted < 200 ms on a real device; survives reboot/kill | E1 | todo |
+| M2 "It blocks" | Blocked app intercepted < 200 ms on a real device; survives reboot/kill | E1 | todo — on-device verification deferred until Prashant is back (2026-07-02); build does NOT block on this, workers proceed past F-05 with emulator/unit evidence |
 | M3 "Core loop complete" | Session → intercept → recovery → resume/exit, end-to-end on device | E2 | todo |
 | M4 "Retention ready" | Streaks/stats/onboarding done; app is daily-usable; closed-track candidate | E3 | todo |
 | M5 "Engagement complete" | All Phase B features pass done-criteria | E4 | todo |

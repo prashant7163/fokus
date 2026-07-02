@@ -6,7 +6,9 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
 
 ---
 
-## 2026-07-01 · Kickoff & scoping (backfilled)
+> Timestamps: Europe/Zurich. Entries before 2026-07-02 02:30 retrofitted (≈ = approximate).
+
+## 2026-07-01 · (time not recorded) · Kickoff & scoping (backfilled)
 
 - Reviewed FOKUS Product Requirements Blueprint v1.0 (now in planning/, local-only).
 - **Decided:** scope = blueprint Phase 1 + 2; cross-platform ambition raised by Prashant;
@@ -16,7 +18,7 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   defensible core; category has brutal retention; distribution is the real risk. Agreed the
   build validates one hypothesis: does in-flow recovery change behavior?
 
-## 2026-07-02 · Android-first, execution model, Step 0 (backfilled)
+## 2026-07-02 ≈00:05–00:45 · Android-first, execution model, Step 0 (backfilled)
 
 - **Decided:** Android-only first (D-002); iOS deferred until Android metrics exist.
 - Publisher: Hoffely GmbH existing Play account (Hofferly published) → no 14-day closed-test
@@ -30,7 +32,7 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
 - **Action items:** Prashant: delete stale .git/*.lock files, push to GitHub, start Play Console
   items #1/#12. Orchestrator: F-01 scaffold next.
 
-## 2026-07-02 · Structure review (7 comments from Prashant)
+## 2026-07-02 ≈00:50–01:20 · Structure review (7 comments from Prashant)
 
 - agents/ moved to project root; design/ created at root.
 - CHANGELOG.md (change tracker) + this DISCUSSIONS.md (MOM) added as living documents.
@@ -49,7 +51,7 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   font TTFs in repo — OK? (3) draw remaining 2 badges now or at F-15; (4) store tagline
   "Focus without the fight." kept or PM owns; (5) disclosure copy confirmed as PM-owned.
 
-## 2026-07-02 · Brand v2, roadmap, website, blueprint audit
+## 2026-07-02 ≈01:25–01:50 · Brand v2, roadmap, website, blueprint audit
 
 - Prashant's 7-point review: brand direction v2 (D-009 — no blue, charcoal+orange icon,
   neutral-to-light system); distinctive positioning vs crowded segment; website; epics/
@@ -71,7 +73,7 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   sign-off, domain + waitlist inbox, trademark check, git locks + push. Orchestrator — next:
   F-01 scaffold (suggest worker session per D-010).
 
-## 2026-07-02 · Rulings D-C/D-D/D-E + monetization discussion
+## 2026-07-02 ≈02:00–02:20 · Rulings D-C/D-D/D-E + monetization discussion
 
 - **Prashant ruled (D-011):** lock-breaks/sub-10-min preserve (excuse) but never earn a streak
   day; no `paused` state; always-on apps handled via user allowlist asked at onboarding.
@@ -86,7 +88,7 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   recovery-resume) need opt-in anonymous analytics OR closed-beta tester exports — needs a
   ruling before Phase B ends (candidate D-012).
 
-## 2026-07-02 · Worker session: F-01 scaffold (per D-010)
+## 2026-07-02 ≈01:30–02:12 · Worker session: F-01 scaffold (per D-010)
 
 - Prashant opened this second Cowork session as a build worker; instruction: "claim and
   execute F-01". Claimed on TASKBOARD, executed inline (core-owner work).
@@ -107,3 +109,16 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   small follow-ups under F-01.
 - **Action items:** Prashant — push to GitHub, watch first CI run. Orchestrator — mark F-01
   done after CI green; F-02 (Drift schema) is next core task.
+
+## 2026-07-02 02:30–02:50 · Timestamps, worker restart protocol, M2 deferral
+
+- Prashant: (1) timestamps now required in CHANGELOG/DISCUSSIONS/DECISIONS — done, historical
+  entries retrofitted from commit times (≈ where approximate); (2) worker kickoff prompt to
+  include a context-checkpoint step — added as v2 prompt (worker cannot run /compact on
+  itself; it checkpoints at task boundaries and signals Prashant to compact/restart);
+  (3) repo pushed, CI gate for F-01 now live on GitHub Actions; (4) M2 on-device verification
+  deferred until Prashant returns — recorded in ROADMAP; build proceeds on emulator/unit
+  evidence, F-03..F-05 stay `review` until device pass.
+- **Action items:** Prashant — watch first Actions run (F-01 → done if green), device pass for
+  M2 when back, font ruling (bundle Plus Jakarta Sans: orchestrator recommends yes).
+  Worker — use kickoff prompt v2 (in this entry's session, stored in CLAUDE.md workflow ref).
