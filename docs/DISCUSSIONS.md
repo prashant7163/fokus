@@ -364,3 +364,19 @@ correlation id. Prashant — push both commits, watch CI (real gate). After gree
   and abort-with-exitReason controller API are ready seams). Prashant — M2 emulator pass
   when convenient. Tech-lead (unhurried) — drift 2.34 upgrade evaluation to retire the
   customConstraint FK workaround (see 14:15 entry).
+
+## 2026-07-02 15:05–15:15 · Handoff: Claude Code becomes the standing worker (main session)
+
+- Prashant moved worker duty to Claude Code desktop (local toolchain: flutter, emulator,
+  adb, gh — CI and Mac now aligned; run #7 green on 077d42d; F-22/F-07 done).
+- Orchestrator issued the long-run worker prompt: F-08 → M2 emulator pass (now automatable
+  locally, closes F-03/04/05) → M3 → retention layer F-09…F-12 → M4 + independent review
+  subagent → Phase B F-13…F-17 → M5 → ship prep (B-03, F-20 drafts, QA matrix, release
+  build config) → M6 → PUBLISH_READY.md handoff. Billing stays deferred (D-003).
+- Standing approvals granted by Prashant for trivial permissions: push, CI iteration, deps
+  (w/ DECISIONS entries), emulator/adb, font bundling (closes open question), l10n, P2
+  sweeps. CONTRACTS changes allowed w/ same-commit DECISIONS entry. Still gated: destructive
+  ops, signing keys, planning/ commits, disclosure/listing verbatim copy, product decisions.
+- **Prashant-only remainder tracked for publish:** Play Console app, keystore/signing,
+  verbatim copy approvals, screenshots sign-off, domain/waitlist/trademark, D-A/D-B/D-F,
+  tester invites, rollout click.
