@@ -35,5 +35,155 @@
   "emergencyExit": "Emergency exit",
   "@emergencyExit": {
     "description": "Policy-bound label, DESIGN_SYSTEM.md §8 — always visible on intercept/exit screens"
+  },
+
+  "recoveryHubTitle": "Take a moment.",
+  "@recoveryHubTitle": {
+    "description": "Recovery hub heading (F-07). Calm, zero-guilt."
+  },
+  "recoveryHubSubtitle": "No rush. Pick what you need.",
+  "@recoveryHubSubtitle": {
+    "description": "Recovery hub subtitle (F-07)."
+  },
+  "recoverySkip": "Skip — back to session",
+  "@recoverySkip": {
+    "description": "Recovery hub dismiss link — recovery is never a trap (F-07)."
+  },
+  "recoveryReadyTitle": "Ready to continue?",
+  "@recoveryReadyTitle": {
+    "description": "Shared module footer heading before Resume/End (F-07)."
+  },
+  "recoveryResume": "Resume focus",
+  "@recoveryResume": {
+    "description": "Primary footer CTA — return to the active session (F-07)."
+  },
+  "recoveryEnd": "End session",
+  "@recoveryEnd": {
+    "description": "De-emphasized footer CTA — routes toward the exit flow (F-07)."
+  },
+  "recoveryClose": "Close recovery",
+  "@recoveryClose": {
+    "description": "TalkBack label for the close/back control in a recovery module (F-07)."
+  },
+
+  "recoveryBreatheName": "Breathe",
+  "@recoveryBreatheName": {
+    "description": "Breathe module name (F-07)."
+  },
+  "recoveryBreatheBenefit": "Slow it down for a few breaths.",
+  "@recoveryBreatheBenefit": {
+    "description": "Breathe module one-line benefit on the hub card (F-07)."
+  },
+  "recoveryBreatheInhale": "Breathe in",
+  "@recoveryBreatheInhale": {
+    "description": "Breathe phase word — inhale (F-07)."
+  },
+  "recoveryBreatheHold": "Hold",
+  "@recoveryBreatheHold": {
+    "description": "Breathe phase word — hold (F-07)."
+  },
+  "recoveryBreatheExhale": "Breathe out",
+  "@recoveryBreatheExhale": {
+    "description": "Breathe phase word — exhale (F-07)."
+  },
+
+  "recoveryTaskResetName": "Task reset",
+  "@recoveryTaskResetName": {
+    "description": "Task reset module name (F-07)."
+  },
+  "recoveryTaskResetBenefit": "Name the next small step.",
+  "@recoveryTaskResetBenefit": {
+    "description": "Task reset one-line benefit on the hub card (F-07)."
+  },
+  "recoveryTaskResetPrompt": "What's the next smallest step?",
+  "@recoveryTaskResetPrompt": {
+    "description": "Task reset heading (F-07)."
+  },
+  "recoveryTaskResetHint": "Open the doc and write one sentence.",
+  "@recoveryTaskResetHint": {
+    "description": "Task reset ghost text example (F-07)."
+  },
+  "recoveryTaskResetSaved": "Noted.",
+  "@recoveryTaskResetSaved": {
+    "description": "Task reset confirmation snackbar on resume (F-07)."
+  },
+
+  "recoveryStretchName": "Stand & stretch",
+  "@recoveryStretchName": {
+    "description": "Stretch module name (F-07)."
+  },
+  "recoveryStretchBenefit": "Move for 45 seconds.",
+  "@recoveryStretchBenefit": {
+    "description": "Stretch one-line benefit on the hub card (F-07)."
+  },
+  "recoveryStretchPrompt": "Stand up. Reach up, roll your shoulders, look away from the screen.",
+  "@recoveryStretchPrompt": {
+    "description": "Stretch guidance prompt (F-07)."
+  },
+  "recoveryStretchDone": "I've stretched",
+  "@recoveryStretchDone": {
+    "description": "Stretch early-complete button (F-07)."
+  },
+
+  "recoveryWaterName": "Water break",
+  "@recoveryWaterName": {
+    "description": "Water module name (F-07)."
+  },
+  "recoveryWaterBenefit": "Get some water and reset.",
+  "@recoveryWaterBenefit": {
+    "description": "Water one-line benefit on the hub card (F-07)."
+  },
+  "recoveryWaterPrompt": "Go get some water. We'll be here.",
+  "@recoveryWaterPrompt": {
+    "description": "Water guidance prompt (F-07)."
+  },
+  "recoveryWaterDone": "I'm back",
+  "@recoveryWaterDone": {
+    "description": "Water early-complete button (F-07)."
+  },
+
+  "recoveryShrinkName": "Shrink session",
+  "@recoveryShrinkName": {
+    "description": "Shrink module name (F-07)."
+  },
+  "recoveryShrinkBenefit": "Finish small — end on a win.",
+  "@recoveryShrinkBenefit": {
+    "description": "Shrink one-line benefit on the hub card (F-07)."
+  },
+  "recoveryShrinkPrompt": "Finish small?",
+  "@recoveryShrinkPrompt": {
+    "description": "Shrink heading (F-07)."
+  },
+  "recoveryShrinkBody": "Shrink the rest to 10 minutes and end on a win.",
+  "@recoveryShrinkBody": {
+    "description": "Shrink explanatory copy (F-07)."
+  },
+  "recoveryShrinkApply": "Shrink to 10 min",
+  "@recoveryShrinkApply": {
+    "description": "Shrink apply CTA (F-07)."
+  },
+  "recoveryShrinkKeep": "Keep full time",
+  "@recoveryShrinkKeep": {
+    "description": "Shrink dismiss CTA — leaves the session unchanged (F-07)."
+  },
+  "recoveryShrinkApplied": "Session shortened to 10 minutes.",
+  "@recoveryShrinkApplied": {
+    "description": "Shrink confirmation snackbar (F-07)."
+  },
+
+  "recoverySecondsLabel": "{seconds} seconds",
+  "@recoverySecondsLabel": {
+    "description": "TalkBack timer label for the 45s modules (F-07).",
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "recoveryCycleLabel": "Cycle {current} of {total}",
+  "@recoveryCycleLabel": {
+    "description": "TalkBack label for the breathe cycle counter (F-07).",
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
   }
 }

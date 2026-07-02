@@ -8,5 +8,46 @@
   "statsTitle": "Dein Fortschritt",
   "settingsTitle": "Einstellungen",
   "exitTitle": "Schon Schluss?",
-  "emergencyExit": "Notausgang"
+  "emergencyExit": "Notausgang",
+
+  "recoveryHubTitle": "Nimm dir einen Moment.",
+  "recoveryHubSubtitle": "Kein Stress. Wähl, was du brauchst.",
+  "recoverySkip": "Überspringen — zurück zur Session",
+  "recoveryReadyTitle": "Bereit weiterzumachen?",
+  "recoveryResume": "Weiter im Fokus",
+  "recoveryEnd": "Beenden",
+  "recoveryClose": "Auszeit schließen",
+
+  "recoveryBreatheName": "Atmen",
+  "recoveryBreatheBenefit": "Ein paar Atemzüge zur Ruhe kommen.",
+  "recoveryBreatheInhale": "Einatmen",
+  "recoveryBreatheHold": "Halten",
+  "recoveryBreatheExhale": "Ausatmen",
+
+  "recoveryTaskResetName": "Neu ausrichten",
+  "recoveryTaskResetBenefit": "Benenne den kleinsten nächsten Schritt.",
+  "recoveryTaskResetPrompt": "Was ist der kleinste nächste Schritt?",
+  "recoveryTaskResetHint": "Öffne das Dokument und schreib einen Satz.",
+  "recoveryTaskResetSaved": "Notiert.",
+
+  "recoveryStretchName": "Aufstehen & strecken",
+  "recoveryStretchBenefit": "Beweg dich für 45 Sekunden.",
+  "recoveryStretchPrompt": "Steh auf. Streck dich, roll die Schultern, schau vom Bildschirm weg.",
+  "recoveryStretchDone": "Hab mich gestreckt",
+
+  "recoveryWaterName": "Wasserpause",
+  "recoveryWaterBenefit": "Hol dir Wasser und komm zur Ruhe.",
+  "recoveryWaterPrompt": "Hol dir ein Glas Wasser. Wir sind noch da.",
+  "recoveryWaterDone": "Bin zurück",
+
+  "recoveryShrinkName": "Session verkürzen",
+  "recoveryShrinkBenefit": "Klein abschließen — mit einem Erfolg enden.",
+  "recoveryShrinkPrompt": "Klein abschließen?",
+  "recoveryShrinkBody": "Verkürze den Rest auf 10 Minuten und beende mit einem Erfolg.",
+  "recoveryShrinkApply": "Auf 10 Min. verkürzen",
+  "recoveryShrinkKeep": "Volle Zeit behalten",
+  "recoveryShrinkApplied": "Session auf 10 Minuten verkürzt.",
+
+  "recoverySecondsLabel": "{seconds} Sekunden",
+  "recoveryCycleLabel": "Zyklus {current} von {total}"
 }

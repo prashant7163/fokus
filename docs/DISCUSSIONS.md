@@ -278,3 +278,50 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   open blocked app, verify intercept, kill process, reboot. After F-07/F-08: M3.
 - **Action items:** Prashant — M2 emulator session when convenient; GitHub connector still
   recommended for orchestrator CI self-serve. Worker — F-22 next.
+
+## 2026-07-02 13:15–13:55 · Worker session — F-22 (D-013 P1 fixes) + F-07 (recovery flow)
+
+Mobile-dev worker session, two tasks each with its own commit. Sandbox cannot run
+flutter/gradle (network allowlist) — machine-validated what was possible (brace/JSON/ARB-parity
+checks, full read of every touched file); **CI is the verification gate** for both.
+
+**F-22 (D-013 P1 fixes) → review.** All four P1s implemented per the binding D-013 rulings:
+- **P1-A** — persisted native `AttemptJournal` (SharedPreferences) for distractionAttempt/
+  recoveryRequested: unbounded within a session, replayed on Dart attach, cleared only on ack.
+  At-least-once + Dart `pkg|ts` idempotency; monotonic seq survives session clear so a stale ack
+  can't match a new session. Restore-critical events keep the in-memory deque. Pure `JournalCore`
+  JVM-tested (needs `org.json` test dep — added — since android.jar's is a throwing stub).
+- **P1-B** — natural native expiry clears `BlockedSetCache` (pure `SessionServicePlan.clearsCacheOnStop`).
+- **P1-C** — `stopSession` never silently no-ops: pure `StopDecision` stops whatever native
+  session is live and emits a `stopMismatch` diagnostic with both ids; Dart reconciles (aborts an
+  orphaned live session it still tracks, ExitReason.stuck).
+- **P1-D** — attribution by timestamp window containment only (`sessionsStartedBefore`), never
+  most-recent-regardless-of-window; unmatched attempts logged + discarded. Covered incl. the
+  reviewer's misattribution scenario (old buffered attempt + newly started session → attaches to
+  the correct old session, not the newer one).
+- **CONTRACTS §1 addenda (flagged, D-013-sanctioned, NOT silently extended):** new MethodChannel
+  method `ackEvents(upToSeq)` and new event `stopMismatch(requestedId, liveId)`. Tech-lead should
+  fold these into CONTRACTS §1 + a DECISIONS note.
+- **P2 sweep (files already touched):** P2-E (getMostRecentSession doc — clarified it is F-11-only,
+  not attribution) DONE. Not swept (out of P1 scope / need schema or event-shape change): P2-B
+  (getActiveSession single-row DB guard), P2-D (recoveryInvoked correlation — needs an event-shape
+  change, belongs with F-07's recovery wiring but the correlation id is still absent).
+
+**F-07 (recovery flow) → review.** POLISH-over-speed honored. 5 modules + hub, each ends
+"Ready to continue?" → Resume/End. `RecoveryController` guarantees a RecoveryEvent row per
+invocation, closed with a result on every path **including back-button/abandon (= exited)**.
+Shrink goes through a new `SessionController.shrinkTo` (re-anchors the wall clock, stays `active`
+— a config change, not a machine transition, so no new CONTRACTS §2 edge; unit-tested incl.
+never-extends guard). l10n EN+DE zero-guilt copy, sage/calm styling, TalkBack labels, ≥48dp,
+reduced-motion for breathe. **flutter_svg** added (pre-approved by orchestrator — needs a DECISIONS
+entry) + recovery SVGs copied into `assets/recovery/`.
+- **CONTRACT GAP (flagged, not invented):** Task-reset's "save the next step to session notes"
+  (SCREENS §5.2) has no column — `focus_sessions` only has `taskAnchor` (the original intent, must
+  not be overwritten). Persisting the note needs a CONTRACTS §3 column addition (tech-lead). Until
+  then the step lives in the recovery flow only; the RecoveryEvent(taskReset) is still logged.
+- **F-08 seam:** End-session routes toward `/exit` and aborts with `ExitReason.stuck` as the
+  default (exitReason detail is F-08's; noted).
+
+**Action items:** Orchestrator — DECISIONS entries for flutter_svg and for the ackEvents/
+stopMismatch CONTRACTS §1 addenda; tech-lead ruling on the task-reset notes column and P2-D
+correlation id. Prashant — push both commits, watch CI (real gate). After green: F-08 exit flow.

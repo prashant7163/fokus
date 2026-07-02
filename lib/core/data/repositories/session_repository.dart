@@ -63,6 +63,13 @@ class SessionRepository {
   Future<void> setStatus(String id, SessionStatus status) =>
       _update(id, FocusSessionsCompanion(status: Value(status)));
 
+  /// Adjusts the planned length of a live session — the Shrink Session
+  /// recovery module (F-07 / recovery type `changeDuration`). The wall-clock
+  /// anchor (`endTime = startTime + plannedMin`) is recomputed by the caller
+  /// and re-armed on the native side; the session stays `active`.
+  Future<void> setPlannedMin(String id, int plannedMin) =>
+      _update(id, FocusSessionsCompanion(plannedMin: Value(plannedMin)));
+
   /// Terminal: completed (timer end, "finished task" exit, or lock-break).
   Future<void> completeSession(
     String id, {

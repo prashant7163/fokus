@@ -221,6 +221,56 @@ class SessionController extends Notifier<SessionState>
     state = state.copyWith(status: next);
   }
 
+  /// Shrink Session recovery module (F-07, recovery type `changeDuration`):
+  /// reduce the remaining time to [remainingMin] minutes and re-anchor the
+  /// wall clock. Machine-legal: the session stays `active` — this is a config
+  /// change, not a transition (no new CONTRACTS §2 edge). Called from recovery,
+  /// so it first composes resume → active if mid-recovery.
+  ///
+  /// No-op if the current remaining is already ≤ [remainingMin] (the module is
+  /// hidden/disabled in that case; guarded here too so it can never *extend* a
+  /// session). The new `plannedMin` is elapsed + [remainingMin] so a later
+  /// timer-end records an honest `actualMin`.
+  Future<void> shrinkTo({int remainingMin = 10}) async {
+    if (!state.isRunning) return;
+    final now = _now();
+    final currentRemaining = state.endTime!.difference(now);
+    if (currentRemaining <= Duration(minutes: remainingMin)) return;
+
+    await _resumeIfInRecovery();
+
+    final id = state.sessionId!;
+    final newEnd = now.add(Duration(minutes: remainingMin));
+    final elapsed = _elapsedMin();
+    final newPlanned = elapsed + remainingMin;
+
+    // Re-arm native with the new anchor (same id → single-session cache is
+    // overwritten in place). Best-effort like other native calls.
+    await _silently(
+      () => _adapter.startSession(
+        NativeSessionConfig(
+          id: id,
+          endEpochMs: newEnd.millisecondsSinceEpoch,
+          taskAnchor: state.taskAnchor,
+          strictMode: state.strictMode,
+        ),
+      ),
+    );
+    await _sessions.setPlannedMin(id, newPlanned);
+
+    state = SessionState(
+      status: SessionStatus.active,
+      sessionId: id,
+      startTime: state.startTime,
+      endTime: newEnd,
+      plannedMin: newPlanned,
+      taskAnchor: state.taskAnchor,
+      strictMode: state.strictMode,
+      remaining: newEnd.difference(now),
+    );
+    _startTicker();
+  }
+
   /// Exit reason `finishedTask` → completed (CONTRACTS §2). Legal from
   /// recovery too (composed as resume → finish).
   Future<void> finishTask() async {

@@ -18,6 +18,9 @@ dependencies:
   drift: ^2.26.0
   drift_flutter: ^0.2.4
   uuid: ^4.5.1
+  # F-07 recovery illustrations (design/assets/recovery_*.svg). Adding this
+  # dependency is PRE-APPROVED by the orchestrator (noted for DECISIONS log).
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -29,3 +32,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/recovery/

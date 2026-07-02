@@ -236,6 +236,51 @@ void main() {
     });
   });
 
+  group('shrinkTo (F-07 recovery — changeDuration)', () {
+    test('reduces remaining to 10 min, re-arms native, stays active', () async {
+      final id = await startSession(plannedMin: 30);
+      now = t0.add(const Duration(minutes: 5)); // 25 min remaining
+
+      await controller().shrinkTo();
+
+      expect(state().status, SessionStatus.active);
+      expect(state().remaining, const Duration(minutes: 10));
+      expect(state().endTime, now.add(const Duration(minutes: 10)));
+      // plannedMin = elapsed(5) + 10 → honest actualMin on later timer end.
+      expect(state().plannedMin, 15);
+      final row = await repo().getById(id);
+      expect(row!.plannedMin, 15);
+      // Native re-armed with the new anchor (same id).
+      expect(fake.startedConfigs.last.id, id);
+      expect(
+        fake.startedConfigs.last.endEpochMs,
+        now.add(const Duration(minutes: 10)).millisecondsSinceEpoch,
+      );
+    });
+
+    test('from recovery composes resume → active then shrinks', () async {
+      final id = await startSession(plannedMin: 30);
+      await controller().enterRecovery();
+
+      await controller().shrinkTo();
+
+      expect(state().status, SessionStatus.active);
+      expect((await repo().getById(id))!.status, SessionStatus.active);
+      expect(state().remaining, const Duration(minutes: 10));
+    });
+
+    test('no-op when remaining is already <= 10 min (never extends)', () async {
+      await startSession(plannedMin: 30);
+      now = t0.add(const Duration(minutes: 25)); // 5 min remaining
+
+      await controller().shrinkTo();
+
+      expect(state().remaining, const Duration(minutes: 5)); // unchanged
+      // No re-arm beyond the initial start.
+      expect(fake.startedConfigs, hasLength(1));
+    });
+  });
+
   group('permissionLost', () {
     test('mid-session → failedPermissions + notice + native stop', () async {
       final id = await startSession();
