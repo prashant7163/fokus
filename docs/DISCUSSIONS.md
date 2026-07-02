@@ -158,3 +158,38 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
 - **Action items:** Prashant — watch CI run on push (F-02/F-03 verification gate).
   Next worker — F-04 (SessionForegroundService + BootReceiver + resilience); startSession/
   stopSession TODO(F-04) hooks are in BlockingChannelHandler.
+
+## 2026-07-02 03:20–03:50 · Worker session: F-04 + F-05 (kickoff prompt v2)
+
+- Worker (mobile-developer + core author) continued Phase A sequentially per D-010.
+- **F-04 → review:** session resilience. SessionForegroundService — persistent countdown
+  notification (silent channel), wall-clock anchored ticks at the session's own minute
+  boundary, START_STICKY re-hydration from the prefs-backed BlockedSetCache, FGS type
+  `specialUse` with a Play-review subtype declaration (no standard type covers app-blocking
+  focus timers), and an accessibility-permission watch (emits permissionLost once — no silent
+  failure). BootReceiver re-arms live sessions after reboot straight from prefs, engine-free.
+  FokusEventBus now buffers restore-critical events (sessionRestored, permissionLost) until
+  the Dart sink attaches. Pure SessionServicePlan logic, 10 JVM tests.
+- **F-05 → review:** native intercept. Code-built UI (no inflation/androidx on the critical
+  path) matching SCREENS §4 1:1 with DESIGN_SYSTEM v2 light literals; task-anchor card omitted
+  cleanly when unset; countdown ticks. Proactive recovery hint at ≥ 3 attempts/5 min via pure
+  AttemptTracker (JVM-tested); hint pre-selects Breathe. CTA wiring: Return→home; I'm stuck →
+  recoveryRequested (CONTRACTS §1, buffered) + `fokus://recovery` deep link; Emergency exit →
+  `fokus://exit`. Deep links use Flutter's own deep-linking (flutter_deeplinking_enabled) so
+  cold AND warm engine are covered without touching CONTRACTS — **go_router must register
+  `/recovery` and `/exit` (F-06/F-07/F-08 seam)**.
+- **Judgment calls (implementation, not contract changes — flag if disagreeing):**
+  (1) distractionAttempt + recoveryRequested events buffered (bounded 16) so engine-dead
+  intercepts don't lose attempt data — spec calls it the product hypothesis; original ts
+  travels with the event. (2) Intercept renders light-theme always, matching F-01's forced
+  ThemeMode.light (D-009); revisit with F-12 theme toggle. (3) stopSession routes through
+  onStartCommand so the FGS 5-second contract is honored.
+- **Toolchain:** kotlinc unavailable in sandbox (release-assets/maven blocked by allowlist) —
+  Kotlin verified by review; all XML machine-validated; CI (gradle testDebugUnitTest) is the
+  gate. Stale .git locks appeared once mid-session; file-delete permission granted, cleared.
+- **Deferred per M2/D-012:** F-04 kill/reboot device check, F-05 <200 ms cold render — both
+  rows stay `review` with F-03.
+- **Action items:** Prashant — watch CI on push (F-04/F-05 gate); PM — intercept + notification
+  copy EN/DE review (with F-20). Next worker — F-06 (Dart session state machine + timer +
+  channel facade); note the deep-link route seam and the buffered-event contract above;
+  startSession/stopSession + event payload shapes documented in BlockingChannelHandler.
