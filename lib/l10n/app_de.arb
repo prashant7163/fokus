@@ -230,5 +230,26 @@
   "dayThu": "Do",
   "dayFri": "Fr",
   "daySat": "Sa",
-  "daySun": "So"
+  "daySun": "So",
+
+  "achievementsTitle": "Erfolge",
+  "achUnlockedHeadline": "{count, plural, one{Erfolg freigeschaltet} other{Erfolge freigeschaltet}}",
+  "achUnlockedOn": "Freigeschaltet am {date}",
+  "achLocked": "Gesperrt",
+  "achFirstSessionName": "Erste Session",
+  "achFirstSessionDesc": "Schließe deine erste Fokus-Session ab.",
+  "achEarlyBirdName": "Früher Vogel",
+  "achEarlyBirdDesc": "Schließe eine Session ab, die vor 7 Uhr beginnt.",
+  "achNightOwlName": "Nachteule",
+  "achNightOwlDesc": "Schließe eine Session ab, die nach 22 Uhr beginnt.",
+  "achDistractionDestroyerName": "Ablenkungs-Zerstörer",
+  "achDistractionDestroyerDesc": "Blockiere 100 Ablenkungsversuche.",
+  "achRecoveryChampionName": "Recovery-Champion",
+  "achRecoveryChampionDesc": "Kehre 10-mal über Recovery zum Fokus zurück.",
+  "achIronWillName": "Eiserner Wille",
+  "achIronWillDesc": "Schließe 10 Sessions im strikten Modus ab.",
+  "achExamHeroName": "Prüfungsheld",
+  "achExamHeroDesc": "Fokussiere 20 Stunden innerhalb von 7 Tagen.",
+  "achTwoWeekWarriorName": "Zwei-Wochen-Krieger",
+  "achTwoWeekWarriorDesc": "Halte eine Serie von 14 Tagen."
 }

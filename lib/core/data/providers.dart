@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'database.dart';
+import 'repositories/achievement_repository.dart';
 import 'repositories/app_lists_repository.dart';
 import 'repositories/distraction_repository.dart';
 import 'repositories/preset_repository.dart';
@@ -37,4 +38,8 @@ final streakRepositoryProvider = Provider<StreakRepository>(
 
 final presetRepositoryProvider = Provider<PresetRepository>(
   (ref) => PresetRepository(ref.watch(databaseProvider)),
+);
+
+final achievementRepositoryProvider = Provider<AchievementRepository>(
+  (ref) => AchievementRepository(ref.watch(databaseProvider)),
 );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../core/router/app_router.dart';
 import '../../../core/streaks/streak_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
@@ -23,7 +25,17 @@ class StatsScreen extends ConsumerWidget {
     final stats = ref.watch(todayStatsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.statsTitle)),
+      appBar: AppBar(
+        title: Text(l10n.statsTitle),
+        actions: [
+          // F-15: badge-gallery entry point.
+          IconButton(
+            icon: const Icon(Icons.emoji_events_outlined),
+            tooltip: l10n.achievementsTitle,
+            onPressed: () => context.push(AppRoutes.achievements),
+          ),
+        ],
+      ),
       body: stats.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('$e')),
