@@ -98,7 +98,7 @@ void main() {
 
   group('RecoveryEvent persistence', () {
     testWidgets('entering a module writes a start row; resume closes resumed',
-        () async {
+        (tester) async {
       final id = await startSession();
       await pumpRecovery(tester, module: 'stretch');
       // Let the post-frame _begin() (enterRecovery + startEvent) resolve.
@@ -128,7 +128,7 @@ void main() {
     });
 
     testWidgets('End session closes the event as exited and aborts',
-        () async {
+        (tester) async {
       final id = await startSession();
       await pumpRecovery(tester, module: 'water');
       for (var i = 0; i < 4; i++) {
@@ -150,7 +150,7 @@ void main() {
     });
 
     testWidgets('abandon (back button) writes the event as exited',
-        () async {
+        (tester) async {
       final id = await startSession();
       final router = await pumpRecovery(tester, module: 'breathe');
 
