@@ -30,8 +30,8 @@ done; the release build is configured; store paperwork and graphics are drafted/
   rule-based suggestions (opt-in).
 
 ### Quality gates
-- **CI:** green through run #20 (9da83e3); run #21 (a74d0ea, D-024 + release config) verify
-  the current HEAD. Pipeline = analyze + 283 Dart tests + assembleDebug + Kotlin JVM tests.
+- **CI:** green through run #20 (9da83e3); run #22 (819b5da) verifies the current HEAD
+  (D-024 + release config + ship-prep docs). Pipeline = analyze + 283 Dart tests + assembleDebug + Kotlin JVM tests.
 - **Independent M4 review** (docs/reviews/M4-review.md): approve-with-fixes, 0 P0; both P1s
   fixed (D-021).
 - **Device passes:** M2 emulator pass (docs/reviews/M2-emulator-pass.md) + M5 QA matrix
