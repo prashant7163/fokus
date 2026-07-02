@@ -75,3 +75,15 @@ structure in docs/ROADMAP.md; execution state only in TASKBOARD.md.
 Remaining audit items: D-A/D-B (priority semantics — editorial, PM applies), D-F (AI
 micro-coaching surface) still open.
 **Revisit when:** beta feedback on streak fairness or allowlist abuse.
+
+## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
+No physical Android device available. M2 verification runs on the Android Studio emulator on
+Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via
+screen control, with Prashant's per-app approval). Emulator can verify: blocking intercept +
+latency, accessibility-service flow, session resilience (process kill, cold boot), permission
+revocation, full UX. Emulator CANNOT verify: OEM battery-killer behavior (Samsung/Xiaomi/
+OnePlus), real-device performance. That residual risk moves to the closed-track testers —
+their devices are the OEM test fleet, and QA row 9 (battery optimization) is re-tagged as a
+closed-track exit criterion instead of a pre-release gate.
+**Revisit when:** a physical device (ideally Samsung or Xiaomi) becomes available — even
+borrowed for a week before public launch.

@@ -122,3 +122,12 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
 - **Action items:** Prashant — watch first Actions run (F-01 → done if green), device pass for
   M2 when back, font ruling (bundle Plus Jakarta Sans: orchestrator recommends yes).
   Worker — use kickoff prompt v2 (in this entry's session, stored in CLAUDE.md workflow ref).
+
+## 2026-07-02 02:55–03:05 · No physical device — emulator strategy (D-012)
+
+- Prashant has no Android device; Android Studio + emulator on his Mac is the test rig.
+- D-012 recorded: emulator = M2 verification device (orchestrator drives Studio/emulator via
+  screen control with approval). OEM battery-killer risk (QA row 9) moves to closed-track
+  testers as exit criterion. Revisit if a physical Samsung/Xiaomi becomes available pre-launch.
+- **Action items:** Orchestrator — after F-01 CI is green, dry-run the pipeline once (build →
+  install scaffold on emulator) to fail fast on toolchain issues before F-03..F-05 land.
