@@ -266,3 +266,15 @@ Maintained by the orchestrator (standing duty — subagents cannot see conversat
   assert in FakeBlockingAdapter.emit so this failure class is loud, not silent.
 - **Action items:** Prashant — push, watch run #4 (Kotlin/assembleDebug still first-run
   territory). GitHub connector suggested for orchestrator self-serve CI logs.
+
+## 2026-07-02 13:00–13:10 · CI run #4 GREEN — M1 done (main session)
+
+- Run #4 green across the full pipeline (analyze, Dart tests, Kotlin JVM tests, assembleDebug)
+  covering F-01…F-06 plus the run #2/#3 fixes. **Milestone M1 "It builds" done.**
+- Taskboard: F-02, F-06 → done (CI-verified). F-03/F-04/F-05 remain `review` — their
+  done-criteria need the M2 emulator pass (D-012), not more CI.
+- **Next per plan:** worker session → F-22 (D-013 P1 fixes) then F-07 recovery flow / F-08
+  exit flow. Prashant (at the Mac, ~20 min) → M2 emulator pass: start session in emulator,
+  open blocked app, verify intercept, kill process, reboot. After F-07/F-08: M3.
+- **Action items:** Prashant — M2 emulator session when convenient; GitHub connector still
+  recommended for orchestrator CI self-serve. Worker — F-22 next.

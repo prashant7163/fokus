@@ -19,7 +19,7 @@ Progress at a glance = milestones table below + taskboard statuses. Append-only 
 
 | Milestone | Definition of done | Epics | Status |
 |---|---|---|---|
-| M1 "It builds" | Scaffold + CI green (analyze, test, assembleDebug) | E1 partial | todo |
+| M1 "It builds" | Scaffold + CI green (analyze, test, assembleDebug) | E1 partial | **done 2026-07-02 13:05** (CI run #4 green: full pipeline over F-01…F-06 + fixes) |
 | M2 "It blocks" | Blocked app intercepted < 200 ms on emulator; survives reboot/kill (D-012: emulator is the M2 device; OEM battery behavior deferred to closed track) | E1 | todo |
 | M3 "Core loop complete" | Session → intercept → recovery → resume/exit, end-to-end on device | E2 | todo |
 | M4 "Retention ready" | Streaks/stats/onboarding done; app is daily-usable; closed-track candidate | E3 | todo |
