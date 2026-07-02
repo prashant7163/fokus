@@ -7,7 +7,7 @@ Status: `todo | doing | review | done | blocked`. Owner: `core` = single-author 
 
 | ID | Task | Owner | Status | Done when |
 |---|---|---|---|---|
-| F-01 | Flutter scaffold: project, theme (M3), nav, Riverpod, CI | core (worker session, 2026-07-02) | review | `flutter analyze` + `assembleDebug` green in CI — scaffold committed; CI run blocked until repo is pushed to GitHub (Prashant action item) |
+| F-01 | Flutter scaffold: project, theme (M3), nav, Riverpod, CI | core (worker session, 2026-07-02) | done | `flutter analyze` + `assembleDebug` green in CI — VERIFIED: CI run #1 green on 395779f (orchestrator checked GitHub Actions 2026-07-02 ~12:20) |
 | F-02 | Drift schema + repositories per CONTRACTS §3 | core (worker session, 2026-07-02) | review | Schema matches contract; repo unit tests pass — 40 unit tests + schema-contract guard written; sandbox cannot run Dart, CI run is the verification gate |
 | F-03 | Kotlin: AccessibilityService + blocked-set cache + detection | core (worker session, 2026-07-02) | review | Blocked app detected < 200 ms on test device — service + cache + channels built, decision logic JVM-tested (9 cases); <200 ms device check deferred to M2 pass |
 | F-04 | Kotlin: SessionForegroundService + BootReceiver + resilience | core (worker session, 2026-07-02) | review | Session survives process kill + reboot — service (START_STICKY, wall-clock re-hydration) + BootReceiver built, plan logic JVM-tested (10 cases); kill/reboot device check deferred to M2 pass |
