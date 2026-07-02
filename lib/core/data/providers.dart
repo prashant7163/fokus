@@ -4,6 +4,7 @@ import 'database.dart';
 import 'repositories/achievement_repository.dart';
 import 'repositories/app_lists_repository.dart';
 import 'repositories/distraction_repository.dart';
+import 'repositories/feedback_repository.dart';
 import 'repositories/preset_repository.dart';
 import 'repositories/recovery_repository.dart';
 import 'repositories/session_repository.dart';
@@ -42,4 +43,8 @@ final presetRepositoryProvider = Provider<PresetRepository>(
 
 final achievementRepositoryProvider = Provider<AchievementRepository>(
   (ref) => AchievementRepository(ref.watch(databaseProvider)),
+);
+
+final feedbackRepositoryProvider = Provider<FeedbackRepository>(
+  (ref) => FeedbackRepository(ref.watch(databaseProvider)),
 );

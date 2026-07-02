@@ -10,6 +10,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../achievements/presentation/widgets/session_achievements_banner.dart';
+import '../../feedback/presentation/feedback_row.dart';
 
 /// Session Complete (F-09, SCREENS §7): full-screen celebration — warm,
 /// earned, never infantilizing. Reached right after a session lands on
@@ -78,8 +79,12 @@ class _SessionCompleteScreenState extends ConsumerState<SessionCompleteScreen> {
             padding: const EdgeInsets.all(FokusSpacing.lg),
             child: Column(
               children: [
-                const Spacer(),
-                _CelebrationRing(reduceMotion: reduceMotion),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: FokusSpacing.xl),
+                        _CelebrationRing(reduceMotion: reduceMotion),
                 const SizedBox(height: FokusSpacing.xl),
                 Text(
                   headline,
@@ -148,8 +153,14 @@ class _SessionCompleteScreenState extends ConsumerState<SessionCompleteScreen> {
                 // F-15: evaluates achievements post-frame; celebrates only
                 // what THIS completion newly unlocked (unlock/celebrate once).
                 const SessionAchievementsBanner(),
-                // TODO(F-16): micro-feedback row (1-in-3 sampling, spec §3.9).
-                const Spacer(),
+                        // F-16: sampled 1-in-3, skippable, 😔 captures a
+                        // reason.
+                        const FeedbackRow(),
+                        const SizedBox(height: FokusSpacing.lg),
+                      ],
+                    ),
+                  ),
+                ),
                 FilledButton(
                   style: FilledButton.styleFrom(
                     minimumSize:

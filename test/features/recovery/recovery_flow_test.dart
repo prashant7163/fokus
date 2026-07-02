@@ -5,12 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fokus/core/blocking/providers.dart';
 import 'package:fokus/core/data/database.dart';
 import 'package:fokus/core/data/providers.dart';
+import 'package:fokus/core/prefs.dart';
 import 'package:fokus/core/data/repositories/recovery_repository.dart';
 import 'package:fokus/core/session/session_controller.dart';
 import 'package:fokus/core/theme/app_theme.dart';
 import 'package:fokus/features/recovery/presentation/recovery_screen.dart';
 import 'package:fokus/l10n/generated/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/data/test_db.dart';
 import '../../core/session/fake_blocking_adapter.dart';
@@ -24,7 +26,9 @@ void main() {
   late DateTime now;
   final t0 = DateTime(2026, 7, 2, 9, 0);
 
-  setUp(() {
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
     now = t0;
     db = testDb();
     fake = FakeBlockingAdapter();
@@ -33,6 +37,7 @@ void main() {
       blockingAdapterProvider.overrideWithValue(fake),
       clockProvider.overrideWithValue(() => now),
       tickerFactoryProvider.overrideWithValue((_) => const Stream.empty()),
+      sharedPreferencesProvider.overrideWithValue(prefs),
     ]);
   });
 

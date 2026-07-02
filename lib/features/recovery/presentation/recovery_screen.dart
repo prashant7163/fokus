@@ -10,6 +10,7 @@ import '../../../core/session/session_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../suggestions/application/suggestion_service.dart';
 import '../application/recovery_controller.dart';
 import 'modules/breathe_module.dart';
 import 'modules/shrink_module.dart';
@@ -202,18 +203,27 @@ class _RecoveryScreenState extends ConsumerState<RecoveryScreen> {
     final theme = Theme.of(context);
     final fokus = theme.extension<FokusColors>()!;
 
-    final modules = <_ModuleCardData>[
-      _ModuleCardData(RecoveryType.breathe, 'recovery_breathe',
-          l10n.recoveryBreatheName, l10n.recoveryBreatheBenefit),
-      _ModuleCardData(RecoveryType.taskReset, 'recovery_taskreset',
-          l10n.recoveryTaskResetName, l10n.recoveryTaskResetBenefit),
-      _ModuleCardData(RecoveryType.stretch, 'recovery_stretch',
-          l10n.recoveryStretchName, l10n.recoveryStretchBenefit),
-      _ModuleCardData(RecoveryType.water, 'recovery_water',
-          l10n.recoveryWaterName, l10n.recoveryWaterBenefit),
-      _ModuleCardData(RecoveryType.changeDuration, 'recovery_shrink',
+    final byType = <RecoveryType, _ModuleCardData>{
+      RecoveryType.breathe: _ModuleCardData(RecoveryType.breathe,
+          'recovery_breathe', l10n.recoveryBreatheName,
+          l10n.recoveryBreatheBenefit),
+      RecoveryType.taskReset: _ModuleCardData(RecoveryType.taskReset,
+          'recovery_taskreset', l10n.recoveryTaskResetName,
+          l10n.recoveryTaskResetBenefit),
+      RecoveryType.stretch: _ModuleCardData(RecoveryType.stretch,
+          'recovery_stretch', l10n.recoveryStretchName,
+          l10n.recoveryStretchBenefit),
+      RecoveryType.water: _ModuleCardData(RecoveryType.water,
+          'recovery_water', l10n.recoveryWaterName,
+          l10n.recoveryWaterBenefit),
+      RecoveryType.changeDuration: _ModuleCardData(
+          RecoveryType.changeDuration, 'recovery_shrink',
           l10n.recoveryShrinkName, l10n.recoveryShrinkBenefit),
-    ];
+    };
+    // F-17 rule 3 (opt-in): personal resume-rate ordering, default otherwise.
+    final order = ref.watch(recoveryOrderProvider).value ??
+        RecoveryType.values;
+    final modules = [for (final t in order) byType[t]!];
 
     return Scaffold(
       body: Container(

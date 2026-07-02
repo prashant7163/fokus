@@ -13,6 +13,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../shared/app_icon_row.dart';
+import '../../suggestions/presentation/suggestion_card.dart';
 import '../../stats/presentation/stats_screen.dart';
 
 /// Home dashboard (F-11, SCREENS §1): answers "what now?" in under a second
@@ -150,6 +151,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
           const SizedBox(height: FokusSpacing.lg),
           if (today != null) _TodayCard(today: today),
+          // F-17: opt-in, max one per day, dismissible, explained.
+          const SuggestionCard(),
         ],
       ),
     );

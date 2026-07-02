@@ -1152,6 +1152,72 @@
     "description": "One-line trigger description (F-15)."
   },
 
+  "sugWindowTitle": "Your tempted hour is around {time}",
+  "@sugWindowTitle": {
+    "description": "Distraction-window suggestion title (F-17, spec §3.10).",
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "sugWindowBody": "Try starting a focus session 15 minutes before it.",
+  "@sugWindowBody": {
+    "description": "Distraction-window suggestion body (F-17)."
+  },
+  "sugLengthTitle": "{minutes}-minute sessions look like your sweet spot",
+  "@sugLengthTitle": {
+    "description": "Optimal-length suggestion title (F-17).",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "sugLengthBody": "You finish them far more often than longer ones.",
+  "@sugLengthBody": {
+    "description": "Optimal-length suggestion body (F-17)."
+  },
+  "sugWhy": "Based on your last 2 weeks, on this device.",
+  "@sugWhy": {
+    "description": "Mandatory why-line on every suggestion (F-17, spec §3.10)."
+  },
+  "sugDismiss": "Dismiss suggestion",
+  "@sugDismiss": {
+    "description": "Dismiss tooltip — suggestions are always dismissible (F-17)."
+  },
+  "sugAct": "Set up a session",
+  "@sugAct": {
+    "description": "Suggestion action → start-session config (F-17)."
+  },
+  "feedbackPrompt": "How was this session?",
+  "@feedbackPrompt": {
+    "description": "Micro-feedback question, sampled 1-in-3 (F-16, spec §3.9)."
+  },
+  "feedbackGood": "Good",
+  "@feedbackGood": {
+    "description": "Text label for 😊 (F-16, a11y per SCREENS §7)."
+  },
+  "feedbackOkay": "Okay",
+  "@feedbackOkay": {
+    "description": "Text label for 😐 (F-16)."
+  },
+  "feedbackRough": "Rough",
+  "@feedbackRough": {
+    "description": "Text label for 😔 (F-16)."
+  },
+  "feedbackTooLong": "Too long",
+  "@feedbackTooLong": {
+    "description": "😔 follow-up chip (F-16)."
+  },
+  "feedbackInterrupted": "Interrupted",
+  "@feedbackInterrupted": {
+    "description": "😔 follow-up chip (F-16)."
+  },
+  "feedbackBlockingFailed": "Blocking failed",
+  "@feedbackBlockingFailed": {
+    "description": "😔 follow-up chip (F-16)."
+  },
+  "feedbackOther": "Something else",
+  "@feedbackOther": {
+    "description": "😔 follow-up chip (F-16)."
+  },
   "dashFocusScoreSemantics": "Focus score, beta: {score} out of 100.",
   "@dashFocusScoreSemantics": {
     "description": "Screen-reader summary of the focus-score card (F-14).",

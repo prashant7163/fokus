@@ -231,6 +231,19 @@ Sanctioned by Prashant's standing approval for CONTRACTS changes with a same-com
 **Revisit when:** closed-track shows WorkManager start-time drift beyond ~minutes (would
 justify AlarmManager exact alarms + its permission).
 
+## D-023 · 2026-07-02 22:40 · F-16/F-17 rulings
+1. **F-16 sampling is deterministic** — the prompt shows on the 1st/4th/7th… completed
+   session (completed-count modulo, replay-safe, no stored counter). 😔 follow-up records a
+   reason code only (no free-text field — keep the moment light, SCREENS §7 chips).
+2. **F-17 thresholds** codified in the pure engine (one file to revisit with data): window
+   rule = attempts in the same hour on ≥4 distinct days of the last 7; length rule = ≥25-pt
+   completion-rate gap with ≥3 samples per side; recovery ordering re-ranks only modules
+   with ≥5 closed samples, under-sampled ones keep their default slots. Daily cap + opt-in
+   + 14-day gate enforced in the service via ai_insights rows (generatedAt = cap,
+   shownAt = dismissed/acknowledged, actedOn = tapped the action).
+3. Both features write ONLY to their CONTRACTS §3 tables; nothing transmits (spec §3.9/§3.10).
+**Revisit when:** closed-track feedback data suggests different thresholds.
+
 ## D-012 · 2026-07-02 03:00 · Device testing = Android emulator; OEM risk shifts to closed track
 No physical Android device available. M2 verification runs on the Android Studio emulator on
 Prashant's Mac (orchestrator can drive Studio's Run button and interact with the emulator via
